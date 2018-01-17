@@ -17,6 +17,9 @@
         <!-- Styles -->
         <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
         <link href="{{ asset('/css/style.css') }}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{{ asset('plugins/summernote/dist/summernote.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/account/jquery.datetimepicker.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/select2.min.css') }}">
         @yield('styles')
 
         <!-- Scripts -->
@@ -27,7 +30,12 @@
         </script>
         <script type="text/javascript" src="{{ asset('/js/app.js') }}"></script>
         <script type="text/javascript" src="{{ asset('/js/script.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/account/jquery.datetimepicker.full.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('/plugins/summernote/dist/summernote.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/select2.full.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('/js/config.js') }}"></script>
         @yield('scripts')
+        
     </head>
 
     <body id="app">

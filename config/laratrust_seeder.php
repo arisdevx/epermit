@@ -14,6 +14,8 @@ return [
             'role-officer' => 'c,r,u,d',
             'role-customer' => 'c,r,u,d',
             'role-tester' => 'c,r,u,d',
+            'role-jabatan_perhutanan_negeri' => 'c,r,u,d',
+            'role-pegawai_hutan_daerah' => 'c,r,u,d',
         ],
         'admin' => [
             'module-admins' => 'c,r,u,d',
@@ -24,6 +26,8 @@ return [
             'role-officer' => 'c,r,u,d',
             'role-customer' => 'c,r,u,d',
             'role-tester' => 'c,r,u,d',
+            'role-jabatan_perhutanan_negeri' => 'c,r,u,d',
+            'role-pegawai_hutan_daerah' => 'c,r,u,d',
         ],
         'officer' => [
             'module-users' => 'c,r,u,d',
@@ -40,13 +44,25 @@ return [
         'tester' => [
             'module-home' => 'r,u'
         ],
+        'pemohon' => [
+            'module-home' => ''
+        ],
+        'jabatan_perhutanan_negeri' => [
+            'role-pegawai_hutan_daerah' => 'c,r,u,d',
+        ],
+        'pegawai_hutan_daerah' => [
+            
+        ]
     ],
     'mode_structure' => [
         'admin' => [
-            'super', 'admin', 'officer'
+            'super', 'admin', 'jabatan_perhutanan_negeri', 'pegawai_hutan_daerah'
         ],
         'customer' => [
             'customer', 'tester'
+        ],
+        'pemohon' => [
+            'pemohon',
         ]
     ],
     'permissions_map' => [

@@ -12,8 +12,8 @@
 
             <div class="modal-footer">
                 {!! Form::open(['url' => '', 'class' => 'modal-action', 'method' => 'delete']) !!}
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Confirm</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Ya</button>
                 {!! Form::close() !!}
             </div>
         </div>

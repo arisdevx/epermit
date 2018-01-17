@@ -1,10 +1,10 @@
 <div class="collapse navbar-collapse">
     <ul class="nav navbar-nav navbar-right">
         <li class="hidden-sm hidden-xs">
-            <a href="{{ route('home.index') }}">
+            {{-- <a href="{{ route('home.index') }}">
                 <i class="material-icons">dashboard</i>
                 <p class="hidden-lg hidden-md">Dashboard</p>
-            </a>
+            </a> --}}
         </li>
         {{--<li class="dropdown">--}}
             {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown">--}}
@@ -31,10 +31,12 @@
             <ul class="dropdown-menu">
                 {{ Form::open(['url' => route('logout'), 'id' => 'logout']) }}{{ Form::close() }}
                 <li>
-                    <a href="{{ route('profile.index') }}"><i class="material-icons">person</i> My Profile</a>
+                    <a href="{{ route('profile.index') }}"><i class="material-icons">person</i> Profil Saya</a>
                 </li>
                 <li>
-                    <a class="btn btn-danger" onclick="$('#logout').submit()">Logout <i class="material-icons">exit_to_app</i></a>
+                    {{-- {{ url('account/logout') }} --}}
+                    {{-- <a class="btn btn-danger" onclick="$('#logout').submit()">Keluar <i class="material-icons">exit_to_app</i></a> --}}
+                    <a class="btn btn-danger" href="{{ url('account/logout') }}">Keluar <i class="material-icons">exit_to_app</i></a>
                 </li>
             </ul>
         </li>

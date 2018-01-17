@@ -41,6 +41,11 @@ return [
             'provider' => 'users',
         ],
 
+        'applicant' => [
+            'driver' => 'session',
+            'provider' => 'users'
+        ],
+
         'api' => [
             'driver' => 'token',
             'provider' => 'users',

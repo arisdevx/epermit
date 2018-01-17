@@ -23,12 +23,26 @@ class User extends Authenticatable
         return $this->hasOne('App\Models\UserProfile');
     }
 
+    public function user_profile()
+    {
+        return $this->belongsTo('App\Models\UserProfile', 'id', 'user_id');
+    }
+
     public function user_role() {
         return $this->hasMany('App\Models\RoleUser');
     }
 
+    public function user_role2() {
+        return $this->belongsTo('App\Models\RoleUser', 'id', 'user_id');
+    }
+
     public function user_permission() {
         return $this->hasMany('App\Models\PermissionUser');
+    }
+
+    public function userLocation()
+    {
+        return $this->belongsTo('App\Models\UserLocation', 'id', 'user_id');
     }
 
     public function allowed_roles($type = 'read') {

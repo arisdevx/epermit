@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Kuala_Lumpur',
 
     /*
     |--------------------------------------------------------------------------
@@ -183,7 +183,8 @@ return [
         Caffeinated\Flash\FlashServiceProvider::class,
         Lavary\Menu\ServiceProvider::class,
         Watson\Breadcrumbs\ServiceProvider::class,
-        Laravolt\Avatar\ServiceProvider::class
+        Laravolt\Avatar\ServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -240,7 +241,8 @@ return [
         'Flash' => Caffeinated\Flash\Facades\Flash::class,
         'Menu' => Lavary\Menu\Facade::class,
         'Breadcrumbs' => Watson\Breadcrumbs\Facade::class,
-        'Avatar' => Laravolt\Avatar\Facade::class
+        'Avatar' => Laravolt\Avatar\Facade::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

@@ -1,6 +1,6 @@
 @extends('layouts.panel')
 
-@section('content')
+{{-- @section('content')
     <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card card-stats">
@@ -8,7 +8,7 @@
                     <i class="material-icons">content_copy</i>
                 </div>
                 <div class="card-content">
-                    <p class="category">Used Space</p>
+                    <p class="category">Ruang yang telah digunakan</p>
                     <h3 class="title">49/50<small>GB</small></h3>
                 </div>
                 <div class="card-footer">
@@ -24,7 +24,7 @@
                     <i class="material-icons">store</i>
                 </div>
                 <div class="card-content">
-                    <p class="category">Revenue</p>
+                    <p class="category">Pendapatan</p>
                     <h3 class="title">$34,245</h3>
                 </div>
                 <div class="card-footer">
@@ -40,7 +40,7 @@
                     <i class="material-icons">info_outline</i>
                 </div>
                 <div class="card-content">
-                    <p class="category">Fixed Issues</p>
+                    <p class="category">Isu Tetap</p>
                     <h3 class="title">75</h3>
                 </div>
                 <div class="card-footer">
@@ -57,7 +57,7 @@
                     <i class="fa fa-twitter"></i>
                 </div>
                 <div class="card-content">
-                    <p class="category">Followers</p>
+                    <p class="category">Pengikut</p>
                     <h3 class="title">+245</h3>
                 </div>
                 <div class="card-footer">
@@ -76,7 +76,7 @@
                     <div class="ct-chart" id="dailySalesChart"></div>
                 </div>
                 <div class="card-content">
-                    <h4 class="title">Daily Sales</h4>
+                    <h4 class="title">Jualan Harian</h4>
                     <p class="category"><span class="text-success"><i class="fa fa-long-arrow-up"></i> 55%  </span> increase in today sales.</p>
                 </div>
                 <div class="card-footer">
@@ -93,7 +93,7 @@
                     <div class="ct-chart" id="emailsSubscriptionChart"></div>
                 </div>
                 <div class="card-content">
-                    <h4 class="title">Email Subscriptions</h4>
+                    <h4 class="title">Langganan E-Mel</h4>
                     <p class="category">Last Campaign Performance</p>
                 </div>
                 <div class="card-footer">
@@ -111,7 +111,7 @@
                     <div class="ct-chart" id="completedTasksChart"></div>
                 </div>
                 <div class="card-content">
-                    <h4 class="title">Completed Tasks</h4>
+                    <h4 class="title">Tugas Selesai</h4>
                     <p class="category">Last Campaign Performance</p>
                 </div>
                 <div class="card-footer">
@@ -129,7 +129,7 @@
                 <div class="card-header" data-background-color="purple">
                     <div class="nav-tabs-navigation">
                         <div class="nav-tabs-wrapper">
-                            <span class="nav-tabs-title">Tasks:</span>
+                            <span class="nav-tabs-title">Tugas:</span>
                             <ul class="nav nav-tabs" data-tabs="tabs">
                                 <li class="active">
                                     <a href="#profile" data-toggle="tab">
@@ -347,16 +347,16 @@
         <div class="col-lg-6 col-md-12">
             <div class="card">
                 <div class="card-header" data-background-color="orange">
-                    <h4 class="title">Employees Stats</h4>
-                    <p class="category">New employees on 15th September, 2016</p>
+                    <h4 class="title">Statistik Pekerja</h4>
+                    <p class="category">Pekerja Baru Dekat 15th September, 2016</p>
                 </div>
                 <div class="card-content table-responsive">
                     <table class="table table-hover">
                         <thead class="text-warning">
                         <th>ID</th>
-                        <th>Name</th>
-                        <th>Salary</th>
-                        <th>Country</th>
+                        <th>Nama</th>
+                        <th>Gaji</th>
+                        <th>Negara</th>
                         </thead>
                         <tbody>
                         <tr>
@@ -389,4 +389,140 @@
             </div>
         </div>
     </div>
+@endsection
+ --}}
+
+@section('content')
+<div class="card card-plain">
+    <div class="card-header" data-background-color="green">
+        <h4 class="title">Dashboard</h4>
+        <p class="category">Jabatan Perhutanan Semenanjung Malaysia</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card card-stats">
+            <div class="card-header" data-background-color="orange">
+                <i class="material-icons">info</i>
+            </div>
+            <div class="card-content">
+                <h3 class="title">{{ $hiking_total }}</h3>
+                <table border="0" width="100%" style="margin-top: 40px">
+                    @if(auth()->user()->hasRole(['admin', 'super']))
+                        <tr>
+                            <td width="35%" align="left">Permohonan Baru</td>
+                            <td width="10%">{{ $hiking_new }}</td>
+                        </tr>
+                        <tr>
+                            <td width="35%" align="left">Permohonan Diproses</td>
+                            <td width="10%">{{ $hiking_processed }}</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td width="35%" align="left">Permohonan Baru</td>
+                            <td width="10%">{{ $hiking_processed }}</td>
+                        </tr>
+                    @endif
+                    <tr>
+                        <td width="35%" align="left">Permohonan Diluluskan</td>
+                        <td width="10%">{{ $hiking_completed }}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%" align="left">Permohonan Selesai</td>
+                        <td width="10%">{{ $hiking_finished }}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%" align="left">Permohonan Dibatalkan</td>
+                        <td width="10%">{{ $hiking_canceled }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    {{-- <a href="#pablo">Lihat</a> --}}
+                    <h4>Aktiviti Pendakian</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stats">
+            <div class="card-header" data-background-color="green">
+                <i class="material-icons">check_circle</i>
+            </div>
+            <div class="card-content">
+                <h3 class="title">{{ $convenience_total }}</h3>
+                <table border="0" width="100%" style="margin-top: 40px">
+                    <tr>
+                        <td width="35%" align="left">Permohonan Baru</td>
+                        <td width="10%">{{ $convenience_processed }}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%" align="left">Permohonan Diluluskan</td>
+                        <td width="10%">{{ $convenience_completed }}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%" align="left">Permohonan Selesai</td>
+                        <td width="10%">{{ $convenience_finished }}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%" align="left">Permohonan Dibatalkan</td>
+                        <td width="10%">{{ $convenience_canceled }}</td>
+                    </tr>
+                    @if(auth()->user()->hasRole(['admin', 'super']))
+                    <tr>
+                        <td width="35%" align="left"></td>
+                        <td width="10%"></td>
+                    </tr>
+                    @endif
+                </table>
+                 @if(auth()->user()->hasRole(['admin', 'super']))
+                    <p class="category">&nbsp;</p>
+                 @endif
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <h4>Tempahan Kemudahan</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stats">
+            <div class="card-header" data-background-color="red">
+                <i class="material-icons">pan_tool</i>
+            </div>
+            <div class="card-content">
+                <h3 class="title">{{ $other_total }}</h3>
+                <table border="0" width="100%" style="margin-top: 40px">
+                    <tr>
+                        <td width="35%" align="left">Permohonan Baru</td>
+                        <td width="10%">{{ $other_processed }}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%" align="left">Permohonan Diluluskan</td>
+                        <td width="10%">{{ $other_completed }}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%" align="left">Permohonan Selesai</td>
+                        <td width="10%">{{ $other_finished }}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%" align="left">Permohonan Dibatalkan</td>
+                        <td width="10%">{{ $other_canceled }}</td>
+                    </tr>
+                </table>
+                @if(auth()->user()->hasRole(['admin', 'super']))
+                    <p class="category">&nbsp;</p>
+                @endif
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <h4>Lain-lain Aktiviti</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection

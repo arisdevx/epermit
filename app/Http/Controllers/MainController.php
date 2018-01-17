@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Setting;
+use App\Models\Slider;
+use App\Models\Post;
 
 class MainController extends Controller
 {
@@ -13,7 +16,36 @@ class MainController extends Controller
      */
     public function index()
     {
-        return view('main.index');
+        $data['homepage'] = Setting::where('setting_key', 'homepage')->first();
+        $data['footer']   = Setting::where('setting_key', 'footer')->first();
+        $data['logo']     = Setting::where('setting_key', 'logo')->first();
+        $data['sliders']  = Slider::get();
+        $data['posts'] = Post::get();
+
+        return view('account.main.index', $data);
+    }
+
+    public function getContent()
+    {
+        $data = [
+            [
+                'title' => 'text',
+                'link' => 'https://asdasd.com/'
+            ],
+            [
+                'title' => 'text 2',
+                'link' => 'https://asdasd.com/'
+            ],
+        ];
+
+        return response()->json($data);
+    }
+
+    public function getInformation($id)
+    {
+        $post = Post::find($id);
+
+        return view('account.main.content', compact('post'));
     }
 
     /**

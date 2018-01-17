@@ -57,9 +57,11 @@ class LaratrustSeeder extends Seeder
             // Create default user for each role
             $user = \App\Models\User::create([
                 'name' => ucwords(str_replace("_", " ", $key)),
+                'username' => strtolower($key),
                 'email' => $key.'@app.com',
                 'password' => bcrypt('password'),
                 'remember_token' => str_random(10),
+                'status'    => '1'
             ]);
             $user->attachRole($role);
 
@@ -68,6 +70,13 @@ class LaratrustSeeder extends Seeder
             $profile->avatar = '/avatars/' . md5($user->email) . '.png';
             $profile->save();
             Avatar::create($user->name)->save(storage_path('app/public') . $profile->avatar);
+            
+            $location = new \App\Models\UserLocation;
+            $location->user_id = $user->id;
+            $location->state_id = 0;
+            $location->area_id = 0;
+            $location->save();
+
         }
 
         // creating user with permissions

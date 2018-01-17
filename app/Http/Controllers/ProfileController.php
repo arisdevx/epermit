@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
-use Auth, Flash, Validator;
+use Auth, Flash, Validator, Hash;
+use App\Http\Requests\AdminProfileRequest;
 
 class ProfileController extends Controller
 {
@@ -61,6 +62,8 @@ class ProfileController extends Controller
         $profile->phone = $request->phone;
         $profile->office = $request->office;
         $profile->mobile = $request->mobile;
+        $profile->nokp = '';
+        $profile->age = '';
         $profile->save();
 
         Flash::success('Your profile details successfully updated.');
@@ -85,5 +88,33 @@ class ProfileController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function updateData(AdminProfileRequest $request)
+    {
+        $user = Auth::user();
+
+        $user->name = $request->name;
+
+        if(!empty($request->password))
+        {
+            $user->password = Hash::make($request->password);
+        }
+
+        if($user->save())
+        {
+            Flash::success('Berjaya mengemaskini kata laluan baru');
+        }
+        else
+        {
+            Flash::error('Gagal mengemaskini kata laluan baru');
+        }
+
+        $profile = UserProfile::where('user_id', Auth::user()->id)->first();
+        $profile->address_1 = (!empty($request->addressuser) ? $request->addressuser : '');
+        $profile->nokp      = (!empty($request->nokp) ? $request->nokp : '');
+        $profile->save();
+
+        return redirect('profile');
     }
 }

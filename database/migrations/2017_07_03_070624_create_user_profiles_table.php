@@ -18,9 +18,15 @@ class CreateUserProfilesTable extends Migration
             $table->string('city');
             $table->string('state');
             $table->string('country');
+            $table->string('nokp')->nullable();
+            $table->string('passport')->nullable();
+            $table->string('age');
+            $table->string('phonecode')->nullable();
             $table->string('phone')->nullable();
             $table->string('mobile')->nullable();
             $table->string('office')->nullable();
+            $table->datetime('birthday')->nullable();
+            $table->string('citizen', 1)->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')

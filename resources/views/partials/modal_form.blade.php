@@ -13,14 +13,15 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary" onclick="$('#modal-form form').submit();">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Batalkan</button>
+                <button type="submit" class="btn btn-primary" onclick="$('#modal-form form').submit();">Simpan</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    
     $(document).on('show.bs.modal', '#modal-form', function(e) {
         $('.modal-body', this).html('<h1 class="text-center"><i class="fa fa-spinner fa-spin fa-fw"></i></h1>');
 

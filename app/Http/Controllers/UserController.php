@@ -66,9 +66,11 @@ class UserController extends Controller
         }
 
         $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
+        $user->username = '';
+        $user->name     = $request->name;
+        $user->email    = $request->email;
         $user->password = Hash::make($password);
+        $user->status   = '1';
         $user->save();
 
         $user->attachRole($request->role);
@@ -113,6 +115,8 @@ class UserController extends Controller
         $user = User::find($id);
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->username = '';
+        $user->status = '1';
         $user->save();
 
         $user->syncRoles($request->role);

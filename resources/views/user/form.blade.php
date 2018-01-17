@@ -5,10 +5,10 @@
 {!! Form::model($user, ['url' => $route, 'method' => $method, 'id' => 'user-form']) !!}
 <div class="row">
     <div class="col-md-6">
-        <div class="form-group label-floating" v-bind:class="errors.name ? 'has-error' : ''">
+        <div class="form-group" v-bind:class="errors.name ? 'has-error' : ''">
             <label class="control-label">
                 <span v-if="errors.name">@{{ errors.name[0] }}</span>
-                <span v-else>Name</span>
+                <span v-else>Nama</span>
             </label>
             {{ Form::text('name', old('name', $user->name), ['class' => 'form-control']) }}
             <span class="material-icons form-control-feedback">clear</span>
@@ -16,10 +16,10 @@
     </div>
 
     <div class="col-md-6">
-        <div class="form-group label-floating" v-bind:class="errors.email ? 'has-error' : ''">
+        <div class="form-group" v-bind:class="errors.email ? 'has-error' : ''">
             <label class="control-label">
                 <span v-if="errors.email">@{{ errors.email[0] }}</span>
-                <span v-else>Email</span>
+                <span v-else>E-Mel</span>
             </label>
             {!! Form::textarea('email', old('email', $user->email), ['class' => 'form-control', 'rows' => 1]) !!}
             <span class="material-icons form-control-feedback">clear</span>
@@ -29,10 +29,10 @@
 
 <div class="row">
     <div class="col-md-6">
-        <div class="form-group label-floating" v-bind:class="errors.role ? 'has-error' : ''">
+        <div class="form-group" v-bind:class="errors.role ? 'has-error' : ''">
             <label class="control-label">
                 <span v-if="errors.role">@{{ errors.role[0] }}</span>
-                <span v-else>Role</span>
+                <span v-else>Peranan</span>
             </label>
             {!! Form::select('role', $roles, old('role', $role), ['class' => 'form-control', 'placeholder' => '']) !!}
             <span class="material-icons form-control-feedback">clear</span>
