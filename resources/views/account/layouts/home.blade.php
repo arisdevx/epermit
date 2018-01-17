@@ -44,7 +44,7 @@
 	<footer class="footer">
 
 			<div class="container">
-				<div class="copyright">
+				<div class="copyright" style="padding-top:15px; padding-bottom: 10px;">
 				<p>Hakcipta Terpelihara &copy; {{ date('Y') }} Jabatan Perhutanan Semananjung Malaysia.
 			</div>
 			</div>

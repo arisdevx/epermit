@@ -74,7 +74,7 @@
 	</div> --}}
 	<div class="row">
 			<div class="col-md-8 col-sm-12">
-				<div class="panel panel-home2">
+				<div class="panel panel-home2" style="padding: 3% 40px;">
 					{!! $homepage->setting_value !!}
 				</div>
 			</div>
