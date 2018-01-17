@@ -79,7 +79,7 @@
 				</div>
 			</div>
 			<div class="col-md-4 col-sm-12">
-				<div style="padding: 20px 40px; border-right: solid 1px lightgray;">
+				<div style="padding: 14px 40px; border-right: solid 1px lightgray;">
 					{!! $footer->setting_value !!}
 				</div>
 			</div>
