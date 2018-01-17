@@ -12,7 +12,7 @@
 			@endforeach
 		</ol>
 
-		<div class="carousel-inner" role="listbox" style="height: 350px !important;" >
+		<div class="carousel-inner" role="listbox" style="height: 400px !important;" >
 			@php($nav = 0)
 			@foreach($sliders as $slider)
 				<div class="item{{ ($nav == 0 ? ' active' : '') }}">

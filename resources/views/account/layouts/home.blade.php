@@ -34,7 +34,7 @@
 				</nav>
 			</header>
 		</div>
-	<main style="min-height: unset;">
+	<main>
 	<div class="container">
 		<div class="site-content">
 			@yield('content')
