@@ -12,7 +12,7 @@
 			@endforeach
 		</ol>
 
-		<div class="carousel-inner" role="listbox" style="height: 500px !important;" >
+		<div class="carousel-inner" role="listbox" style="height: 350px !important;" >
 			@php($nav = 0)
 			@foreach($sliders as $slider)
 				<div class="item{{ ($nav == 0 ? ' active' : '') }}">
@@ -74,7 +74,7 @@
 	</div> --}}
 	<div class="row">
 			<div class="col-md-8 col-sm-12">
-				<div class="panel panel-home2" style="padding: 65px 40px !important;">
+				<div class="panel panel-home2">
 					{!! $homepage->setting_value !!}
 				</div>
 			</div>
