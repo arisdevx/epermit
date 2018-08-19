@@ -23,35 +23,31 @@ class ApplicantHikingParticipantRequest extends FormRequest
      */
     public function rules()
     {
-        switch ($this->method()) {
-            case 'POST':
-            case 'PUT':
-                return [
-                    'hiker_fullname'     => 'required',
-                    'hiker_ic'           => 'required',
-                    'hiker_birthday'     => 'required',
-                    'hiker_age'          => 'required',
-                    'hiker_gender'       => 'required',
-                    'hiker_nationality'  => 'required',
-                    'hiker_phone'        => 'required',
-                    'hiker_address'      => 'required',
-                    'hiker_state'        => 'required',
-                    'hiker_postcode'     => 'required',
-                    'emergency_fullname' => 'required',
-                    'emergency_phone'    => 'required',
-                    'emergency_address'  => 'required',
-                    'emergency_state'    => 'required',
-                    'emergency_postcode' => 'required',
-                    'declaration_name'   => 'required',
-                    'declaration_ic'     => 'required',
-                    'declaration_date'   => 'required',
-                    'agreement' => 'required',
-                ];
-                break;
-            
-            default:
-                # code...
-                break;
+        $validate = [];
+        $validate['hiker_fullname']         = 'required';
+        $validate['hiker_ic']               = 'required|min:8';
+        $validate['hiker_birthday']         = 'required';
+        $validate['hiker_age']              = 'required';
+        $validate['hiker_gender']           = 'required';
+        $validate['hiker_nationality']      = 'required';
+        $validate['hiker_phone']            = 'required';
+        $validate['hiker_address']          = 'required';
+        $validate['hiker_state']            = 'required';
+        $validate['hiker_postcode']         = 'required';
+        $validate['emergency_fullname']     = 'required';
+        $validate['emergency_phone']        = 'required';
+        $validate['emergency_address']      = 'required';
+        $validate['emergency_relationship'] = 'required';
+        if($this->hiker_country == '130')
+        {
+            $validate['emergency_state']        = 'required';
         }
+        $validate['emergency_postcode']     = 'required';
+        $validate['declaration_name']       = 'required';
+        $validate['declaration_ic']         = 'required';
+        $validate['declaration_date']       = 'required';
+        $validate['agreement']              = 'required';
+        
+        return $validate;
     }
 }

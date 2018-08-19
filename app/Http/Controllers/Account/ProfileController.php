@@ -9,6 +9,7 @@ use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\ProfileRequest;
 use App\Models\State;
+use App\Models\StateUser;
 use App\Models\Country;
 use Auth;
 
@@ -18,8 +19,8 @@ class ProfileController extends Controller
 	{
 		$data['user'] = User::with(['profile'])
 							->find(Auth::guard('applicant')->user()->id);
-		$data['states'] = State::get();
-		$data['countries'] = Country::get();
+		$data['states'] = StateUser::orderBy('name', 'ASC')->get();
+		$data['countries'] = Country::orderBy('name', 'ASC')->get();
 
 		return view('account.profile.index', $data);
 	}

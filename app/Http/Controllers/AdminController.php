@@ -28,7 +28,20 @@ class AdminController extends Controller
     {
         if(auth()->user()->hasRole(['admin', 'super']))
         {
-            $admins = User::whereHas('user_role.role', function($q) {
+            $admins = User::whereHas('user_role.role.mode_role.mode', function($q) {
+                $q->where('name', 'admin');
+                $q->orWhere('name', 'officer');
+                $q->orWhere('name', 'jabatan_perhutanan_negeri');
+                $q->orWhere('name', 'pegawai_hutan_daerah');
+            })
+            ->where(function($q) use ($request) {
+                $q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
+                $q->orWhereRaw('LOWER(email) LIKE ?', ['%'.strtolower($request->search).'%']);
+            })
+            ->paginate(10);
+
+            /**
+             $admins = User::whereHas('user_role.role', function($q) {
                 $q->whereIn('name', Auth::user()->allowed_roles('read'));
             })
             ->whereHas('user_role.role.mode_role.mode', function($q) {
@@ -38,7 +51,8 @@ class AdminController extends Controller
                 $q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
                 $q->orWhereRaw('LOWER(email) LIKE ?', ['%'.strtolower($request->search).'%']);
             })
-            ->paginate(20);
+            ->paginate(10);
+            */
         }
         else
         {
@@ -55,7 +69,7 @@ class AdminController extends Controller
                 $q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
                 $q->orWhereRaw('LOWER(email) LIKE ?', ['%'.strtolower($request->search).'%']);
             })
-            ->paginate(20);
+            ->paginate(10);
         }
 
         return view('admin.index', compact('admins'));
@@ -138,15 +152,19 @@ class AdminController extends Controller
             ->pluck('display_name', 'id');
         $role = $admin->roles->first()->id;
         $location = UserLocation::where('user_id', $id)->first();
+
         if(auth()->user()->hasRole(['super', 'admin']))
         {
             $states = State::get();
+            $areas = Area::get();
         }
         else
         {
-            $states = State::where('id', Auth::user()->userLocation->state_id)->get();
+            $states = State::where('id', $location->state_id)->get();
+            $areas     = Area::where('state_id', $location->state_id)->get();
         }
-        $areas     = Area::where('state_id', $location->state_id)->get();
+
+        
 
         return view('admin.form', compact('admin', 'roles', 'role', 'location', 'states', 'areas'));
     }
@@ -177,10 +195,14 @@ class AdminController extends Controller
         $user->syncRoles($request->role);
 
         $userLocation = UserLocation::where('user_id', $user->id)->first();
-        $userLocation->user_id = $user->id;
-        $userLocation->state_id = (!empty($request->state) ? $request->state : 0);
-        $userLocation->area_id = (!empty($request->area) ? $request->area : 0);
-        $userLocation->save();
+        
+        if(!empty($userLocation))
+        {
+            $userLocation->user_id = $user->id;
+            $userLocation->state_id = (!empty($request->state) ? $request->state : 0);
+            $userLocation->area_id = (!empty($request->area) ? $request->area : 0);
+            $userLocation->save();
+        }
 
         activityLog('Update Pengguna ' . $user->name);
 

@@ -21,7 +21,7 @@
                 <span v-if="errors.email">@{{ errors.email[0] }}</span>
                 <span v-else>E-Mel</span>
             </label>
-            {!! Form::textarea('email', old('email', $user->email), ['class' => 'form-control', 'rows' => 1]) !!}
+            {!! Form::textarea('email', old('email', $user->email), ['class' => 'form-control', 'rows' => 1, 'style' => 'text-transform: lowercase']) !!}
             <span class="material-icons form-control-feedback">clear</span>
         </div>
     </div>
@@ -33,7 +33,11 @@
                 <span v-if="errors.nokp">@{{ errors.nokp[0] }}</span>
                 <span v-else>No. K/P / Passport</span>
             </label>
-            {{ Form::text('nokp', old('nokp', (!empty($user->profile->nokp) ? $user->profile->nokp: $user->profile->passport)), ['class' => 'form-control']) }}
+            @if($user->profile->citizen == '1')
+                {{ Form::number('nokp', old('nokp', (!empty($user->profile->nokp) ? $user->profile->nokp: $user->profile->passport)), ['class' => 'form-control', 'id' => 'nokp', 'data-maxsize' => '12']) }}
+            @else
+                {{ Form::text('nokp', old('nokp', (!empty($user->profile->nokp) ? $user->profile->nokp: $user->profile->passport)), ['class' => 'form-control', 'id' => 'nokp']) }}
+            @endif
             <span class="material-icons form-control-feedback">clear</span>
         </div>
     </div>
@@ -64,4 +68,16 @@
             }
         }
     });
+
+    (function($){
+        'use strict';
+        $(document).ready(function(){
+            $('#nokp').keypress(function (e) {
+                var txt = String.fromCharCode(e.which);
+                if (!txt.match(/[A-Za-z0-9&. ]/)) {
+                    return false;
+                }
+            });
+        });
+    })(jQuery);
 </script>

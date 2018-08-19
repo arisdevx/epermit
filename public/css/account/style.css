@@ -2,8 +2,18 @@ html,
 body {
 	height: 100%;
 }
+main {
+	
+}
+body {
+	overflow: hidden;
+}
+body.scroll {
+	overflow-y: auto !important;
+}
 .navbar-home {
 	border-radius: 0;
+	background-color: #ffffff;
 }
 .homepage-container {
 	/*width: 928px;*/
@@ -73,8 +83,15 @@ body {
 	border-right: 1px solid #7b6256;*/
 	/*border-bottom: 1px solid #7b6256;*/
 }
-main {
-	min-height: 78%;
+.site-main {
+	display: flex;
+	flex-direction: column;
+	min-height: 87vh;
+}
+.site-main .site-content {
+	flex: 1;
+	border-left: 1px solid #cccccc;
+	border-right: 1px solid #cccccc;
 }
 .footer {
 	
@@ -85,12 +102,14 @@ main {
 	border-right: 1px solid #dddddd;
 }
 .copyright {
-	border-top: 1px solid #555555;
-	padding-top: 25px;
-	padding-bottom: 15px;
+	border-top: 0;
+	padding-top: 5px !important;
+	padding-bottom: 1px !important;
 	text-align: center;
-	color: #ffffff;
-	background-color: #7a6256;
+	color: #000000;
+	background-color: #dddddd;
+	border-left: 1px solid #dddddd;
+	border-right: 1px solid #dddddd;
 }
 
 .register-panel {
@@ -103,7 +122,7 @@ fieldset {
     padding: 0 20px 20px 20px;
     border-bottom: none;
     border-radius: 4px;
-    margin-bottom: 15px;
+    margin-bottom: 6px;
 }
 
 legend {
@@ -111,6 +130,7 @@ legend {
     border: none;
     font-size: 14px;
     font-weight: bold;
+    margin-bottom: 5px;
 }
 
 .homepage-information {
@@ -124,4 +144,41 @@ legend {
 .navbar-brand {
 	padding-top: 5px;
 	padding-bottom: 5px;
+}
+
+/* Participant Form */
+.participant-header {
+	text-align: center;
+	padding: 40px 0;
+}
+.participant-header h3,
+.participant-header h4 {
+	text-transform: uppercase;
+}
+.participant-header .logo {
+
+}
+.participant-header .participant-description {
+	margin-bottom: 30px;
+}
+.participant-header hr {
+	color: #000000;
+	background-color: #000000;
+	border: 1px solid #000000;
+}
+
+.modal-centered {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+  min-height: calc(100vh - 60px);
+  @media (max-width: 767px) {
+    min-height: calc(100vh - 20px);
+  }
+}
+
+.carousel-control.right,
+.carousel-control.left {
+	background-image: none !important;
 }

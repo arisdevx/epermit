@@ -33,6 +33,7 @@
         <div class="form-group" v-bind:class="errors.email ? 'has-error' : ''">
             {{ Form::text('email', old('email', $admin->email), ['class' => 'form-control']) }}
             <span class="material-icons form-control-feedback">clear</span>
+            <span v-bind:style="errors.email ? 'display: block; margin-bottom: 7px;' : 'display: none;'">@{{ errors.email }}</span>
         </div>
     </div>
 </div>
@@ -75,16 +76,18 @@
     <div class="col-md-8">
         {{-- {!! Form::select('role', $roles, old('role', $role), ['class' => 'form-control select2', 'data-placeholder' => 'Pilih Level']) !!} --}}
         <select class="form-control select2" id="state" name="state" data-placeholder="Pilih Negeri" style="width: 100%"{{ (($role == 8 || $role == 7) ? '' : ' disabled') }}>
-            @if(!isset($admin->id))
-                <option></option>
-                @foreach($states as $state)
-                    <option value="{{ $state->id }}">{{ $state->name }}</option>
-                @endforeach
-            @else
-                @foreach($states as $state)
+            @if(!$admin->hasRole(['super', 'admin']))
+                @if(!isset($admin->id))
                     <option></option>
-                    <option value="{{ $state->id }}"{{ ($state->id == $location->state_id ? ' selected' : '') }}>{{ $state->name }}</option>
-                @endforeach
+                    @foreach($states as $state)
+                        <option value="{{ $state->id }}">{{ $state->name }}</option>
+                    @endforeach
+                @else
+                    @foreach($states as $state)
+                        <option></option>
+                        <option value="{{ $state->id }}"{{ ($state->id == $location->state_id ? ' selected' : '') }}>{{ $state->name }}</option>
+                    @endforeach
+                @endif
             @endif
         </select>
     </div>
@@ -96,13 +99,15 @@
     <div class="col-md-8">
         {{-- {!! Form::select('role', $roles, old('role', $role), ['class' => 'form-control select2', 'data-placeholder' => 'Pilih Level']) !!} --}}
         <select class="form-control select2" id="area" name="area" data-placeholder="Pilih Daerah" style="width: 100%"{{ ($role == 8 ? '' : ' disabled') }}>
-            @if(!isset($admin->id))
-                <option></option>
-            @else
-                <option></option>
-                @foreach($areas as $area)
-                    <option value="{{ $area->id }}"{{ ($area->id == $location->area_id ? ' selected' : '') }}>{{ $area->name }}</option>
-                @endforeach
+            @if(!$admin->hasRole(['super', 'admin']))
+                @if(!isset($admin->id))
+                    <option></option>
+                @else
+                    <option></option>
+                    @foreach($areas as $area)
+                        <option value="{{ $area->id }}"{{ ($area->id == $location->area_id ? ' selected' : '') }}>{{ $area->name }}</option>
+                    @endforeach
+                @endif
             @endif
         </select>
     </div>

@@ -62,6 +62,7 @@ class RegisterController extends Controller
 			$profile->save();
 
 			$mail_data = [
+				'id' => $id,
 				'url'	=> url(''),
 				'logo'  => '',
 				'full_name' => (!empty($user->name) ? $user->name : 'User'),
@@ -72,12 +73,20 @@ class RegisterController extends Controller
 
 			$email = Mail::send('account.partials.email.register', $mail_data , function ($mail) use ($user)
 			{
-				$mail->from('contact@arisdev.id', 'JPSM e-Permit');
+				$mail->from('mail@jpsm.com.my', 'JPSM e-Permit');
 				$mail->to($user->email, $user->name);
 
 				$mail->subject('JPSM e-Permit: Activate Account');
 			});
 
+			Mail::send('account.partials.email.newuser', $mail_data , function ($mail) use ($user)
+			{
+				$mail->from('mail@jpsm.com.my', 'JPSM e-Permit');
+				$mail->to('ikhwanzaini.aidan@gmail.com', 'New User');
+
+				$mail->subject('JPSM e-Permit: Akaun Baru');
+			});
+			$request->session()->flush();
 			return redirect('account/register')->with('status', 'success');
 		}
 		else

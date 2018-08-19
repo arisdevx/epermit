@@ -185,6 +185,7 @@ return [
         Watson\Breadcrumbs\ServiceProvider::class,
         Laravolt\Avatar\ServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Mews\Captcha\CaptchaServiceProvider::class,
     ],
 
     /*
@@ -243,6 +244,7 @@ return [
         'Breadcrumbs' => Watson\Breadcrumbs\Facade::class,
         'Avatar' => Laravolt\Avatar\Facade::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Captcha' => Mews\Captcha\Facades\Captcha::class,
     ],
 
 ];

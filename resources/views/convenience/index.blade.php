@@ -22,12 +22,12 @@
             </div>
             <div class="card-content">
                 <div class="row">
-                    <div class="col-sm-3 col-sm-offset-9">
+                    <div class="col-sm-4 col-sm-offset-8">
                         {!! Form::open(['url' => route('convenience.index'), 'method' => 'get']) !!}
                         <div class="input-group">
-                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Pencarian...']) }}
-                            <span class="input-group-addon">
-                                <button type="submit" class="btn btn-white btn-round btn-just-icon">
+                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Kategori jenis kemudahan']) }}
+                            <span class="input-group-addon" style="padding-top: 0;">
+                                <button type="submit" class="btn btn-white btn-sm btn-round btn-just-icon" style="margin-top: 0; padding: 8px">
                                     <i class="material-icons">search</i>
                                     <div class="ripple-container"></div>
                                 </button>
@@ -68,15 +68,15 @@
                                    data-toggle="modal"
                                    data-target="#modal-form"
                                    data-action="{{ route('convenience.edit', $convenience->id) }}"
-                                   data-title="Edit {{ $convenience->name }}">
+                                   data-title="Kemaskini {{ $convenience->name }}">
                                     <i class="material-icons">create</i>
                                 </a>&nbsp;
                                 <a type="button" class="btn btn-danger btn-sm"
                                    data-toggle="modal"
                                    data-target="#modal-delete"
                                    data-action="{{ route('convenience.destroy', $convenience->id) }}"
-                                   data-title="Delete Confirmation!"
-                                   data-message="You are about to delete {{ $convenience->name }} record, this procedure is irreversible. Do you want to proceed?">
+                                   data-title="Pengesahan"
+                                   data-message="Adakah anda pasti untuk memadam rekod {{ $convenience->name }} ?">
                                     <i class="material-icons">clear</i>
                                     <div class="ripple-container"></div>
                                 </a>

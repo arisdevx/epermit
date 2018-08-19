@@ -67,28 +67,28 @@
                 <span v-if="errors.phone">@{{ errors.phone[0] }}</span>
                 <span v-else>Telefon</span>
             </label>
-            {{ Form::text('phone', old('phone', $regionalforestry->phone), ['class' => 'form-control']) }}
+            {{ Form::number('phone', old('phone', $regionalforestry->phone), ['class' => 'form-control']) }}
             <span class="material-icons form-control-feedback">clear</span>
         </div>
         <div class="form-group" v-bind:class="errors.fax ? 'has-error' : ''">
             <label class="control-label" style="margin-top: 5px">
                 <span v-if="errors.fax">@{{ errors.fax[0] }}</span>
-                <span v-else>Fax</span>
+                <span v-else>Faks</span>
             </label>
-            {{ Form::text('fax', old('fax', $regionalforestry->fax), ['class' => 'form-control']) }}
+            {{ Form::number('fax', old('fax', $regionalforestry->fax), ['class' => 'form-control']) }}
             <span class="material-icons form-control-feedback">clear</span>
         </div>
         <div class="form-group" v-bind:class="errors.email ? 'has-error' : ''">
             <label class="control-label" style="margin-top: 8px">
                 <span v-if="errors.email">@{{ errors.email[0] }}</span>
-                <span v-else>Telefon</span>
+                <span v-else>Email</span>
             </label>
             {{ Form::text('email', old('email', $regionalforestry->email), ['class' => 'form-control']) }}
             <span class="material-icons form-control-feedback">clear</span>
         </div>
     </div>
 </div>
-<div class="form-group" v-bind:class="errors.update ? 'has-error' : ''">
+{{-- <div class="form-group" v-bind:class="errors.update ? 'has-error' : ''">
     <label class="" for="update">
         <input type="checkbox" id="update" name="update" value="1"{!! (isset($regionalforestry->id) && $regionalforestry->update == 'Y' ? ' checked' : '') !!}> Kemaskini
     </label>
@@ -99,7 +99,7 @@
         <input type="checkbox" id="delete" name="delete" value="1"{!! (isset($regionalforestry->id) && $regionalforestry->delete == 'Y' ? ' checked' : '') !!}> Hapus
     </label>
     <span class="material-icons form-control-feedback">clear</span>
-</div>
+</div> --}}
 
 {!! Form::close() !!}
 

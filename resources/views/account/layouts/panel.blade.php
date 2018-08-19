@@ -28,8 +28,16 @@
 								<li><a href="{{ url('/') }}">Home</a></li>
 							</ul>
 							<ul class="nav navbar-nav navbar-right">
-								<li><a href="{{ url('account/register') }}">Daftar</a></li>
-								<li><a href="{{ url('login') }}">Log Masuk</a></li>
+								<li>
+									{{ Form::open(['url' => url('account/register'), 'method' => 'GET', 'style' => 'margin-top: 7px;' ]) }}
+										<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-user"></span> Daftar</button>
+									{{ Form::close() }}
+								</li>
+								<li>
+									{{ Form::open(['url' => url('login'), 'method' => 'GET', 'style' => 'margin-top: 7px; margin-left: 10px; margin-right: 10px;' ]) }}
+										<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-lock"></span> Log Masuk</button>
+									{{ Form::close() }}
+								</li>
 							</ul>
 						</div>
 						<div class="clearfix"></div>

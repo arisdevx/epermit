@@ -52,21 +52,21 @@
                             @foreach($subcategories as $subcategory)
                                 <tr>
                                     <td>{{ $index++ }}</td>
-                                    <td>{{ $subcategory->convenience_category->name }}</td>
+                                    <td>{{ !empty($subcategory->convenience_category->name) ? $subcategory->convenience_category->name : '' }}</td>
                                     <td>{{ $subcategory->name }}</td>
                                     <td class="td-actions text-right">
                                         <a type="button" class="btn btn-primary btn-sm"
                                            data-toggle="modal"
                                            data-target="#modal-form"
                                            data-action="{{ route('convenience-sub-category.edit', $subcategory->id) }}"
-                                           data-title="Edit {{ $subcategory->name }}">
+                                           data-title="Kemaskini {{ $subcategory->name }}">
                                             <i class="material-icons">create</i>
                                         </a>&nbsp;
                                         <a type="button" class="btn btn-danger btn-sm"
                                            data-toggle="modal"
                                            data-target="#modal-delete"
                                            data-action="{{ route('convenience-sub-category.destroy', $subcategory->id) }}"
-                                           data-title="Delete Confirmation!"
+                                           data-title="Hapus"
                                            data-message="You are about to delete {{ $subcategory->name }} record, this procedure is irreversible. Do you want to proceed?">
                                             <i class="material-icons">clear</i>
                                             <div class="ripple-container"></div>

@@ -36,7 +36,7 @@ class RegisterAccountRequest extends FormRequest
             $validate['emailnoncitizen']    = 'required|email|unique:users,email';
         }
 
-        $validate['fullname']  = 'required';
+        $validate['fullname']  = 'required|regex:/^[\pL\s\-]+$/u';
         $validate['birthday']  = 'required';
         $validate['age']       = 'required';
         $validate['phonecode'] = 'required';
@@ -45,8 +45,12 @@ class RegisterAccountRequest extends FormRequest
         $validate['agreement'] = 'required';
         $validate['postcode']     = 'required';
         $validate['city']     = 'required';
-        $validate['state']     = 'required';
+        if($this->country == '130')
+        {
+            $validate['state']     = 'required';
+        }
         $validate['country']     = 'required';
+        $validate['captcha'] = 'required|captcha';
         $this->session()->flash('check', 'ok');
 
         return $validate;
@@ -59,9 +63,23 @@ class RegisterAccountRequest extends FormRequest
 
     public function messages()
     {
-        return [
-            'usernamecitizen.numeric' => 'No Kad Pengenalan / Passport yang dimasukan tidak sah',
-            'usernamenoncitizen.numeric' => 'No Kad Pengenalan / Passport yang dimasukan tidak sah'
-        ];
+        $validate['usernamecitizen.numeric'] = 'No Kad Pengenalan / Passport yang dimasukan tidak sah';
+        $validate['usernamenoncitizen.numeric'] = 'No Kad Pengenalan / Passport yang dimasukan tidak sah';
+        $validate['usernamenoncitizen.between'] = 'The username must be between 8 to 10 characters';
+        $validate['usernamecitizen.between'] = 'The username must be between 12 characters';
+
+        if($this->citizen == '1')
+        {
+            $validate['emailcitizen.email'] = 'The email must be valid email address';
+        }
+        else
+        {
+            $validate['emailnoncitizen.email'] = 'The email must be valid email address';
+        }
+
+        $validate['captcha.required'] = 'Please insert captcha';
+        $validate['fullname.regex'] = 'The full Name must be alphabet';
+        
+        return $validate;
     }
 }

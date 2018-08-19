@@ -16,11 +16,11 @@
             <div class="card-content">
                 <div class="row">
                     <div class="col-sm-3 col-sm-offset-9">
-                        {!! Form::open(['url' => route('state-forestry-department.index'), 'method' => 'get']) !!}
+                        {!! Form::open(['url' => route('audit-trail-access.index'), 'method' => 'get']) !!}
                         <div class="input-group">
-                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Pencarian...']) }}
-                            <span class="input-group-addon">
-                                <button type="submit" class="btn btn-white btn-round btn-just-icon">
+                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Nama Pengguna..']) }}
+                            <span class="input-group-addon" style="padding-top: 0;">
+                                <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin-top: 0; padding: 8px">
                                     <i class="material-icons">search</i>
                                     <div class="ripple-container"></div>
                                 </button>
@@ -56,7 +56,7 @@
                                        data-toggle="modal"
                                        data-target="#modal-delete"
                                        data-action="{{ url('audit-trail-access/' . $log->id) }}"
-                                       data-title="Delete Confirmation!"
+                                       data-title="Hapus"
                                        data-message="You are about to delete this record, this procedure is irreversible. Do you want to proceed?">
                                         <i class="material-icons">clear</i>
                                         <div class="ripple-container"></div>

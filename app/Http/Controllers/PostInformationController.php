@@ -62,4 +62,6 @@ class PostInformationController extends Controller
 		Flash::success(sprintf('You\'ve successfully deleted the %s.', $post->title));
 		return redirect()->route('post-information.index');
 	}
+
+	
 }

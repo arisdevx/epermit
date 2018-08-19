@@ -43,14 +43,14 @@
                                            data-toggle="modal"
                                            data-target="#modal-form"
                                            data-action="{{ route('post-information.edit', $post->id) }}"
-                                           data-title="Edit {{ $post->name }}">
+                                           data-title="Kemaskini {{ $post->name }}">
                                             <i class="material-icons">create</i>
                                         </a>&nbsp;
                                         <a type="button" class="btn btn-danger btn-sm"
                                            data-toggle="modal"
                                            data-target="#modal-delete"
                                            data-action="{{ route('post-information.destroy', $post->id) }}"
-                                           data-title="Delete Confirmation!"
+                                           data-title="Hapus"
                                            data-message="You are about to delete {{ $post->name }} record, this procedure is irreversible. Do you want to proceed?">
                                             <i class="material-icons">clear</i>
                                             <div class="ripple-container"></div>

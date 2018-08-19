@@ -11,24 +11,83 @@ use App\Models\Area;
 use App\Models\PermanentForest;
 use App\Models\Mountain;
 use Illuminate\Http\Request;
+use App\Models\UserLocation;
 use Flash;
 use Validator;
 use Log;
+use DB;
 
 class PermanentForestController extends Controller
 {
 	public function index(Request $request)
 	{
-		$data['forests'] = PermanentForest::where(function($q) use ($request){
-									$q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
-							   })->paginate(10);
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$data['forests'] = PermanentForest::select(DB::raw('permanent_forests.*, states.name as state_name'))
+											->join('states', 'states.id', '=', 'permanent_forests.state_id')
+											->join('areas', 'areas.id', '=', 'permanent_forests.area_id')
+											->where(function($q) use ($request){
+												$q->whereRaw('LOWER(permanent_forests.name) LIKE ?', ['%'.strtolower($request->search).'%']);
+							   				})
+							   				->whereRaw("permanent_forests.state_id = " . $location->state_id)
+							   				->orderBy('states.name', 'ASC')
+							   				->orderBy('areas.name', 'ASC')
+											->has('state')->paginate(10);
+			}
+			else
+			{
+				$data['forests'] = PermanentForest::select(DB::raw('permanent_forests.*, states.name as state_name'))
+											->join('states', 'states.id', '=', 'permanent_forests.state_id')
+											->join('areas', 'areas.id', '=', 'permanent_forests.area_id')
+											->where(function($q) use ($request){
+												$q->whereRaw('LOWER(permanent_forests.name) LIKE ?', ['%'.strtolower($request->search).'%']);
+							   				})
+							   				->orderBy('states.name', 'ASC')
+							   				->orderBy('areas.name', 'ASC')
+											->has('state')->paginate(10);
+			}
+		}
+		else
+		{
+			$data['forests'] = PermanentForest::select(DB::raw('permanent_forests.*, states.name as state_name'))
+											->join('states', 'states.id', '=', 'permanent_forests.state_id')
+											->join('areas', 'areas.id', '=', 'permanent_forests.area_id')
+											->where(function($q) use ($request){
+												$q->whereRaw('LOWER(permanent_forests.name) LIKE ?', ['%'.strtolower($request->search).'%']);
+							   				})
+							   				->orderBy('states.name', 'ASC')
+							   				->orderBy('areas.name', 'ASC')
+											->has('state')->paginate(10);
+		}
 
 		return view('permanentforest.index', $data);
 	}
 
 	public function create()
 	{
-		$states    = State::get();
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$states    = State::where('id', $location->state_id)->get();
+			}
+			else
+			{
+				$states    = State::get();
+			}
+		}
+		else
+		{
+			$states    = State::get();
+		}
+
+		
 		$areas     = Area::get();
 		// $mountains = Mountain::get();
 		$forest = new PermanentForest;
@@ -64,7 +123,7 @@ class PermanentForestController extends Controller
 
 		activityLog('Tambah Hutan Simpan Kekal ' . $forest->name);
 
-		Flash::success(sprintf('You\'ve successfully created the %s.', $forest->name));
+		Flash::success(sprintf('Anda telah berjaya menambah maklumat %s.', $forest->name));
 
         // return ['errors' => false];
 	}
@@ -113,7 +172,23 @@ class PermanentForestController extends Controller
 
 	public function edit($id)
 	{
-		$states = State::get();
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$states    = State::where('id', $location->state_id)->get();
+			}
+			else
+			{
+				$states    = State::get();
+			}
+		}
+		else
+		{
+			$states    = State::get();
+		}
 		$areas   = Area::get();
 		
 		$forest = PermanentForest::find($id);
@@ -149,7 +224,7 @@ class PermanentForestController extends Controller
 
 		activityLog('Update Hutan Simpan Kekal ' . $forest->name);
 
-		Flash::success(sprintf('You\'ve successfully changed the %s.', $forest->name));
+		Flash::success(sprintf('Anda telah berjaya mengemaskini maklumat %s.', $forest->name));
 
         // return ['errors' => false];
 	}
@@ -160,7 +235,7 @@ class PermanentForestController extends Controller
 		activityLog('Hapus Hutan Simpan Kekal ' . $forest->name);
 		$forest->delete();
 
-		Flash::success(sprintf('%s has been deleted.', $forest->name));
+		Flash::success(sprintf('Anda telah berjaya memadam maklumat %s.', $forest->name));
         return redirect()->route('permanent-forest.index');
 	}
 }

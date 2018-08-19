@@ -10,4 +10,14 @@ class HikingEmergency extends Model
     use SoftDeletes;
 
     protected $table = 'hiking_emergencies';
+
+    public function state()
+    {
+    	return $this->belongsTo('App\Models\State');
+    }
+
+    public function country()
+    {
+    	return $this->belongsTo('App\Models\Country');
+    }
 }

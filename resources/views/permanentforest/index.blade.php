@@ -22,12 +22,12 @@
             </div>
             <div class="card-content">
                 <div class="row">
-                    <div class="col-sm-3 col-sm-offset-9">
+                    <div class="col-sm-4 col-sm-offset-8">
                         {!! Form::open(['url' => route('permanent-forest.index'), 'method' => 'get']) !!}
                         <div class="input-group">
-                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Pencarian...']) }}
-                            <span class="input-group-addon">
-                                <button type="submit" class="btn btn-white btn-round btn-just-icon">
+                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Nama hutan simpan kekal']) }}
+                            <span class="input-group-addon" style="padding-top: 0">
+                                <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin-top: 0; padding: 8px">
                                     <i class="material-icons">search</i>
                                     <div class="ripple-container"></div>
                                 </button>
@@ -44,8 +44,8 @@
                         <th>Negeri</th>
                         <th>Daerah</th>
                         <th>Nama Hutan Simpan Kekal</th>
-                        <th>Had Daya Tampung</th>
-                        <th>Harga</th>
+                        {{-- <th>Had Daya Tampung</th> --}}
+                        {{-- <th>Harga</th> --}}
                         <th style="width: 1%"></th>
                     </tr>
                     </thead>
@@ -57,22 +57,22 @@
                             <td>{{ (!empty($forest->state->name) ? $forest->state->name : '') }}</td>
                             <td>{{ (!empty($forest->area->name) ? $forest->area->name : '') }}</td>
                             <td>{{ $forest->name }}</td>
-                            <td>{{ $forest->capacity }}</td>
-                            <td>RM {{ (!empty($forest->price) ? $forest->price : '0') }}</td>
+                            {{-- <td>{{ $forest->capacity }}</td> --}}
+                            {{-- <td>RM {{ (!empty($forest->price) ? $forest->price : '0') }}</td> --}}
                             <td class="td-actions text-right">
                                 <a type="button" class="btn btn-primary btn-sm"
                                    data-toggle="modal"
                                    data-target="#modal-form"
                                    data-action="{{ route('permanent-forest.edit', $forest->id) }}"
-                                   data-title="Edit {{ $forest->name }}">
+                                   data-title="Kemaskini {{ $forest->name }}">
                                     <i class="material-icons">create</i>
                                 </a>&nbsp;
                                 <a type="button" class="btn btn-danger btn-sm"
                                    data-toggle="modal"
                                    data-target="#modal-delete"
                                    data-action="{{ route('permanent-forest.destroy', $forest->id) }}"
-                                   data-title="Delete Confirmation!"
-                                   data-message="You are about to delete {{ $forest->name }} record, this procedure is irreversible. Do you want to proceed?">
+                                   data-title="Pengesahan"
+                                   data-message="Adakah anda pasti untuk memadam rekod {{ $forest->name }}?">
                                     <i class="material-icons">clear</i>
                                     <div class="ripple-container"></div>
                                 </a>

@@ -25,9 +25,9 @@
                     <div class="col-sm-3 col-sm-offset-9">
                         {!! Form::open(['url' => route('regional-forest-officials.index'), 'method' => 'get']) !!}
                         <div class="input-group">
-                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Pencarian...']) }}
-                            <span class="input-group-addon">
-                                <button type="submit" class="btn btn-white btn-round btn-just-icon">
+                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Nama Pejabat']) }}
+                            <span class="input-group-addon" style="padding-top: 0">
+                                <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin-top: 0; padding: 8px;">
                                     <i class="material-icons">search</i>
                                     <div class="ripple-container"></div>
                                 </button>
@@ -48,8 +48,8 @@
                         <th>Telefon</th>
                         <th>Fax</th>
                         <th>Email</th>
-                        <th style="text-align: center">Kemaskini</th>
-                        <th style="text-align: center">Hapus</th>
+                        {{-- <th style="text-align: center">Kemaskini</th>
+                        <th style="text-align: center">Hapus</th> --}}
                         <th style="width: 1%"></th>
                     </tr>
                     </thead>
@@ -65,22 +65,22 @@
                             <td>{{ (!empty($regionalforestry->phone) ? $regionalforestry->phone : '-') }}</td>
                             <td>{{ (!empty($regionalforestry->fax) ? $regionalforestry->fax : '-') }}</td>
                             <td>{{ (!empty($regionalforestry->email) ? $regionalforestry->email : '-') }}</td>
-                            <td align="center">{{ ($regionalforestry->update == 'Y' ? 'Ya' : 'Tidak') }}</td>
-                            <td align="center">{{ ($regionalforestry->delete == 'Y' ? 'Ya' : 'Tidak') }}</td>
+                            {{-- <td align="center">{{ ($regionalforestry->update == 'Y' ? 'Ya' : 'Tidak') }}</td>
+                            <td align="center">{{ ($regionalforestry->delete == 'Y' ? 'Ya' : 'Tidak') }}</td> --}}
                             <td class="td-actions text-right">
                                 <a type="button" class="btn btn-primary btn-sm"
                                    data-toggle="modal"
                                    data-target="#modal-form"
                                    data-action="{{ route('regional-forest-officials.edit', $regionalforestry->id) }}"
-                                   data-title="Edit {{ $regionalforestry->name }}">
+                                   data-title="Kemaskini {{ $regionalforestry->name }}">
                                     <i class="material-icons">create</i>
                                 </a>&nbsp;
                                 <a type="button" class="btn btn-danger btn-sm"
                                    data-toggle="modal"
                                    data-target="#modal-delete"
                                    data-action="{{ route('regional-forest-officials.destroy', $regionalforestry->id) }}"
-                                   data-title="Delete Confirmation!"
-                                   data-message="You are about to delete {{ $regionalforestry->name }} record, this procedure is irreversible. Do you want to proceed?">
+                                   data-title="Pengesahan"
+                                   data-message="Adakah anda pasti untuk memadam rekod {{ $regionalforestry->name }} ?">
                                     <i class="material-icons">clear</i>
                                     <div class="ripple-container"></div>
                                 </a>

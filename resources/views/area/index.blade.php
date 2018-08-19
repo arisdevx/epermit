@@ -25,9 +25,9 @@
                     <div class="col-sm-3 col-sm-offset-9">
                         {!! Form::open(['url' => route('area.index'), 'method' => 'get']) !!}
                         <div class="input-group">
-                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Pencarian...']) }}
-                            <span class="input-group-addon">
-                                <button type="submit" class="btn btn-white btn-round btn-just-icon">
+                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Nama Daerah..']) }}
+                            <span class="input-group-addon" style="padding-top: 0;">
+                                <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin-top: 0; padding: 8px;">
                                     <i class="material-icons">search</i>
                                     <div class="ripple-container"></div>
                                 </button>
@@ -59,15 +59,15 @@
                                    data-toggle="modal"
                                    data-target="#modal-form"
                                    data-action="{{ route('area.edit', $area->id) }}"
-                                   data-title="Edit {{ $area->name }}">
+                                   data-title="Kemaskini {{ $area->name }}">
                                     <i class="material-icons">create</i>
                                 </a>&nbsp;
                                 <a type="button" class="btn btn-danger btn-sm"
                                    data-toggle="modal"
                                    data-target="#modal-delete"
                                    data-action="{{ route('area.destroy', $area->id) }}"
-                                   data-title="Delete Confirmation!"
-                                   data-message="You are about to delete {{ $area->name }} record, this procedure is irreversible. Do you want to proceed?">
+                                   data-title="Pengesahan"
+                                   data-message="Adakah anda pasti untuk memadam rekod {{ $area->name }}?">
                                     <i class="material-icons">clear</i>
                                     <div class="ripple-container"></div>
                                 </a>

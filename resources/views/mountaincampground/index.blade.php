@@ -61,14 +61,14 @@
                                            data-toggle="modal"
                                            data-target="#modal-form"
                                            data-action="{{ route('campground.edit', $campground->id) }}"
-                                           data-title="Edit {{ $campground->name }}">
+                                           data-title="Kemaskini {{ $campground->name }}">
                                             <i class="material-icons">create</i>
                                         </a>&nbsp;
                                         <a type="button" class="btn btn-danger btn-sm"
                                            data-toggle="modal"
                                            data-target="#modal-delete"
                                            data-action="{{ route('campground.destroy', $campground->id) }}"
-                                           data-title="Delete Confirmation!"
+                                           data-title="Hapus"
                                            data-message="You are about to delete {{ $campground->name }} record, this procedure is irreversible. Do you want to proceed?">
                                             <i class="material-icons">clear</i>
                                             <div class="ripple-container"></div>

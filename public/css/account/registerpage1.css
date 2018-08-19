@@ -1,0 +1,77 @@
+body {
+	background-color: #f1f1f1;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+.equal{
+    display: table-row; 
+    table-layout: fixed;
+}
+
+.row.equal > div {
+    /*background-color: #ddd;*/
+}
+
+/* only equalize height on wider screens */
+@media (min-width: 768px) {
+    .row.equal > div {
+        display: table-cell;
+        float: none;
+    }
+}
+
+.wrapper {
+  display: table;
+  position: absolute;
+  height: 80%;
+  width: 100%;
+  top: 5px;
+  bottom: 50px;
+}
+
+.register-page {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.register-page-container {
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+}
+.register-page-container .register-page-left {
+	position: relative;
+	background-color: #1a2e39;
+	color: #ffffff;
+	padding: 40px;
+	border-top-left-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+
+.register-page-container .register-page-left .page-left-content {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin: 0 auto;
+}
+
+.register-page-container .register-page-right {
+	background-color: #ffffff;
+	padding: 40px;
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+	width: 750px;
+}
+
+.form-control-custom {
+	display: block;
+	width: 100% !important;
+	border-radius: 3px;
+	border: 1px solid #bbbbbb;
+	padding-left: 5px;
+	padding-right: 5px;
+}

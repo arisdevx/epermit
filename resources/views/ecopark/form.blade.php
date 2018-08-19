@@ -101,7 +101,7 @@
             <span class="material-icons form-control-feedback">clear</span>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="form-group" v-bind:class="errors.capacity ? 'has-error' : ''">
             <label class="control-label">
                 <span v-if="errors.capacity">@{{ errors.capacity[0] }}</span>
@@ -111,16 +111,24 @@
             <span class="material-icons form-control-feedback">clear</span>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="form-group" v-bind:class="errors.name ? 'has-error' : ''">
-            <label class="control-label" style="display: block; margin-top: 25px;">
+            <label class="control-label">
+                <span v-if="errors.active">@{{ errors.active[0] }}</span>
+                <span v-else>Status</span>
+            </label>
+            <select class="form-control" name="active">
+                <option value="1"{{ (isset($ecopark->id) && $ecopark->active == '1' ? ' selected' : '') }}>Enable</option>
+                <option value="0"{{ (isset($ecopark->id) && $ecopark->active == '0' ? ' selected' : '') }}>Disable</option>
+            </select>
+{{--             <label class="control-label" style="display: block; margin-top: 25px;">
                 <input type="radio" name="active" value="1"{{ (isset($ecopark->id) && $ecopark->active == '1' ? ' checked' : '') }}> Enable</label>
                 
             </label>
             <label class="control-label" style="margin-top: 0;">
                 <input type="radio" name="active" value="0"{{ (isset($ecopark->id) && $ecopark->active == '0' ? ' checked' : '') }}> Disable</label>
                 
-            </label>
+            </label> --}}
         </div>
     </div>
 </div>

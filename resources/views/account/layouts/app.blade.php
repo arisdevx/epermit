@@ -10,11 +10,15 @@
     <meta name="viewport" content="width=device-width" />
 
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap/bootstrap.min.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ asset('css/account/style.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('css/account/style.css?v=7') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/account/jquery.datetimepicker.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/select2.min.css') }}">
 	@yield('styles')
 	<link rel="shortcut icon" href="{{ asset('/img/favicon.png') }}">
+	<script type="text/javascript">
+		var url = '{{ url('/') }}';
+		var _token = '{{  csrf_token() }}';
+	</script>
 </head>
 <body>
 	@yield('container')

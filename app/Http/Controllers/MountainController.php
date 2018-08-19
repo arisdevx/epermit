@@ -12,6 +12,8 @@ use App\Models\Area;
 use App\Models\Mountain;
 use App\Models\PermanentForest;
 use App\Models\MountainCampground;
+use App\Models\MountainRelated;
+use App\Models\UserLocation;
 use Flash;
 use Validator;
 use Log;
@@ -20,16 +22,60 @@ class MountainController extends Controller
 {
 	public function index(Request $request)
 	{
-		$data['mountains'] = Mountain::where(function($q) use ($request){
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$data['mountains'] = Mountain::where(function($q) use ($request){
+											$q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
+									   })
+										->where('state_id', $location->state_id)->paginate(10);
+			}
+			else
+			{
+				$data['mountains'] = Mountain::where(function($q) use ($request){
+											$q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
+									   })
+									   ->where([
+									   		['state_id' => $location->state_id],
+									   		['area_id'  => $location->area_id],
+									   	])
+									   ->paginate(10);
+			}
+		}
+		else
+		{
+			$data['mountains'] = Mountain::where(function($q) use ($request){
 											$q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
 									   })->paginate(10);
+		}
+
+		
 
 		return view('mountain.index', $data);
 	}
 
 	public function create()
 	{
-		$states = State::get();
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$states    = State::where('id', $location->state_id)->get();
+			}
+			else
+			{
+				$states    = State::get();
+			}
+		}
+		else
+		{
+			$states    = State::get();
+		}
 		$areas = Area::get();
 		$mountain = new Mountain;
 
@@ -77,9 +123,10 @@ class MountainController extends Controller
 		// 	return ['error' => $validate->errors()];
 		// }
 
-		$mountain             = new Mountain;
-		$mountain->name       = (!empty($request->name) ? $request->name : '');
-		$mountain->price      = (!empty($request->price) ? $request->price : '');
+		$mountain              = new Mountain;
+		$mountain->name        = (!empty($request->name) ? $request->name : '');
+		$mountain->price       = (!empty($request->price) ? $request->price : '');
+		$mountain->other_price = (!empty($request->other_price) ? $request->other_price : '');
 		$mountain->campground = (!empty($request->campground) ? $request->campground : '0');
 		$mountain->capacity   = (!empty($request->capacity) ? $request->capacity : '');
 		$mountain->location   = (!empty($request->location) ? $request->location : '');
@@ -106,16 +153,46 @@ class MountainController extends Controller
 			}
 		}
 
+		if(!empty($request->related_state))
+		{
+			foreach($request->related_state as $k => $v)
+			{
+				if($k != 0)
+				{
+					$related              = new MountainRelated;
+					$related->mountain_id = $mountain->id;
+					$related->state_id    = $v;
+					$related->save();
+				}
+			}
+		}
+
 		activityLog('Tambah Gunung ' . $mountain->name);
 
-		Flash::success(sprintf('You\'ve successfully created the %s.', $mountain->name));
+		Flash::success(sprintf('Anda telah berjaya menambah maklumat %s.', $mountain->name));
 
         // return ['errors' => false];
 	}
 
 	public function edit($id)
 	{
-		$states = State::get();
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$states    = State::where('id', $location->state_id)->get();
+			}
+			else
+			{
+				$states    = State::get();
+			}
+		}
+		else
+		{
+			$states    = State::get();
+		}
 		$areas = Area::get();
 		$mountain = Mountain::find($id);
 		$forests = PermanentForest::where([
@@ -148,6 +225,7 @@ class MountainController extends Controller
 		$mountain             = Mountain::find($id);
 		$mountain->name       = (!empty($request->name) ? $request->name : '');
 		$mountain->price      = (!empty($request->price) ? $request->price : '');
+		$mountain->other_price      = (!empty($request->other_price) ? $request->other_price : '');
 		$mountain->campground = (!empty($request->campground) ? $request->campground : '');
 		$mountain->capacity   = (!empty($request->capacity) ? $request->capacity : '0');
 		$mountain->location   = (!empty($request->location) ? $request->location : '');
@@ -177,9 +255,36 @@ class MountainController extends Controller
 				}
 			}
 		}
+
+		if(!empty($request->related_state))
+		{
+			$oldrelated = MountainRelated::where('mountain_id', $mountain->id);
+			$oldrelated->forceDelete();
+
+			foreach($request->related_state as $k => $v)
+			{
+				if($k != 0)
+				{
+					$related              = new MountainRelated;
+					$related->mountain_id = $mountain->id;
+					$related->state_id    = $v;
+					$related->save();
+				}
+			}
+		}
+		else
+		{
+			$oldrelated = MountainRelated::where('mountain_id', $mountain->id);
+			
+			if(!empty($oldrelated->get()))
+			{
+				$oldrelated->forceDelete();
+			}
+		}
+
 		activityLog('Update Gunung ' . $mountain->name);
 
-		Flash::success(sprintf('You\'ve successfully changed the %s.', $mountain->name));
+		Flash::success(sprintf('Anda telah berjaya mengemaskini maklumat %s.', $mountain->name));
 
         // return ['errors' => false];
 	}
@@ -191,7 +296,7 @@ class MountainController extends Controller
 		$mountain->delete();
 
 
-		Flash::success(sprintf('%s has been deleted.', $mountain->name));
+		Flash::success(sprintf('Anda telah berjaya memadam maklumat %s.', $mountain->name));
         return redirect()->route('hiking.index');
 	}
 

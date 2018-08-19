@@ -5,8 +5,8 @@
 
     <div class="card card-nav-tabs">
         <div class="card-header" data-background-color="green">
-            <h4 class="title">&nbsp;</h4>
-            <p class="category">Lain-lain Aktiviti</p>
+            <h4 class="title"><strong>Lain-lain Aktiviti</strong></h4>
+            <p class="category"><strong><i>Others Activities</i></strong></p>
         </div>
 
         <div class="card-content">
@@ -157,10 +157,26 @@
                     </tr>
                 </tbody>
             </table> --}}
-
+            {{-- {{ dd($phd_data) }} --}}
             <div id="printData" style="display: none">
                 <div id="printArea">
-                    <table border="0" width="100%">
+                    <table border="0" width="100%" style="padding: 0; margin: 0">
+                      <tr>
+                        <td width="20%" align="center">
+                          <img src="{{ url('img/jpsm-tiger-logo.png') }}" style="width: 150px">
+                        </td>
+                        <td width="50%" align="center">
+                        JABATAN PERHUTANAN NEGERI<br /> 
+                        {{ (!empty($phd_data->name) ? $phd_data->name : 'Pegawai Hutan Daerah') }}<br />
+                        {{ (!empty($phd_data->address) ? $phd_data->address : 'Alamat Pejabat Hutan Daerah') }}<br />
+                        No. Tel: {{ (!empty($phd_data->phone) ? $phd_data->phone : '-') }} Fax: {{ (!empty($phd_data->fax) ? $phd_data->fax : '-') }} Email: {{ (!empty($phd_data->email) ? $phd_data->email : '-') }} 
+                        </td>
+                        <td width="20%" align="center">
+                          <img src="{{ url('img/jpsm-mail-logo.png') }}" style="width: 100px">
+                        </td>
+                      </tr>
+                    </table>
+                    {{-- <table border="0" width="100%">
                         <tr>
                             <td colspan="2">{{ (!empty($other->applicant_other_activity_detail->agency) ? $other->applicant_other_activity_detail->agency : '') }}</td>
                         </tr>
@@ -183,7 +199,7 @@
                         <tr>
                             <td colspan="2">{{ (!empty($other->applicant_other_activity_detail->email) ? $other->applicant_other_activity_detail->email : '') }}</td>
                         </tr>
-                    </table>
+                    </table> --}}
                     <hr />
 
                     <table width="100%" border="0">
@@ -192,7 +208,7 @@
                             <td width="50%">No Rujukan : {{ $applicant->number }}</td>
                         </tr>
                         <tr>
-                            <td width="50%">Alamat Pejabat Hutan Daerah</td>
+                            <td width="50%">{{ (!empty($phd_data->address) ? $phd_data->address : 'Alamat Pejabat Hutan Daerah') }}<br /></td>
                             <td width="50%">Tarikh : {{ date('d/m/Y') }}</td>
                         </tr>
                     </table>
@@ -205,7 +221,7 @@
                         <p><strong>Dengan segala hormatnya, saya merujuk kepada perkara diatas.</strong></p>
 
                         <p><strong>1. Maklumat aktiviti adalah seperti berikut:</strong></p>
-                        <table width="80%" border="1" cellspacing="0" cellpadding="5" style="margin: 0 auto">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="2" style="margin: 0 auto">
                             <tr>
                                 <th style="text-align: left; width: 30%">Nama Aktiviti</th>
                                 <td colspan="3">{{ (!empty($other->applicant_other_activity_detail->name) ? $other->applicant_other_activity_detail->name : '') }}</td>
@@ -229,6 +245,7 @@
                                 <td colspan="3">{{ (!empty($other->applicant_other_activity_declaration->application_date) ? date('d/m/Y', strtotime($other->applicant_other_activity_declaration->application_date)) : '') }}</td>
                             </tr>
                         </table>
+                        <br>
                         <p><strong>3. {{ (!empty($other->applicant_other_activity_detail->description) ? $other->applicant_other_activity_detail->description : '') }}</strong></p>
                         <p>4. Saya mengaku bahawa maklumat-maklumat yang diberikan di atas adalah benar. Pihak kerajaan tidak akan dipertanggungjawabkan jika terdapat sebarang kesulitan yang timbul akibat maklumat yang tidak benar. Keselamatan pemohon dan para peserta semasa menjalankan aktiviti adalah dibawah tanggungjawab sendiri.</p>
                         <p>Yang Benar, </p>
@@ -237,20 +254,20 @@
                         {{ (!empty($other->applicant_other_activity_declaration->application_date) ? date('d/m/Y', strtotime($other->applicant_other_activity_declaration->application_date)) : '') }}
                     </div>
                 </div>
-            <h4 class="text-center" style="margin-top: 100px;">Permohonan Anda Telah Berjaya Dihantar Dan Akan Diproses</h4>
+            <h4 class="text-center" style="margin-top: 100px;">Permohonan Anda Telah Berjaya Dihantar Dan Akan Diproses <br><i>Your Application Has Been Successfully Delivered And Will Be Processed</i></h4>
             <div class="text-center" style="margin: 20px 0 10px 0">
                 <div class="row" style="margin-bottom: 100px;">
                     <div class="col-md-6">
                         <div class="pull-right">
                             <a href="{{ url('account/member-aktiviti-lain/'. request()->segment(3) .'/download') }}" class="btn btn-success"><i class="material-icons">file_download</i></a><br />
-                            Muat Turun
+                            Muat Turun / <i>Download</i>
                         </div>
                         <div class="clearfix"></div>
                     </div>
                     <div class="col-md-6">
                         <div class="pull-left">
                             <a href="javascript:void(0)" class="btn btn-primary" id="print"><i class="material-icons">print</i></a><br />
-                            Cetak
+                            Cetak / <i>Print</i>
                         </div>
                         <div class="clearfix"></div>
                     </div>

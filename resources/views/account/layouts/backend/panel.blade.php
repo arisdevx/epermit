@@ -1,11 +1,7 @@
 @extends('account.layouts.backend.app')
 
 @section('scripts')
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $(".dropdown-toggle").dropdown();
-        });
-    </script>
+    
 @endsection
 
 @section('container')

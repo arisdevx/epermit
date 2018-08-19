@@ -43,32 +43,38 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php($index = 1)
-                    @php($days = 0)
-                    @php($participan_total = 0)
-                    @php($amount_total = 0)
-                    @foreach($applicant->applicantConvenience as $convenience)
+                    @if(count($applicant->applicantConveniences) > 0)
+                        @php($index = 1)
+                        @php($days = 0)
+                        @php($participan_total = 0)
+                        @php($amount_total = 0)
+                        @foreach($applicant->applicantConveniences as $applicantConvenience)
+                            <tr>
+                                <td style="width: 1%">{{ $index++ }}</td>
+                                <td>{{ (!empty($applicantConvenience) ? $applicantConvenience->state->name : '') }}</td>
+                                <td>{{ (!empty($applicantConvenience->area->name) ? $applicantConvenience->area->name : '') }}</td>
+                                <td>{{ $applicantConvenience->convenience->name }}</td>
+                                <td>{{ date('d/m/Y', strtotime($applicantConvenience->starting_date)) }}</td>
+                                <td>{{ date('d/m/Y', strtotime($applicantConvenience->ending_date)) }}</td>
+                                <td>{{ $applicantConvenience->participant }}</td>
+                                <td>{{ $applicantConvenience->days_total }}</td>
+                                <td>RM {{ $applicantConvenience->amount }}</td>
+                            </tr>
+                            @php($days += $applicantConvenience->days_total)
+                            @php($participan_total += $applicantConvenience->participant)
+                            @php($amount_total += $applicantConvenience->amount)
+                        @endforeach
                         <tr>
-                            <td style="width: 1%">{{ $index }}</td>
-                            <td>{{ (!empty($convenience->state->name) ? $convenience->state->name : '') }}</td>
-                            <td>{{ (!empty($convenience->area->name) ? $convenience->area->name : '') }}</td>
-                            <td>{{ $convenience->convenience->name }}</td>
-                            <td>{{ date('d/m/Y', strtotime($convenience->starting_date)) }}</td>
-                            <td>{{ date('d/m/Y', strtotime($convenience->ending_date)) }}</td>
-                            <td>{{ $convenience->participant }}</td>
-                            <td>{{ $convenience->days_total }}</td>
-                            <td>RM {{ $convenience->amount }}</td>
+                            <td colspan="6" align="right">Total</td>
+                            <td>{{ $participan_total }}</td>
+                            <td>{{ $days }}</td>
+                            <td>RM {{ $amount_total }}</td>
                         </tr>
-                        @php($days += $convenience->days_total)
-                        @php($participan_total += $convenience->participant)
-                        @php($amount_total += $convenience->amount)
-                    @endforeach
-                    <tr>
-                        <td colspan="6" align="right">Total</td>
-                        <td>{{ $participan_total }}</td>
-                        <td>{{ $days }}</td>
-                        <td>RM {{ $amount_total }}</td>
-                    </tr>
+                    @else
+                        <tr>
+                            <td colspan="9" class="text-center">Tiada maklumat</td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
             <a href="{{ url('account/member-application-status') }}" class="btn btn-default">Semula</a>

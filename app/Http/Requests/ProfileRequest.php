@@ -23,23 +23,24 @@ class ProfileRequest extends FormRequest
      */
     public function rules()
     {
-        switch ($this->method()) {
-            case 'PUT':
-                    return [
-                        'email'                 => 'required|unique:users,email,' . $this->segment(3),
-                        'password'              => 'sometimes|nullable|between:8,20|confirmed',
-                        'password_confirmation' => 'same:password',
-                        'agreement'             => 'required',
-                        'name'                  => 'required',
-                        'birthday'              => 'required',
-                        'phonecode'             => 'required',
-                        'phone'                 => 'required',
-                        'age'                   => 'required',
-                        'address'               => 'required',
-                    ];
-                break;
-            
-            default: break;
-        }
+        return [
+            'email'                 => 'required|unique:users,email,' . $this->segment(3),
+            'password'              => 'sometimes|nullable|between:8,20|confirmed',
+            'password_confirmation' => 'same:password',
+            'agreement'             => 'required',
+            'name'                  => 'required|regex:/^[\pL\s\-]+$/u',
+            'birthday'              => 'required',
+            'phonecode'             => 'required',
+            'phone'                 => 'required',
+            'age'                   => 'required',
+            'address'               => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.regex' => 'The name must be a string',
+        ];
     }
 }

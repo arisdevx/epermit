@@ -78,9 +78,113 @@ Copyright (c) 2015 Daniel Eden
     filter: alpha(opacity=0);
 }
 
-.form-group label.control-label {
+.form-group label.control-label,
+label {
 	color: #333333;
+	/*text-transform: uppercase;*/
 }
 label small {
 	display: block !important;
+}
+
+input[type="text"], textarea, select option,
+.select2-state-container,
+.select2-results__option,
+.select2-selection__rendered { 
+    text-transform: uppercase !important;
+}
+select {text-transform:capitalize}
+::-webkit-input-placeholder { /* WebKit browsers */
+    text-transform: none;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    text-transform: none;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    text-transform: none;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    text-transform: none;
+}
+::placeholder { /* Recent browsers */
+    text-transform: none;
+}
+
+.card [data-background-color="soft-green"] {
+	background: #88bf8b;
+}
+
+.panel-default > .panel-heading.soft-green {
+	background-color: #88bf8b;
+	color: #ffffff;
+}
+.bootstrap-select .btn.btn-default {
+	background-color: #ffffff !important;
+	color: #555555;
+	border: 1px solid #dddddd;
+}
+.bootstrap-select.btn-group {
+	margin: 0;
+}
+.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+	color: #555555;
+}
+
+.bootstrap-select.btn-group .dropdown-menu {
+	margin-top: 4px;
+    border-top: 1px solid #dddddd;
+    border-radius: 4px;
+}
+.bootstrap-select.btn-group .btn {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	box-shadow: none !important;
+}
+.bootstrap-select.btn-group .dropdown-menu > .active > a, 
+.bootstrap-select.btn-group .dropdown-menu > .active > a:focus, 
+.bootstrap-select.btn-group .dropdown-menu > .active > a:hover {
+	color: #ffffff !important;
+}
+
+.bootstrap-select.btn-group .dropdown-menu > a:focus,
+.bootstrap-select.btn-group .dropdown-menu > a:hover,
+.bootstrap-select.btn-group .dropdown-menu > .active > a:focus, 
+.bootstrap-select.btn-group .dropdown-menu > .active > a:hover {
+	background-color: #3097d1 !important;
+}
+
+.bootstrap-select.btn-group .dropdown-menu {
+	z-index: 999999;
+}
+
+p, h4, li, label, .control-label, small, li a, i, .stats {
+	color: #000000 !important;
+}
+.card-header .title,
+.card-header p,
+.card-header i,
+.alert i,
+.btn i{
+	color: #ffffff !important;
+}
+.help-error i {
+	color: #f44336 !important;
+}
+.btn.btn-white i {
+	color: #000000 !important;
+}
+
+.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+	width: 100% !important;
+	margin-top: 0;
+}
+.table tbody {
+	border-bottom: 1px solid #cccccc !important;
+}
+.table .table {
+	background-color: transparent; 
+}
+.table .table thead tr th,
+.table .table thead tr td {
+	background-color: #f5f5f5;
 }

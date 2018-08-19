@@ -20,6 +20,8 @@ use App\Models\PermanentForest;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Country;
 use App\Models\UserLocation;
+use App\Models\RegionalForestry;
+use App\Models\Mountain;
 use Auth;
 use Mail;
 use PDF;
@@ -27,10 +29,30 @@ use DB;
 
 class AktivitiLainController extends Controller
 {
-	public function index()
+	public function index(Request $request)
 	{
-		$data['states'] = State::get();
-		$data['countries'] = Country::get();
+		$data['states'] = State::orderBy('name', 'ASC')->get();
+		$data['areas']  = Area::where('state_id', $request->old('state'))->get();
+		$data['countries'] = Country::orderBy('name', 'ASC')->get();
+
+		if($request->old('category') == 'hsk')
+		{
+			$places = PermanentForest::where([
+							'state_id' => $request->old('state'),
+							'area_id'  => $request->old('area')
+					  ])->get();
+		}
+		else
+		{
+			$places = EcoPark::where([
+							'state_id' => $request->old('state'),
+							'area_id' => $request->old('area'),
+							'type' => $request->old('category')
+					  ])->get();
+
+		}
+
+		$data['places'] = $places;
 
 		return view('account.aktivitilain.index', $data);
 	}
@@ -139,7 +161,9 @@ class AktivitiLainController extends Controller
 				'declaration_name' => $declaration->name,
 				'declaration_ic'   => $declaration->ic_number,
 				'declaration_date' => date('d/m/Y', strtotime($declaration->application_date)),
-				'staff_name'	   => (!empty($phd) ? (!empty($phd->user->name) ? $phd->user->name : (!empty($jpn->user->name) ? $jpn->user->name : 'Pegawai Hutan Daerah')) : 'Pegawai Hutan Daerah')
+				'staff_name'	   => (!empty($phd) ? (!empty($phd->user->name) ? $phd->user->name : (!empty($jpn->user->name) ? $jpn->user->name : 'Pegawai Hutan Daerah')) : 'Pegawai Hutan Daerah'),
+				'area' => $applicant->applicantOtherActivity->area->name,
+				'state' => $applicant->applicantOtherActivity->state->name
 			];
 
 			$data['applicant'] = Applicant::find($applicant->id);
@@ -166,10 +190,10 @@ class AktivitiLainController extends Controller
 
 			$email = Mail::send('account.partials.email.lainlainaktiviti', $mail_data , function ($mail) use ($user)
 			{
-				$mail->from('noreply@jpsm.com.my', 'JPSM e-Permit');
+				$mail->from(config('mail.from.address'), 'JPSM e-Permit');
 				$mail->to($user->email, $user->name);
 
-				$mail->subject('Surat Permohonan Aktiviti Pendakian');
+				$mail->subject('Surat Permohonan Lain-lain Aktiviti');
 				$mail->attach($user->file);
 			});
 		}
@@ -181,13 +205,13 @@ class AktivitiLainController extends Controller
 	{
 		$data['applicant'] = Applicant::find($id);
 		$data['other']    = ApplicantOtherActivity::where('applicant_id', $id)->first();
-		$data['states']    = State::get();
-		$data['areas']	   = Area::where('state_id', $data['other']->state_id)->get();
-		$data['states'] = State::get();
-		$data['countries'] = Country::get();
-		$data['terlists'] = EcoPark::where('type', 'ter')->get();
-		$data['htnlists'] = EcoPark::where('type', 'htn')->get();
-		$data['hsklists'] = PermanentForest::get();
+		$data['states']    = State::orderBy('name', 'ASC')->get();
+		$data['areas']	   = Area::where('state_id', $data['other']->state_id)->orderBy('name', 'ASC')->get();
+		$data['states'] = State::orderBy('name', 'ASC')->get();
+		$data['countries'] = Country::orderBy('name', 'ASC')->get();
+		$data['terlists'] = EcoPark::where('type', 'ter')->orderBy('name', 'ASC')->get();
+		$data['htnlists'] = EcoPark::where('type', 'htn')->orderBy('name', 'ASC')->get();
+		$data['hsklists'] = PermanentForest::orderBy('name', 'ASC')->get();
 
 		return view('account.aktivitilain.edit', $data);
 	}
@@ -281,22 +305,17 @@ class AktivitiLainController extends Controller
 
 	public function findArea(Request $request)
 	{
-		$areas = Area::where('state_id', $request->id)->get();
+		$areas = Area::where('state_id', $request->id)->orderBy('name', 'ASC')->get();
 
-		$data[] = [
-			'id'   => '',
-			'text' => ''
-		];
+		$data = '';
+		$data .= '<option disabled selected value>Daerah</option>';
 
 		foreach($areas as $area)
 		{
-			$data[] = [
-				'id'   => $area->id,
-				'text' => $area->name
-			];
+			$data .= '<option value="'. $area->id .'">'. $area->name .'</option>';
 		}
 
-		return response()->json($data);
+		return $data;
 	}
 
 	public function findActivity(Request $request)
@@ -304,29 +323,31 @@ class AktivitiLainController extends Controller
 		$activities = OthersActivity::where([
 					  		'state_id' => $request->state_id,
 					  		'area_id' => $request->area_id
-					  ])->get();
+					  ])->orderBy('name', 'ASC')->get();
 
-		$data[] = [
-			'id'   => '',
-			'text' => ''
-		];
+		$data = '';
+		$data .= '<option disabled selected value>Kategori</option>';
 
 		foreach($activities as $activity)
 		{
-			$data[] = [
-				'id'   => $activity->id,
-				'text' => $activity->name
-			];
+			$data .= '<option value="'. $activity->id .'">'. $activity->name .'</option>';
 		}
 
-		return response()->json($data);
+		return $data;
 	}
 
 	public function findActivityPrice(Request $request)
 	{
-		$hsk = PermanentForest::find($request->id);
+		// $hsk = PermanentForest::find($request->id);
 
-		return $hsk->price;
+		// return $hsk->price;
+
+		$mountain = Mountain::where([
+								'state_id' => $request->state,
+								'area_id'  => $request->area,
+								'permanent_forest_id' => $request->id
+							])->first();
+		return (!empty($mountain) ? $mountain->price : 0);
 	}
 
 	public function findEcoPark(Request $request)
@@ -351,10 +372,9 @@ class AktivitiLainController extends Controller
 
 	public function findPlace(Request $request)
 	{
-		$data[] = [
-			'id' => '',
-			'text' => ''
-		];
+		$data = '';
+		$data .= '<option disabled selected value>Tempat Aktiviti</option>';
+
 		if($request->type == 'hsk')
 		{
 			$places = PermanentForest::where([
@@ -364,10 +384,7 @@ class AktivitiLainController extends Controller
 
 			foreach($places as $place)
 			{
-				$data[] = [
-					'id' => $place->id,
-					'text' => $place->name
-				];
+				$data .= '<option value="'. $place->id .'">'. $place->name .'</option>';
 			}
 		}
 		else
@@ -380,14 +397,11 @@ class AktivitiLainController extends Controller
 
 			foreach($places as $place)
 			{
-				$data[] = [
-					'id' => $place->id,
-					'text' => $place->name
-				];
+				$data .= '<option value="'. $place->id .'">'. $place->name .'</option>';
 			}
 		}
 
-		return response()->json($data);
+		return $data;
 	}
 
 	public function viewActivity($id)
@@ -408,6 +422,12 @@ class AktivitiLainController extends Controller
 		$data['jpn'] = UserLocation::where([
 								'state_id' => $data['other']->state_id
 							 ])->first();
+
+		$data['phd_data'] = RegionalForestry::where([
+											'state_id' => $data['other']->state_id,
+											'area_id' => $data['other']->area_id
+									    ])
+										->first();
 
 		return view('account.aktivitilain.review', $data);
 	}
@@ -436,14 +456,18 @@ class AktivitiLainController extends Controller
 		$data['jpn'] = UserLocation::where([
 								'state_id' => $data['other']->state_id
 							 ])->first();
+		$data['phd_data'] = RegionalForestry::where([
+											'state_id' => $data['other']->state_id,
+											'area_id' => $data['other']->area_id
+									    ])
+										->first();
 
 
 		view()->share($data);
 		$pdf = PDF::loadView('account.aktivitilain.download');
 
-		return $pdf->download('download_'. $data['applicant']->number .'.pdf');
+		return $pdf->download('Lain Aktiviti ' . date('dmY') . '.pdf');
 
-		// return view('account.aktivitilain.download', $data);
 	}
 
 	public function checkCapacity(Request $request)

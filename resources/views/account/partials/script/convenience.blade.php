@@ -6,8 +6,8 @@
 
 			$('.otherStartingDate').datetimepicker({
 				format:'Y/m/d',
-				minDate:'{{ date('Y/m/d', strtotime('+1 month')) }}',
-				startDate: '{{ date('Y/m/d', strtotime('+1 month')) }}',
+				minDate:'{{ date('Y/m/d', strtotime('+1 day')) }}',
+				startDate: '{{ date('Y/m/d', strtotime('+1 day')) }}',
 				timepicker:false,
 				format:'d/m/Y',
 				scrollMonth:false,
@@ -17,8 +17,8 @@
 			});
 			$('.otherEndingDate').datetimepicker({
 				format:'Y/m/d',
-				minDate:'{{ date('Y/m/d', strtotime('+1 month')) }}',
-				startDate: '{{ date('Y/m/d', strtotime('+1 month')) }}',
+				minDate:'{{ date('Y/m/d', strtotime('+2 day')) }}',
+				startDate: '{{ date('Y/m/d', strtotime('+2 day')) }}',
 				timepicker:false,
 				format:'d/m/Y',
 				scrollMonth:false,
@@ -57,7 +57,7 @@
 					var end = new Date(ending_date[2] + '-' + ending_date[1] + '-' + ending_date[0]);
 					var diff = Math.round((end- start)/(1000*60*60*24));
 
-					$('#day').val(diff);
+					$('#day').val((diff+1));
 				}
 
 			});
@@ -72,7 +72,7 @@
 					},
 					success: function(data)
 					{
-						$('#area').select2('destroy').empty().select2({data: data});
+						$('#area').html(data).selectpicker('refresh');
 					}
 				});
 				// $.ajax({
@@ -107,7 +107,7 @@
 					success: function(data)
 					{
 
-						$('#eco_park').select2('destroy').empty().select2({data: data});
+						$('#eco_park').html(data).selectpicker('refresh');
 					}
 				});
 			});
@@ -159,13 +159,13 @@
 						{
 							$('#price').val($.number(data.price, 2));
 							$('#amount').val($.number(data.price, 2));
-							$('#children').select2('destroy').empty().select2({data: data.slots});
-							$('#student').select2('destroy').empty().select2({data: data.slots});
-							$('#adult').select2('destroy').empty().select2({data: data.slots});
+							$('#children').html(data.slots).selectpicker('refresh');
+							$('#student').html(data.slots).selectpicker('refresh');
+							$('#adult').html(data.slots).selectpicker('refresh');
 						}
 						else
 						{
-							$('#category').select2('destroy').empty().select2({data: data.data});
+							$('#category').html(data.data).selectpicker('refresh');
 						}
 						// if(data.error === 'false')
 						// {
@@ -206,7 +206,7 @@
 
 						$('#price').val($.number(data.price, 2));
 						$('#amount').val($.number(data.price, 2));
-						$('#unit').select2('destroy').empty().select2({data: data.slots});
+						$('#unit').html(data.slots).selectpicker('refresh');
 					}
 				});
 			});
@@ -380,7 +380,7 @@
 					},
 					success: function(data)
 					{
-						$('#type').select2('destroy').empty().select2({data: data});
+						$('#type').html(data).selectpicker('refresh');
 					}
 				});
 			});
@@ -402,7 +402,132 @@
 					},
 					success: function(data)
 					{
-						$('#convenience_category').select2('destroy').empty().select2({data: data});
+						$('#convenience_category').html(data).selectpicker('refresh');
+					}
+				});
+			});
+
+			// Tempahan kemudahan baru
+			$('body').on('click', '#addToTable', function(){
+
+				var count = $('.row-table').length;
+
+				$.ajax({
+					type: 'POST',
+					url: '{{ url('account/member-tempahan-kemudahan/ajax-store') }}',
+					data: {
+						_token: '{{ csrf_token() }}',
+						state: $('#state').val(),
+						area: $('#area').val(),
+						type: $('#type').val(),
+						eco_park: $('#eco_park').val(),
+						starting_date: $('#starting_date').val(),
+						ending_date: $('#ending_date').val(),
+						day: $('#day').val(),
+						convenience_category: $('#convenience_category').val(),
+						children: $('#children').val(),
+						student: $('#student').val(),
+						adult: $('#adult').val(),
+						unit: $('#unit').val(),
+						category: $('#category').val(),
+						nationality: $('#nationality').val(),
+						amount: $('#amount').val(),
+					},
+					success: function(data)
+					{
+						var convenience_ids = [];
+						var conveniece_id = $('#convenience_ids').val();
+						convenience_ids = conveniece_id.split(',');
+
+						if(conveniece_id == '')
+						{
+							console.log('check');
+							$('#convenience_ids').val(data.id)
+						}
+						else
+						{
+							console.log('check 2');
+							convenience_ids.push(data.id);
+							$('#convenience_ids').val(convenience_ids.join(','));
+						}
+
+
+						$('#convenienceEmpty').hide();
+						console.log(count);
+						var html = "<tr id='tableId-"+ data.id +"' class='row-table'>\
+										<td>"+ (count + 1) +"</td>\
+										<td>"+ data.starting_date +"</td>\
+										<td>"+ data.ending_date +"</td>\
+										<td>"+ data.day +" Hari</td>\
+										<td>"+ data.convenience +"</td>\
+										<td>"+ data.category +"</td>\
+										<td>"+ data.unit +"</td>\
+										<td>"+ data.amount +"</td>\
+										<td class='text-center'>\
+											<div class='btn-group btn-group-sm' role='group' aria-label='...'>\
+												<a href='javascript:void(0)' class='btn btn-danger deleteFromTable' data-id='"+ data.id +"'><span class='fa fa-close'></span></a>\
+											</div>\
+										</td>\
+									</tr>";
+									/*
+
+												<a href='javascript:void(0)' class='btn btn-default'><span class='fa fa-edit'></span></a>\
+									*/
+						$(html).appendTo('#convenienceTableData');
+						// $('#state').val('').trigger('change');
+						// $('#area').val('').trigger('change');
+						// $('#type').val('').trigger('change');
+						// $('#eco_park').val('').trigger('change');
+						// $('#starting_date').val('');
+						// $('#ending_date').val('');
+						// $('#day').val('');
+						$('#convenience_category').val('default');
+						$('#convenience_category').selectpicker('refresh');
+						$('#children').val('').trigger('change');
+						$('#student').val('').trigger('change');
+						$('#adult').val('').trigger('change');
+						$('#unit').val('');
+						$('#category').val('').trigger('change');
+						$('#nationality').val('').trigger('change');
+						$('#amount').val('');
+						$('#peopledetail').hide();
+						$('#people').hide();
+						$('#pricing').hide();
+						$('#unitdetail').hide();
+						$('#unitdata').hide();
+						$('#peopledetail').hide();
+						$('#people').hide();
+						$('#pricing').hide();
+						$('#unitdetail').hide();
+						$('#unitdata').hide();
+					}
+				});
+			});
+
+			$('body').on('click', '.deleteFromTable', function(){
+				$.ajax({
+					type: 'POST',
+					url: '{{ url('account/member-tempahan-kemudahan/delete-from-table') }}',
+					data: {
+						_token: '{{ csrf_token() }}',
+						id: $(this).data('id')
+					},
+					success: function(data){
+						$('#tableId-' + data).remove();
+						var convenience_ids = [];
+						var conveniece_id = $('#convenience_ids').val();
+						convenience_ids = conveniece_id.split(',');
+
+						convenience_ids = $.grep(convenience_ids, function(value){
+							return value != data;
+						});
+
+						$('#convenience_ids').val(convenience_ids);
+
+						if(convenience_ids.length == 0)
+						{
+							$('#convenienceEmpty').show();
+						}
 					}
 				});
 			});

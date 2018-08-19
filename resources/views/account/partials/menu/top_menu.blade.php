@@ -2,7 +2,7 @@
     <ul class="nav navbar-nav navbar-right">
         <li class="hidden-sm hidden-xs">
             <a href="{{ route('home.index') }}">
-                <i class="material-icons">dashboard</i>
+                <i class="material-icons"></i>
                 <p class="hidden-lg hidden-md">Dashboard</p>
             </a>
         </li>

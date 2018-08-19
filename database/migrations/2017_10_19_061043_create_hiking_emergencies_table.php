@@ -24,6 +24,7 @@ class CreateHikingEmergenciesTable extends Migration
             $table->integer('applicant_id');
             $table->integer('user_id');
             $table->integer('hiking_participant_id');
+            $table->string('relationship', 255)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

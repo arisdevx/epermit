@@ -24,6 +24,7 @@ use App\Models\HikingParticipant;
 use App\Models\Convenience;
 use App\Models\ApplicantOtherActivity;
 use App\Models\RegionalForestry;
+use App\Models\StateForestry;
 use Flash;
 use Validator;
 use Log;
@@ -166,141 +167,96 @@ class ApplicantStatusController extends Controller
 		{
 			activityLog('Status Permohonan Selesai');
 
-			$type         = '';
-			$place        = '';
-			$otherecopark = '';
-			$price        = '';
-			$participant  = '';
-			$amount       = '';
-			$other_price  = '';
-			$activity_date = date('d/m/Y');
-			$starting_date = date('d/m/Y');
-			$ending_date = date('d/m/Y');
-			$phd_name = '';
-			$phd_address = '';
-			$phd_phone = '';
-			$phd_fax = '';
-			$phd_email = '';
+			$type = '';
+			$place = '';
+			$category = '';
+			$area = '';
+			$state = '';
+			$starting_date = '';
+			$participant = '';
+			$guide = '';
+			$fee = '';
+			$total_person = '';
+			$activity = '';
+			$gov_data = '';
+			$gov_phd = '';
+			$receipt = '';
 
 			if($applicant->type == 'hiking')
 			{
-				$type = 'Aktiviti Pendakian';
-				$place = (!empty($applicant->hikingInformation->permanent_forest->name) ? $applicant->hikingInformation->permanent_forest->name : '');
-				$price        = $applicant->hikingInformation->mountain->price;
-				$participant  = $applicant->hikingInformation->participants_total;
-				$amount       = $applicant->amount;
-				$other_price  = 0; //$applicant->hikingInformation->permanent_forest->price;
-				$activity_date= date('d/m/Y', strtotime($applicant->hikingDeclaration->date));
-				$starting_date = date('d/m/Y', strtotime($applicant->hikingInformation->starting_date));
-				$ending_date = date('d/m/Y', strtotime($applicant->hikingInformation->ending_date));
-			
-				$phd = RegionalForestry::where([
-											'state_id' => $applicant->hikingLocation->state_id,
-											'area_id' => $applicant->hikingLocation->area_id
-									    ])
-										->first();
-				$phd_name = $phd->name;
-				$phd_address = $phd->address;
-				$phd_phone = $phd->phone;
-				$phd_fax = $phd->fax;
-				$phd_email = $phd->email;
+				$state_forestry = StateForestry::where('state_id', $applicant->hikingLocation->state->id)->first();
+				$area_forestry = RegionalForestry::where([
+						['state_id', $applicant->hikingLocation->state->id],
+						['area_id', $applicant->hikingLocation->area->id]
+					])->first();
+
+				$type = 'hiking';
+				$place = $applicant->hikingInformation->mountain->name;
+				$category = 'PENDAKIAN GUNUNG';
+				$area = $applicant->hikingLocation->area->name;
+				$state = $applicant->hikingLocation->state->name;
+				$starting_date = date('d M Y', strtotime($applicant->hikingInformation->starting_date));
+				$guide = $applicant->hikingGuide->count();
+				$participant = ($applicant->hikingInformation->participants_total-$guide);
+				$total_person = $applicant->hikingInformation->participants_total;
+				$activity = 'Aktiviti Pendakian';
+				$gov_phd = (!empty($area_forestry) ? $area_forestry->name . ', ' . $area_forestry->address : '');
 			}
 			elseif($applicant->type == 'other')
 			{
-				$type = 'Lain-lain Aktiviti';
-				
+				$type = 'other';
 				if($applicant->applicantOtherActivity->type == 'hsk'){
                     $place = (!empty($applicant->applicantOtherActivity->permanent_forest->name) ? $applicant->applicantOtherActivity->permanent_forest->name : '');
 				}else{
-					$otherecopark = 'true';
                     $place = (!empty($applicant->applicantOtherActivity->eco_park->name) ? $applicant->applicantOtherActivity->eco_park->name : '');
 				}
-
-				$price        = $applicant->applicantOtherActivity->permanent_forest->price;
-				$participant  = $applicant->applicantOtherActivity->applicant_other_activity_detail->participant;
-				$amount       = $applicant->amount;
-				$activity_date= date('d/m/Y', strtotime($applicant->applicantOtherActivity->applicant_other_activity_declaration->application_date));
-				$starting_date = date('d/m/Y', strtotime($applicant->applicantOtherActivity->applicant_other_activity_detail->starting_date));
-				$ending_date = date('d/m/Y', strtotime($applicant->applicantOtherActivity->applicant_other_activity_detail->ending_date));
-			
-				$phd = RegionalForestry::where([
-											'state_id' => $applicant->applicantOtherActivity->state_id,
-											'area_id' => $applicant->applicantOtherActivity->area_id
-									    ])
-										->first();
-				$phd_name = $phd->name;
-				$phd_address = $phd->address;
-				$phd_phone = $phd->phone;
-				$phd_fax = $phd->fax;
-				$phd_email = $phd->email;
 			}
 			elseif($applicant->type == 'convenience')
 			{
-				$type = 'Tempahan Kemudahan';
-				$price = $applicant->applicantConvenience->convenience->price;
-				$participant = $applicant->applicantConvenience->participant;
-				$amount  = $applicant->amount;
-				$activity_date= date('d/m/Y', strtotime($applicant->applicantConvenience->applicant_convenience_declaration->application_date));
-				$starting_date = date('d/m/Y', strtotime($applicant->applicantConvenience->starting_date));
-				$ending_date = date('d/m/Y', strtotime($applicant->applicantConvenience->ending_date));
-			
-				$phd = RegionalForestry::where([
-											'state_id' => $applicant->applicantConvenience->state_id,
-											'area_id' => $applicant->applicantConvenience->area_id
-									    ])
-										->first();
-				$phd_name = $phd->name;
-				$phd_address = $phd->address;
-				$phd_phone = $phd->phone;
-				$phd_fax = $phd->fax;
-				$phd_email = $phd->email;
+				$type = 'convenience';
+				$place = (!empty($applicant->applicantConvenience->eco_park->name) ? $applicant->applicantConvenience->eco_park->name : '-');
 			}
 
-			$email_data = [
-				'applicant' => $applicant,
+			$mail_data = [
 				'number' => $applicant->number,
-				'date' => date('d/m/Y', strtotime($applicant->created_at)),
 				'type' => $type,
+				'full_name' => $applicant->user->name,
 				'place' => $place,
-				'status' => 'Selesai',
-				'price' => $price,
-				'participant' => $participant,
-				'amount' => $amount,
-				'ecopark' => $otherecopark,
-				'other_price' => $other_price,
-				'activity_date' => $activity_date,
+				'category' => $category,
+				'area' => $area,
+				'state' => $state,
+				'applicant_date' => date('d M Y', strtotime($applicant->created_at)),
 				'starting_date' => $starting_date,
-				'ending_date' => $ending_date,
-				'receipt' => $request->receipt,
-				'phd_name' => $phd_name,
-				'phd_address' => $phd_address,
-				'phd_phone' => $phd_phone,
-				'phd_fax' => $phd_fax,
-				'phd_email' => $phd_email
+				'participant' => $participant,
+				'guide' => $guide,
+				'total_person' => $total_person,
+				'amount' => $applicant->amount,
+				'gov_phd' => $gov_phd,
+				'receipt' => (!empty($request->receipt) ? $request->receipt : '-'),
 			];
 
-			view()->share($email_data);
-			$pdf = PDF::loadView('applicantstatus.finishemail')->save(public_path('files/lulus_' . $applicant->number . '.pdf'));
-			$applicant['file'] = public_path('files/lulus_' . $applicant->number . '.pdf');
-			// return view('applicantstatus.finishemail', $email_data);
-
-			$email = Mail::send('applicantstatus.finishemail', $email_data , function ($mail) use ($applicant)
+			view()->share($mail_data);
+			$pdf = PDF::loadView('applicantstatus.finishemail')->save(public_path('files/finish_payment_' . str_replace('/', '_', $applicant->number) . '.pdf'));
+			$user = $applicant->user;
+			$user['file'] = public_path('files/finish_payment_' . str_replace('/', '_', $applicant->number) . '.pdf');
+			$user['activity'] = $activity;
+			$email = Mail::send('applicantstatus.finishemail', $mail_data , function ($mail) use ($user)
 			{
-				$mail->from('noreply@jpsm.com.my', 'JPSM e-Permit');
-				$mail->to($applicant->user->email, $applicant->user->name);
+				$mail->from(config('mail.from.address'), 'JPSM e-Permit');
+				$mail->to($user->email, $user->name);
 
-				$mail->subject('Status Permohonan Diluluskan');
-				$mail->attach($applicant->file);
+				$mail->subject('Surat Permohonan Pengesahan Pembayaran');
+				$mail->attach($user->file);
 			});
 
-			echo $phd_name;
+			session()->flash('status', 'success-finish');
 
-
-			// return redirect(url('applicant-status'))->with('status', 'success-finish');
+			// return redirect('applicant-status');
 		}
 		else
 		{
-			return redirect(url('applicant-status'))->with('status', 'failed-finish');
+			session()->flash('status', 'failed-finish');
+			// return redirect(url('applicant-status'))->with('status', 'failed-finish');
 		}
 	}
 
@@ -315,15 +271,40 @@ class ApplicantStatusController extends Controller
 
 			$type = '';
 			$place = '';
+			$category = '';
+			$area = '';
+			$state = '';
+			$starting_date = '';
+			$participant = '';
+			$guide = '';
+			$fee = '';
+			$total_person = '';
+			$activity = '';
+			$gov_data = '';
 
 			if($applicant->type == 'hiking')
 			{
-				$type = 'Aktiviti Pendakian';
-				$place = (!empty($applicant->hikingInformation->permanent_forest->name) ? $applicant->hikingInformation->permanent_forest->name : '');
+				$state_forestry = StateForestry::where('state_id', $applicant->hikingLocation->state->id)->first();
+				$area_forestry = RegionalForestry::where([
+						['state_id', $applicant->hikingLocation->state->id],
+						['area_id', $applicant->hikingLocation->area->id]
+					])->first();
+
+				$type = 'hiking';
+				$place = $applicant->hikingInformation->mountain->name;
+				$category = 'PENDAKIAN GUNUNG';
+				$area = $applicant->hikingLocation->area->name;
+				$state = $applicant->hikingLocation->state->name;
+				$starting_date = date('d M Y', strtotime($applicant->hikingInformation->starting_date));
+				$guide = $applicant->hikingGuide->count();
+				$participant = ($applicant->hikingInformation->participants_total-$guide);
+				$total_person = $applicant->hikingInformation->participants_total;
+				$activity = 'Aktiviti Pendakian';
+				$gov_data = $state_forestry->name . (!empty($area_forestry) ? ', ' . $area_forestry->address : '');
 			}
 			elseif($applicant->type == 'other')
 			{
-				$type = 'Lain-lain Aktiviti';
+				$type = 'other';
 				if($applicant->applicantOtherActivity->type == 'hsk'){
                     $place = (!empty($applicant->applicantOtherActivity->permanent_forest->name) ? $applicant->applicantOtherActivity->permanent_forest->name : '');
 				}else{
@@ -332,24 +313,41 @@ class ApplicantStatusController extends Controller
 			}
 			elseif($applicant->type == 'convenience')
 			{
-				$type = 'Tempahan Kemudahan';
+				$type = 'convenience';
 				$place = (!empty($applicant->applicantConvenience->eco_park->name) ? $applicant->applicantConvenience->eco_park->name : '-');
 			}
 
-			$email_data = [
+			$mail_data = [
 				'number' => $applicant->number,
-				'date' => date('d/m/Y', strtotime($applicant->created_at)),
 				'type' => $type,
+				'full_name' => $applicant->user->name,
 				'place' => $place,
-				'status' => 'Diluluskan'
+				'category' => $category,
+				'area' => $area,
+				'state' => $state,
+				'applicant_date' => date('d M Y', strtotime($applicant->created_at)),
+				'starting_date' => $starting_date,
+				'participant' => $participant,
+				'guide' => $guide,
+				'total_person' => $total_person,
+				'amount' => $applicant->amount,
+				'gov_data' => $gov_data,
 			];
 
-			$email = Mail::send('applicantstatus.statusemail', $email_data , function ($mail) use ($applicant)
-			{
-				$mail->from('noreply@jpsm.com.my', 'JPSM e-Permit');
-				$mail->to($applicant->user->email, $applicant->user->name);
+			// return view('applicantstatus.statusemail', $mail_data);
 
-				$mail->subject('Status Permohonan');
+			view()->share($mail_data);
+			$pdf = PDF::loadView('applicantstatus.statusemail')->save(public_path('files/finish_' . str_replace('/', '_', $applicant->number) . '.pdf'));
+			$user = $applicant->user;
+			$user['file'] = public_path('files/finish_' . str_replace('/', '_', $applicant->number) . '.pdf');
+			$user['activity'] = $activity;
+			$email = Mail::send('applicantstatus.statusemail', $mail_data , function ($mail) use ($user)
+			{
+				$mail->from(config('mail.from.address'), 'JPSM e-Permit');
+				$mail->to($user->email, $user->name);
+
+				$mail->subject('Surat Permohonan diluluskan');
+				$mail->attach($user->file);
 			});
 
 			return redirect(url('applicant-status'))->with('status', 'success-completed')->with('status-text', 'Anda Telah Melulus Permohonan '. $applicant->number .' Dan Menunggu Bayaran Daripada Pemohon');
@@ -367,7 +365,7 @@ class ApplicantStatusController extends Controller
 
 		if($applicant->save())
 		{
-			activityLog('Status Permohonan Selesai');
+			activityLog('Status Permohonan Diluluskan');
 
 			$type         = '';
 			$place        = '';
@@ -536,21 +534,23 @@ class ApplicantStatusController extends Controller
 				$type = 'Tempahan Kemudahan';
 			}
 
-			$email_data = [
-				'number' => $applicant->number,
-				'date' => date('d/m/Y', strtotime($applicant->created_at)),
-				'type' => $type,
-				'place' => $place,
-				'status' => 'Dibatalkan'
-			];
+			// $email_data = [
+			// 	'full_name' => $applicant->user->name,
+			// 	'number' => $applicant->number,
+			// 	'date' => date('d/m/Y', strtotime($applicant->created_at)),
+			// 	'type' => $type,
+			// 	'place' => $place,
+			// 	'status' => 'Dibatalkan',
+			// 	'amount' => $applicant->amount,
+			// ];
 
-			$email = Mail::send('applicantstatus.statusemail', $email_data , function ($mail) use ($applicant)
-			{
-				$mail->from('noreply@jpsm.com.my', 'JPSM e-Permit');
-				$mail->to($applicant->user->email, $applicant->user->name);
+			// $email = Mail::send('applicantstatus.statusemail', $email_data , function ($mail) use ($applicant)
+			// {
+			// 	$mail->from('noreply@jpsm.com.my', 'JPSM e-Permit');
+			// 	$mail->to($applicant->user->email, $applicant->user->name);
 
-				$mail->subject('Status Permohonan');
-			});
+			// 	$mail->subject('Status Permohonan');
+			// });
 
 
 			return redirect(url('applicant-status'))->with('status', 'success-cancel');

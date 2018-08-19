@@ -19,7 +19,8 @@ class ApplicantsListController extends Controller
 
 	public function index(Request $request)
 	{
-		$users = User::whereHas('user_role.role.mode_role.mode', function($q) {
+		$users = User::where('name', 'like', '%'. $request->search .'%')
+                        ->whereHas('user_role.role.mode_role.mode', function($q) {
             $q->where('name', 'pemohon');
         })
         ->paginate(20);
@@ -75,7 +76,7 @@ class ApplicantsListController extends Controller
         $user->syncRoles([]);
         $user->delete();
 
-        Flash::success(sprintf('%s account has been deleted.', $user->name));
+        Flash::success(sprintf('Berjaya memadam rekod %s', $user->name));
         return redirect()->route('applicants-list.index');
     }
 

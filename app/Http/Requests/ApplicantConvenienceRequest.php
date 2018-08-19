@@ -31,8 +31,8 @@ class ApplicantConvenienceRequest extends FormRequest
             'starting_date'        => 'required',
             'ending_date'          => 'required',
             'day'                  => 'required',
-            'convenience_category' => 'required',
-            'amount'               => 'required',
+            // 'convenience_category' => 'required',
+            // 'amount'               => 'required',
             'agreement' => 'required',
         ];
     }

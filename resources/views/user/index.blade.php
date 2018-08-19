@@ -60,7 +60,7 @@
                                    data-toggle="modal"
                                    data-target="#modal-form"
                                    data-action="{{ route('user.edit', $user->id) }}"
-                                   data-title="Edit {{ $user->name }}"
+                                   data-title="Kemaskini {{ $user->name }}"
                                 >
                                     Edit
                                 </a>
@@ -68,7 +68,7 @@
                                    data-toggle="modal"
                                    data-target="#modal-delete"
                                    data-action="{{ route('user.destroy', $user->id) }}"
-                                   data-title="Delete Confirmation!"
+                                   data-title="Hapus"
                                    data-message="You are about to delete {{ $user->name }} record, this procedure is irreversible. Do you want to proceed?"
                                 >
                                     Hapus

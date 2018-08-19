@@ -28,7 +28,7 @@ class Convenience extends Model
 
     public function convenience_category()
     {
-        return $this->belongsTo('App\Models\ConvenienceCategory');
+        return $this->belongsTo('App\Models\ConvenienceCategory')->orderBy('name');
     }
 
     public function convenience_sub_category()

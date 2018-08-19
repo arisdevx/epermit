@@ -45,6 +45,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\UserLocation', 'id', 'user_id');
     }
 
+    public function user_location()
+    {
+        return $this->belongsTo('App\Models\UserLocation', 'user_id');
+    }
+
     public function allowed_roles($type = 'read') {
         $roles = Role::get()->pluck('name', 'id')->toArray();
         foreach ($roles as $role) {

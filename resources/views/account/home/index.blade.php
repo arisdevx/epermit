@@ -4,25 +4,50 @@
     
     <div class="card card-plain">
         <div class="card-header" data-background-color="green">
-            <h4 class="title">Sila Pilih Pemohonan Yang Dikehendaki Di Bawah.</h4>
-            <p class="category">Klik Kategori Dibawah</p>
+            <h4 class="title">Kategori Permohonan</h4>
+            <p class="category">Application Category</p>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-6">
             <a href="{{ url('account/member-aktiviti-pendakian') }}">
-                <div class="card card-stats">
+                <div class="card card-stats" style="height: 280px">
                     <div class="card-header" data-background-color="orange">
-                        <i class="material-icons">assignment</i>
+                        <img src="{{ url('img/icons/hiking.png') }}">
+                        {{-- <i class="material-icons">assignment</i> --}}
                     </div>
                     <div class="card-content">
-                        <p class="category">Aktiviti</p>
+                        <p class="category"><strong>Aktiviti</strong></p>
                         <h3 class="title">Pendakian</h3>
+                        <small>Hiking Activity</small>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            Mohon
+                            Permohonan permit bagi menjalankan aktiviti pendakian di dalam hutan simpanan kekal (HSK)
+                           <br><i>Application for a permit to carry out climbing activities in permanent forest</i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 col-sm-6">
+            <a href="{{ url('account/member-aktiviti-lain') }}">
+                <div class="card card-stats" style="height: 280px">
+                    <div class="card-header" data-background-color="red">
+                        <img src="{{ url('img/icons/other.png') }}">
+                        {{-- <i class="material-icons">info_outline</i> --}}
+                    </div>
+                    <div class="card-content">
+                        <p class="category"><strong>Lain-lain</strong></p>
+                        <h3 class="title">Aktiviti</h3>
+                        <small>Others Activity</small>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            Lain-lain Aktiviti bagi menjalankan lain-lain aktiviti di Taman Eko Rimba (TER), Hutan Taman Negeri (HTN), dan Hutan Simpan Kekal (HSK)
+                           <br><i>Other activities for other activities at Eco-Parks, State Forest, and Permanent Forest Reserves</i>
                         </div>
                     </div>
                 </div>
@@ -30,35 +55,20 @@
         </div>
         <div class="col-lg-4 col-md-6 col-sm-6">
             <a href="{{ url('account/member-tempahan-kemudahan') }}">
-                <div class="card card-stats">
+                <div class="card card-stats" style="height: 280px">
                     <div class="card-header" data-background-color="green">
-                        <i class="material-icons">store</i>
+                        <img src="{{ url('img/icons/booking.png') }}">
+                        {{-- <i class="material-icons">store</i> --}}
                     </div>
                     <div class="card-content">
-                        <p class="category">Tempahan Kemudahan</p>
+                        <p class="category"><strong>Tempahan Kemudahan</strong></p>
                         <h3 class="title">TER/HTN</h3>
+                        <small>Convenience Activity</small>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            Mohon
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-6">
-            <a href="{{ url('account/member-aktiviti-lain') }}">
-                <div class="card card-stats">
-                    <div class="card-header" data-background-color="red">
-                        <i class="material-icons">info_outline</i>
-                    </div>
-                    <div class="card-content">
-                        <p class="category">Lain-lain</p>
-                        <h3 class="title">Aktiviti</h3>
-                    </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            Mohon
+                             Tempahan kemudahan di Taman Eko Rimba (TER) dan Hutan Taman Negeri (HTN) di Malaysia
+                           <br><i>Facilities booking at Eco-Park (TER) and State Park Forest (HTN) in Malaysia</i>
                         </div>
                     </div>
                 </div>

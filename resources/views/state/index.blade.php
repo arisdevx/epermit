@@ -26,8 +26,8 @@
                         {!! Form::open(['url' => route('state.index'), 'method' => 'get']) !!}
                         <div class="input-group">
                             {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Pencarian...']) }}
-                            <span class="input-group-addon">
-                                <button type="submit" class="btn btn-white btn-round btn-just-icon">
+                            <span class="input-group-addon" style="padding-top: 0">
+                                <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin-top: 0; padding: 8px;">
                                     <i class="material-icons">search</i>
                                     <div class="ripple-container"></div>
                                 </button>
@@ -56,7 +56,7 @@
                                    data-toggle="modal"
                                    data-target="#modal-form"
                                    data-action="{{ route('state.edit', $state->id) }}"
-                                   data-title="Edit {{ $state->name }}"
+                                   data-title="Kemaskini {{ $state->name }}"
                                 >
                                     <i class="material-icons">create</i>
                                 </a>&nbsp;
@@ -64,7 +64,7 @@
                                    data-toggle="modal"
                                    data-target="#modal-delete"
                                    data-action="{{ route('state.destroy', $state->id) }}"
-                                   data-title="Delete Confirmation!"
+                                   data-title="Hapus"
                                    data-message="You are about to delete {{ $state->name }} record, this procedure is irreversible. Do you want to proceed?"
                                 >
                                     <i class="material-icons">clear</i>

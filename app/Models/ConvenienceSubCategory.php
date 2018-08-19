@@ -13,6 +13,6 @@ class ConvenienceSubCategory extends Model
 
     public function convenience_category()
     {
-    	return $this->belongsTo('App\Models\ConvenienceCategory');
+    	return $this->belongsTo('App\Models\ConvenienceCategory', 'convenience_id', 'id');
     }
 }

@@ -13,6 +13,7 @@
         "laravelcollective/html": "^5.4.0",
         "laravolt/avatar": "^1.8",
         "lavary/laravel-menu": "^1.6",
+        "mews/captcha": "^2.1",
         "santigarcor/laratrust": "3.2.*",
         "watson/breadcrumbs": "^1.0"
     },

@@ -20,22 +20,51 @@ use App\Models\HikingDeclaration;
 use App\Models\HikingLocation;
 use App\Models\HikingParticipant;
 use App\Models\Convenience;
+use App\Models\State;
+use App\Models\Country;
+use App\Models\UserLocation;
+use App\Models\RegionalForestry;
+use App\Models\HikingGuide;
+use App\Models\GuideConfig;
+use App\Models\Setting;
 use Flash;
 use Validator;
 use Log;
+use Mail;
+use PDF;
 
 class ParticipantFormController extends Controller
 {
-	public function index()
+	public function index($id)
 	{
-		return view('participantform.form');
+		// dd(Setting::where('setting_key', 'guide')->first()->setting_value);
+		$setting = json_decode(Setting::where('setting_key', 'guide')->first()->setting_value);
+		
+		$data['applicant'] = Applicant::find($id);
+		$data['states'] = State::get();
+		$data['countries'] = Country::get();
+		$data['malim_available'] = ceil($data['applicant']->hikingInformation->participants_total/$setting->participant)*$setting->guide;
+		$data['malim_ready'] = $data['applicant']->hikingGuide->count();
+
+		return view('participantform.form', $data);
 	}
 
 	public function submit(ParticipantRequest $request, $id)
 	{
+
+		$applicant = Applicant::find($id);
+
 		$applicantParticipant               = new HikingParticipant;
 		$applicantParticipant->applicant_id = $id;
 		$applicantParticipant->save();
+
+		if(!empty($request->guide))
+		{
+			$hikingGuide = new HikingGuide;
+			$hikingGuide->applicant_id = $id;
+			$hikingGuide->participant_id = $applicantParticipant->id;
+			$hikingGuide->save();
+		}
 
 		$applicantBiodata                        = new HikingBiodata;
 		$applicantBiodata->fullname              = $request->hiker_fullname;
@@ -46,8 +75,9 @@ class ParticipantFormController extends Controller
 		$applicantBiodata->nationality           = (!empty($request->hiker_nationality) ? '1' : '0');
 		$applicantBiodata->phone                 = $request->hiker_phone;
 		$applicantBiodata->address               = $request->hiker_address;
-		$applicantBiodata->state                 = $request->hiker_state;
+		$applicantBiodata->state_id                 = $request->hiker_state;
 		$applicantBiodata->postcode              = $request->hiker_postcode;
+		$applicantBiodata->country_id			= $request->hiker_country;
 		$applicantBiodata->applicant_id          = $id;
 		$applicantBiodata->user_id               = 0;
 		$applicantBiodata->hiking_participant_id = $applicantParticipant->id;
@@ -58,11 +88,13 @@ class ParticipantFormController extends Controller
 		$applicantEmergency->phone                 = $request->emergency_phone;
 		$applicantEmergency->address               = $request->emergency_address;
 		$applicantEmergency->second_address        = (!empty($request->emergency_second_address) ? $request->emergency_second_address : '');
-		$applicantEmergency->state                 = $request->emergency_state;
+		$applicantEmergency->state_id                 = $request->emergency_state;
 		$applicantEmergency->postcode              = $request->emergency_postcode;
+		$applicantEmergency->country_id                 = $request->emergency_country;
 		$applicantEmergency->applicant_id          = $id;
 		$applicantEmergency->user_id               = 0;
 		$applicantEmergency->hiking_participant_id = $applicantParticipant->id;
+		$applicantEmergency->relationship = $request->emergency_relationship;
 		$applicantEmergency->save();
 
 		$applicantInsurance                        = new HikingInsurance;
@@ -103,11 +135,140 @@ class ParticipantFormController extends Controller
 			$order++;
 		}
 
-		return redirect(url('form/completed'));
+		$mail_data = [
+			'full_name' => $applicant->user->name,
+			'participant' => $request->declaration_name,
+			'number' => $applicant->number
+		];
+
+		Mail::send('account.partials.email.newparticipant', $mail_data , function ($mail) use ($applicant)
+		{
+			$mail->from('mail@jpsm.com.my', 'JPSM e-Permit');
+			$mail->to($applicant->user->email, $applicant->user->email);
+
+			$mail->subject('JPSM e-Permit: Pendaftaran Peserta Baru');
+		});
+
+		return redirect(url('form/completed/' . $id . '/' . $applicantParticipant->id));
 	}
 
-	public function completed()
+	public function completed($id, $participant_id)
 	{
-		return '<p style="text-align: center; margin-top: 100px;">Pendaftaran telah direkod. Terima kasih</p>';
+		$data['applicant'] = Applicant::find($id);
+		$data['biodata'] = HikingBiodata::where([
+											'applicant_id' => $id,
+											'hiking_participant_id' => $participant_id
+										])->first();
+		$data['emergency'] = HikingEmergency::where([
+											'applicant_id' => $id,
+											'hiking_participant_id' => $participant_id
+										])->first();
+		$data['insurance'] = HikingInsurance::where([
+											'applicant_id' => $id,
+											'hiking_participant_id' => $participant_id
+										])->first();
+		$data['declaration'] = HikingDeclaration::where([
+											'applicant_id' => $id,
+											'hiking_participant_id' => $participant_id
+										])->first();
+		$data['health']				= HikingHealth::where([
+										'applicant_id' => $id,
+										'hiking_participant_id' => $participant_id
+									  ])->first();
+		
+		$checkPHD		   = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id,
+								'area_id'  => $data['applicant']->hikingLocation->area_id
+							 ])->first();
+
+		$data['phd'] = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id,
+								'area_id'  => $data['applicant']->hikingLocation->area_id
+							 ])->first();
+		$data['jpn'] = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id
+							 ])->first();
+		$data['phd_data'] = RegionalForestry::where([
+											'state_id' => $data['applicant']->hikingLocation->state_id,
+											'area_id' => $data['applicant']->hikingLocation->area_id
+									    ])
+										->first();
+
+		return view('participantform.finish', $data);
+	}
+
+	public function view($id)
+	{
+		$data['applicant'] = Applicant::find($id);
+		
+		$checkPHD		   = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id,
+								'area_id'  => $data['applicant']->hikingLocation->area_id
+							 ])->first();
+
+		$data['phd'] = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id,
+								'area_id'  => $data['applicant']->hikingLocation->area_id
+							 ])->first();
+		$data['jpn'] = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id
+							 ])->first();
+		$data['phd_data'] = RegionalForestry::where([
+											'state_id' => $data['applicant']->hikingLocation->state_id,
+											'area_id' => $data['applicant']->hikingLocation->area_id
+									    ])
+										->first();
+		return view('account.aktivitipendakian.review', $data);
+	}
+
+	public function download($id, $participant_id)
+	{
+		$data['applicant'] = Applicant::find($id);
+		$data['biodata'] = HikingBiodata::where([
+											'applicant_id' => $id,
+											'hiking_participant_id' => $participant_id
+										])->first();
+		$data['emergency'] = HikingEmergency::where([
+											'applicant_id' => $id,
+											'hiking_participant_id' => $participant_id
+										])->first();
+		$data['insurance'] = HikingInsurance::where([
+											'applicant_id' => $id,
+											'hiking_participant_id' => $participant_id
+										])->first();
+		$data['declaration'] = HikingDeclaration::where([
+											'applicant_id' => $id,
+											'hiking_participant_id' => $participant_id
+										])->first();
+		$data['health']				= HikingHealth::where([
+										'applicant_id' => $id,
+										'hiking_participant_id' => $participant_id
+									  ])->first();
+		
+		$checkPHD		   = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id,
+								'area_id'  => $data['applicant']->hikingLocation->area_id
+							 ])->first();
+
+		$data['phd'] = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id,
+								'area_id'  => $data['applicant']->hikingLocation->area_id
+							 ])->first();
+		$data['jpn'] = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id
+							 ])->first();
+		$data['phd_data'] = RegionalForestry::where([
+											'state_id' => $data['applicant']->hikingLocation->state_id,
+											'area_id' => $data['applicant']->hikingLocation->area_id
+									    ])
+										->first();
+
+		view()->share($data);
+
+		$pdf = PDF::loadView('participantform.download');
+
+		return $pdf->download('download_'. $data['applicant']->number .'.pdf');
+
+		// return view('participantform.download', $data);
 	}
 }

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\State;
 use App\Models\Area;
 use App\Models\RegionalForestry;
+use App\Models\UserLocation;
 use Flash;
 use Validator;
 use Log;
@@ -18,16 +19,54 @@ class RegionalForestOfficialsController extends Controller
 {
 	public function index(Request $request)
 	{
-		$data['regionalforestries'] = RegionalForestry::where(function($q) use ($request){
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$data['regionalforestries'] = RegionalForestry::where(function($q) use ($request){
+											$q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
+									   })
+									   ->where('state_id', $location->state_id)->paginate(10);
+			}
+			else
+			{
+				$data['regionalforestries'] = RegionalForestry::where(function($q) use ($request){
 											$q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
 									   })->paginate(10);
+			}
+		}
+		else
+		{
+			$data['regionalforestries'] = RegionalForestry::where(function($q) use ($request){
+											$q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
+									   })->paginate(10);
+		}
+		
 
 		return view('regionalforestry.index', $data);
 	}
 
 	public function create()
 	{
-		$states = State::get();
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$states    = State::where('id', $location->state_id)->get();
+			}
+			else
+			{
+				$states    = State::get();
+			}
+		}
+		else
+		{
+			$states    = State::get();
+		}
 		$areas  = Area::get();
 		$regionalforestry = new RegionalForestry;
 
@@ -59,14 +98,30 @@ class RegionalForestOfficialsController extends Controller
 		$regionalforestry->email = (!empty($request->email) ? $request->email : '');
 		$regionalforestry->save();
 
-		Flash::success(sprintf('You\'ve successfully created the %s.', $regionalforestry->name));
+		Flash::success(sprintf('Anda telah berjaya menambah maklumat %s.', $regionalforestry->name));
 
         return ['errors' => false];
 	}
 
 	public function edit($id)
 	{
-		$states = State::get();
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$states    = State::where('id', $location->state_id)->get();
+			}
+			else
+			{
+				$states    = State::get();
+			}
+		}
+		else
+		{
+			$states    = State::get();
+		}
 		$areas  = Area::get();
 		$regionalforestry = RegionalForestry::find($id);
 
@@ -98,7 +153,7 @@ class RegionalForestOfficialsController extends Controller
 		$regionalforestry->email = (!empty($request->email) ? $request->email : '');
 		$regionalforestry->save();
 
-		Flash::success(sprintf('You\'ve successfully changed the %s.', $regionalforestry->name));
+		Flash::success(sprintf('Anda telah berjaya mengemaskini maklumat %s.', $regionalforestry->name));
 
         return ['errors' => false];
 	}
@@ -108,7 +163,7 @@ class RegionalForestOfficialsController extends Controller
 		$regionalforestry = RegionalForestry::find($id);
 		$regionalforestry->delete();
 
-		Flash::success(sprintf('%s has been deleted.', $regionalforestry->name));
+		Flash::success(sprintf('Anda telah berjaya memadam maklumat %s.', $regionalforestry->name));
         return redirect()->route('regional-forest-officials.index');
 	}
 

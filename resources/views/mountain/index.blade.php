@@ -25,9 +25,9 @@
                     <div class="col-sm-3 col-sm-offset-9">
                         {!! Form::open(['url' => route('hiking.index'), 'method' => 'get']) !!}
                         <div class="input-group">
-                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Pencarian...']) }}
-                            <span class="input-group-addon">
-                                <button type="submit" class="btn btn-white btn-round btn-just-icon">
+                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Nama Gunung...']) }}
+                            <span class="input-group-addon" style="padding-top: 0;">
+                                <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin-top: 0; padding: 8px">
                                     <i class="material-icons">search</i>
                                     <div class="ripple-container"></div>
                                 </button>
@@ -44,13 +44,13 @@
                         <th>Negeri</th>
                         <th>Daerah</th>
                         <th>Hutan Simpan Kekal</th>
-                        <th>Lokasi</th>
+                        {{-- <th>Lokasi</th> --}}
                         <th>Nama Gunung</th>
                         <th>Caj Permit/Org</th>
-                        <th>Tapak Perkhemahan</th>
+                        {{-- <th>Tapak Perkhemahan</th> --}}
                         <th>Had Daya Tampung Perkhemahan</th>
                         <th>Masa Perjalanan</th>
-                        <td class="text-center">Status</td>
+                        {{-- <td class="text-center">Status</td> --}}
                         <th style="width: 1%"></th>
                     </tr>
                     </thead>
@@ -62,10 +62,10 @@
                             <td>{{ (!empty($mountain->state->name) ? $mountain->state->name : '') }}</td>
                             <td>{{ (!empty($mountain->area->name) ? $mountain->area->name : '') }}</td>
                             <td>{{ (!empty($mountain->permanent_forest->name) ? $mountain->permanent_forest->name : '') }}</td>
-                            <td>{{ $mountain->location }}</td>
+                            {{-- <td>{{ $mountain->location }}</td> --}}
                             <td>{{ $mountain->name }}</td>
                             <td>RM{{ $mountain->price }}</td>
-                            <td>{{ ($mountain->campground == 'Y' ? 'Ada' : 'Tiada') }}</td>
+                            {{-- <td>{{ ($mountain->campground == 'Y' ? 'Ada' : 'Tiada') }}</td> --}}
                             <td>{{ $mountain->capacity }}</td>
                             <td>
                                 @if($mountain->travel_day == '1' && $mountain->travel_night == '0')
@@ -74,26 +74,26 @@
                                     {{ $mountain->travel_day }}H{{ $mountain->travel_night }}M
                                 @endif
                             </td>
-                            <td align="center">
+                            {{-- <td align="center">
                                 @if($mountain->active == '1')
                                     <span class="label label-success">Enable</span>
                                 @else
                                     <span class="label label-danger">Disable</span>
                                 @endif
-                            </td>
+                            </td> --}}
                             <td class="td-actions text-right">
                                 <a type="button" class="btn btn-primary btn-sm"
                                    data-toggle="modal"
                                    data-target="#modal-form"
                                    data-action="{{ route('hiking.edit', $mountain->id) }}"
-                                   data-title="Edit {{ $mountain->name }}">
+                                   data-title="Kemaskini {{ $mountain->name }}">
                                     <i class="material-icons">create</i>
                                 </a>&nbsp;
                                 <a type="button" class="btn btn-danger btn-sm"
                                    data-toggle="modal"
                                    data-target="#modal-delete"
                                    data-action="{{ route('hiking.destroy', $mountain->id) }}"
-                                   data-title="Delete Confirmation!"
+                                   data-title="Hapus"
                                    data-message="You are about to delete {{ $mountain->name }} record, this procedure is irreversible. Do you want to proceed?">
                                     <i class="material-icons">clear</i>
                                     <div class="ripple-container"></div>

@@ -19,14 +19,15 @@ class LoginController extends Controller
 {
 	public function index()
 	{
-		if(Auth::guard('applicant')->check())
-		{
-			return redirect('account/member-home');
-		}
-		else
-		{
-			return view('account.user.login');
-		}
+		return redirect(url('/'));
+		// if(Auth::guard('applicant')->check())
+		// {
+		// 	return redirect('account/member-home');
+		// }
+		// else
+		// {
+		// 	return view('account.user.login');
+		// }
 		
 	}
 

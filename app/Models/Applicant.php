@@ -29,15 +29,29 @@ class Applicant extends Model
     {
         return $this->hasMany('App\Models\HikingParticipant');
     }
-
+    public function hikingGuide()
+    {
+        return $this->hasMany('App\Models\HikingGuide');
+    }
+    
     public function applicantConvenience()
     {
         return $this->belongsTo('App\Models\ApplicantConvenience', 'id', 'applicant_id');
     }
 
+    public function applicantConveniences()
+    {
+        return $this->hasMany('App\Models\ApplicantConvenience');
+    }
+
     public function applicant_convenience()
     {
-        return $this->belongsTo('App\Models\ApplicantConvenience', 'id', 'applicant_id');
+        return $this->hasMany('App\Models\ApplicantConvenience');
+    }
+
+    public function applicant_convenience_declaration()
+    {
+        return $this->belongsTo('App\Models\ApplicantConvenienceDeclaration', 'id', 'applicant_id');
     }
 
     public function hikingLocation()

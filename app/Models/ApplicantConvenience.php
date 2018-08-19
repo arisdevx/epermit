@@ -43,6 +43,11 @@ class ApplicantConvenience extends Model
 
     public function applicant_convenience_declaration()
     {
-        return $this->belongsTo('App\Models\ApplicantConvenienceDeclaration', 'id', 'applicant_convenience_id');
+        return $this->belongsTo('App\Models\ApplicantConvenienceDeclaration', 'id', 'applicant_id');
+    }
+
+    public function convenience_category()
+    {
+        return $this->belongsTo('App\Models\ConvenienceCategory');
     }
 }

@@ -16,14 +16,27 @@
 	@yield('styles')
 	<link rel="shortcut icon" href="{{ asset('/img/favicon.png') }}">
 </head>
-<body>
+<body class="scroll">
 	@yield('container')
 	@yield('modal')
 	<script type="text/javascript" src="{{ asset('js/jquery.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/bootstrap/bootstrap.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/account/jquery.datetimepicker.full.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/select2.full.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/maxlength.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('/js/printThis.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/account/script.js') }}"></script>
+	<script type="text/javascript">
+		(function($){
+			'use strict';
+
+			$(document).ready(function(){
+				$('body').on('click', '#print', function(){
+					$('#printArea').printThis();
+				});
+			});
+		})(jQuery);
+	</script>
 
 	@yield('script')
 </body>

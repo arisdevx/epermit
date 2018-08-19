@@ -25,4 +25,9 @@ class Mountain extends Model
     {
         return $this->belongsTo('App\Models\PermanentForest');
     }
+
+    public function mountain_related()
+    {
+        return $this->hasMany('App\Models\MountainRelated');
+    }
 }

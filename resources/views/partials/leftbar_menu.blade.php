@@ -164,8 +164,45 @@
             <a href="{{ url('applicant-status') }}">
                 <i class="material-icons">assignment</i>
                 <p>Status Permohonan</p>
+                @if(get_applicant_total() != 0)
+                    <div data-background-color="red" class="badge badge-danger pull-right" style="margin-top: -25px; margin-right: -20px; background-color: #ef5350">{{ get_applicant_total() }}</div>
+                @endif
             </a>
         </li>
+        @if(auth()->user()->hasRole(['super', 'admin', 'jabatan_perhutanan_negeri', 'pegawai_hutan_daerah']))
+            <li>
+                <a data-toggle="collapse" href="#applications">
+                    <i class="material-icons">settings</i>
+                    <p>Permohonan
+                        <b class="caret"></b>
+                    </p>
+                </a>
+                <div class="collapse{{ (in_array(request()->segment(1), ['aktiviti-pendakian', 'tempahan-kemudahan', 'aktiviti-lain', 'application-status']) ? ' in' : '') }}" id="applications">
+                    <ul class="nav">
+                        <li>
+                            <a href="{{ route('aktiviti-pendakian.index') }}">
+                                <span class="sidebar-normal">Aktiviti Pendakian</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('tempahan-kemudahan.index') }}">
+                                <span class="sidebar-normal">Tempahan Kemudahan</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('aktiviti-lain.index') }}">
+                                <span class="sidebar-normal">Aktiviti Lain-lain</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('application-status.index') }}">
+                                <span class="sidebar-normal">Status Permohonan</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        @endif
         @if(auth()->user()->hasRole(['super', 'admin', 'jabatan_perhutanan_negeri']))
             <li>
                 <a data-toggle="collapse" href="#configuration">
@@ -174,7 +211,7 @@
                         <b class="caret"></b>
                     </p>
                 </a>
-                <div class="collapse" id="configuration">
+                <div class="collapse{{ (in_array(request()->segment(1), ['permanent-forest', 'eco-park', 'hiking', 'convenience', 'state-user', 'area', 'guide', 'regional-forest-officials']) ? ' in' : '') }}" id="configuration">
                     <ul class="nav">
                         <li>
                             <a href="{{ route('permanent-forest.index') }}">
@@ -233,11 +270,23 @@
                             </a>
                         </li>
                         @endif --}}
-                         <li>
+                        <li>
+                            <a href="{{ route('state-user.index') }}">
+                                <span class="sidebar-normal">Negeri</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('area.index') }}">
                                 <span class="sidebar-normal">Daerah</span>
                             </a>
                         </li>
+                        @if(auth()->user()->hasRole('super', 'admin'))
+                            <li>
+                                <a href="{{ route('guide.index') }}">
+                                    <span class="sidebar-normal">Malim</span>
+                                </a>
+                            </li>
+                        @endif
                         {{-- @if(auth()->user()->hasRole(['super', 'admin']))
                          <li>
                             <a href="{{ route('state-forestry-department.index') }}">
@@ -263,7 +312,7 @@
                         <b class="caret"></b>
                     </p>
                 </a>
-                <div class="collapse" id="settings">
+                <div class="collapse{{ (in_array(request()->segment(1), ['homepage-setting', 'slider-setting', 'post-information']) ? ' in' : '') }}" id="settings">
                     <ul class="nav">
                         <li>
                             <a href="{{ route('homepage-setting.index') }}">
@@ -290,7 +339,7 @@
                         <b class="caret"></b>
                     </p>
                 </a>
-                <div class="collapse" id="audit">
+                <div class="collapse{{ (in_array(request()->segment(1), ['audit-trail-access', 'audit-trail-activity']) ? ' in' : '') }}" id="audit">
                     <ul class="nav">
                         <li>
                             <a href="{{ route('audit-trail-access.index') }}">

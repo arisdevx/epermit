@@ -6,6 +6,8 @@ use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Auth, Flash, Validator, Hash;
 use App\Http\Requests\AdminProfileRequest;
+use App\Models\State;
+use App\Models\Country;
 
 class ProfileController extends Controller
 {
@@ -13,8 +15,10 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $profile = Auth::user()->profile ?: new UserProfile();
+        $states = State::orderBy('name', 'ASC')->get();
+        $countries = Country::orderBy('name', 'ASC')->get();
 
-        return view('profile.index', compact('user', 'profile'));
+        return view('profile.index', compact('user', 'profile', 'states', 'countries'));
     }
 
     public function create()
@@ -92,6 +96,15 @@ class ProfileController extends Controller
 
     public function updateData(AdminProfileRequest $request)
     {
+        $profile = UserProfile::where('user_id', Auth::user()->id)->first();
+        $profile->address_1 = (!empty($request->addressuser) ? $request->addressuser : '');
+        $profile->nokp      = (!empty($request->nokp) ? $request->nokp : '');
+        $profile->city = (!empty($request->city) ? $request->city : '');
+        $profile->postcode = (!empty($request->postcode) ? $request->postcode : '');
+        $profile->state = (!empty($request->state) ? $request->state : '');
+        $profile->country = (!empty($request->country) ? $request->country : '');
+        $profile->save();
+        
         $user = Auth::user();
 
         $user->name = $request->name;
@@ -110,10 +123,7 @@ class ProfileController extends Controller
             Flash::error('Gagal mengemaskini kata laluan baru');
         }
 
-        $profile = UserProfile::where('user_id', Auth::user()->id)->first();
-        $profile->address_1 = (!empty($request->addressuser) ? $request->addressuser : '');
-        $profile->nokp      = (!empty($request->nokp) ? $request->nokp : '');
-        $profile->save();
+
 
         return redirect('profile');
     }

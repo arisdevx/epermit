@@ -13,7 +13,7 @@
             <table class="table table-bordered" style="margin-bottom: 10px; width: 30%">
                 <thead>
                     <tr class="active">
-                        <th colspan="2">Pemohon</th>
+                        <th colspan="2"><strong>Pemohon</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,7 +30,7 @@
             <table class="table table-bordered" style="margin-top: 10px;">
                 <thead>
                     <tr class="active">
-                        <th colspan="6" style="text-align: center;">A. Maklumat Pendakian</th>
+                        <th colspan="6" style="text-align: center;"><strong>A. Maklumat Pendakian</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,10 +42,10 @@
                         <th>Daerah</th>
                         <td>{{ $location->area->name }}</td>
                     </tr>
-                    <tr>
+                    {{-- <tr>
                         <th>Hutan Simpan Kekal</th>
                         <td>{{ (!empty($information->permanent_forest->name) ? $information->permanent_forest->name : '') }}</td>
-                    </tr>
+                    </tr> --}}
                     <tr>
                         <th>Nama Gunung</th>
                         <td>{{ $information->mountain->name }}</td>
@@ -59,11 +59,11 @@
                         <th>Tarikh Tamat</th>
                         <td>{{ date('d/m/Y', strtotime($information->ending_date)) }}</td>
                     </tr>
-                    
+                    {{-- 
                     <tr>
                         <th>Nama Malim Gunung</th>
                         <td>{{ $information->mountain_guide }}</td>
-                    </tr>
+                    </tr> --}}
                     <tr>
                         <th>Jumlah Peserta</th>
                         <td>{{ $information->participants_total }} Orang</td>
@@ -108,7 +108,7 @@
             <table class="table table-bordered" style="margin-top: 10px;">
                 <thead>
                     <tr class="active">
-                        <th colspan="6" style="text-align: center;">B. Maklumat Pendaki</th>
+                        <th colspan="6" style="text-align: center;"><strong>B. Maklumat Pendaki</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -136,7 +136,7 @@
                         <th width="15%">Warganegara</th>
                         <td width="15%">{{ date('d/m/Y', strtotime($biodata->nationality)) }}</td>
                         <th width="20%">Negeri</th>
-                        <td width="30%" colspan="1">{{ $biodata->state }}</td>
+                        <td width="30%" colspan="1">{{ $biodata->state->name }}</td>
                         <th width="20%">Poskod</th>
                         <td width="30%">{{ $biodata->postcode }}</td>
                     </tr>
@@ -145,7 +145,7 @@
             <table class="table table-bordered" style="margin-top: 10px;">
                 <thead>
                     <tr class="active">
-                        <th colspan="6" style="text-align: center;">C. Maklumat Orang Untuk Dihubungi Jika Berlaku Kecemasan</th>
+                        <th colspan="6" style="text-align: center;"><strong>C. Maklumat Orang Untuk Dihubungi Jika Berlaku Kecemasan</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -161,13 +161,13 @@
                         <th>Alamat Tempat Tinggal</th>
                         <td>{{ $emergency->address }}</td>
                      </tr>
-                      <tr>
+                      {{-- <tr>
                         <th>Sekiranya Berbeza <br />Daripada Alamat Pendaki</th>
                         <td>{{ $emergency->second_address }}</td>
-                     </tr>
+                     </tr> --}}
                      <tr>
                         <th>Negeri</th>
-                        <td>{{ $emergency->state }}</td>
+                        <td>{{ $emergency->state->name }}</td>
                      </tr>
                      <tr>
                         <th>Poskod</th>
@@ -178,7 +178,7 @@
             <table class="table table-bordered" style="margin-top: 10px;">
                 <thead>
                     <tr class="active">
-                        <th colspan="6" style="text-align: center;">D. Maklumat Polisi Insurans</th>
+                        <th colspan="6" style="text-align: center;"><strong>D. Maklumat Polisi Insurans</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -195,7 +195,7 @@
             <table class="table table-bordered" style="margin-top: 10px;">
                 <thead>
                     <tr class="active">
-                        <th colspan="5" style="text-align: center;">E. Maklumat Kesihatan Pendaki</th>
+                        <th colspan="5" style="text-align: center;"><strong>E. Maklumat Kesihatan Pendaki</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -339,7 +339,7 @@
             <table class="table table-bordered" style="margin-top: 10px;">
                 <thead>
                     <tr class="active">
-                        <th colspan="6" style="text-align: center;">F. Perakuan Kebenaran Pendaki</th>
+                        <th colspan="6" style="text-align: center;"><strong>F. Perakuan Kebenaran Pendaki</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -357,7 +357,7 @@
                      </tr>
                 </tbody>
             </table>
-            <table class="table table-bordered" style="margin-top: 10px;">
+            {{-- <table class="table table-bordered" style="margin-top: 10px;">
                 <thead>
                     <tr class="active">
                         <th colspan="6" style="text-align: center;">G. Tempahan Kemudahan</th>
@@ -378,8 +378,8 @@
                         </tr>
                      @endif
                 </tbody>
-            </table>
-            <a href="{{ url('applicant-status') }}" class="btn btn-default">Semula</a>
+            </table> --}}
+            <a href="{{ url('applicant-status') }}" class="btn btn-default">Kembali</a>
         </div>
     </div>
 </div>

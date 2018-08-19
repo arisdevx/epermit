@@ -1,37 +1,148 @@
-@extends('account.layouts.panel')
+@extends('participantform.layout.panel')
 
 @section('content')
+	<style type="text/css">
+		table tr td,
+		h3, h4 {
+			text-transform: uppercase;
+		}
+		.form-group label.control-label,
+		label {
+			color: #333333;
+			/*text-transform: uppercase;*/
+		}
+		label small {
+			display: block !important;
+		}
+
+		input, textarea, select option,
+		.select2-state-container,
+		.select2-results__option,
+		.select2-selection__rendered { 
+		    text-transform: uppercase !important;
+		}
+		select {text-transform:capitalize}
+		::-webkit-input-placeholder { /* WebKit browsers */
+		    text-transform: none;
+		}
+		:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+		    text-transform: none;
+		}
+		::-moz-placeholder { /* Mozilla Firefox 19+ */
+		    text-transform: none;
+		}
+		:-ms-input-placeholder { /* Internet Explorer 10+ */
+		    text-transform: none;
+		}
+		::placeholder { /* Recent browsers */
+		    text-transform: none;
+		}
+	</style>
+	<header class="participant-header">
+			<div class="participant-logo"><img src="{{ asset('img/logo-bg-white.png') }}"></div>
+			<div class="participant-description">
+				<h3>Jabatan Perhutanan Semenanjung Malaysia</h3>
+				<h4><strong>Borang Peserta Aktiviti Pendakian / <i>Participant form of Climbing Activity</i></strong></h4>
+			</div>
+			
+				<table border="1" width="100%" cellpadding="10%" cellspacing="5">
+					<tr>
+						<td align="left" width="20%" style="padding: 5px">Nama Pemohon</td>
+						<td align="center" width="1%" style="padding: 5px">:</td>
+						<td align="left" style="padding: 5px">{{ $applicant->hikingDeclaration->fullname }}</td>
+					</tr>
+					<tr>
+						<td align="left" width="20%" style="padding: 5px">Tarikh Permohonan</td>
+						<td align="center" width="1%" style="padding: 5px">:</td>
+						<td align="left" style="padding: 5px">{{ date('d/m/Y', strtotime($applicant->hikingDeclaration->date)) }}</td>
+					</tr>
+					<tr>
+						<td align="left" width="20%" style="padding: 5px">No Permohonan</td>
+						<td align="center" width="1%" style="padding: 5px">:</td>
+						<td align="left" style="padding: 5px">{{ $applicant->number }}</td>
+					</tr>
+					<tr>
+						<td align="left" width="20%" style="padding: 5px">Negeri Pendakian</td>
+						<td align="center" width="1%" style="padding: 5px">:</td>
+						<td align="left" style="padding: 5px">{{ $applicant->hikingLocation->state->name }}</td>
+					</tr>
+					<tr>
+						<td align="left" width="20%" style="padding: 5px">Daerah Pendakian</td>
+						<td align="center" width="1%" style="padding: 5px">:</td>
+						<td align="left" style="padding: 5px">{{ $applicant->hikingLocation->area->name }}</td>
+					</tr>
+					<tr>
+						<td align="left" width="20%" style="padding: 5px">Tempat Pendakian</td>
+						<td align="center" width="1%" style="padding: 5px">:</td>
+						<td align="left">{{ $applicant->hikingInformation->mountain->name }}</td>
+					</tr>
+				</table>
+				<hr>
+				<p style="text-align: left; text-transform: uppercase">
+					*ARAHAN / <i>INSTRUCTIONS</i> : <br />
+				Anda dikehendaki melengkapkan maklumat peribadi sebelum menghantar permohonan ini untuk diproses.
+				<br><i>YOU REQUIRED COMPLETING PERSONAL INFORMATION BEFORE SENDING THIS APPLICATION TO PROCESSED.</i>
+				</p>
+			
+		</header>
 	{{ Form::open(['url' => url('form/hiking/submit/' . request()->segment(3)), 'method' => 'POST']) }}
 		<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 			<div class="panel panel-default">
 				<div class="panel-heading" role="tab">
 					<h4 class="panel-title">
 						<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#form2" aria-expanded="false" aria-controls="form2">
-							A. MAKULMAT PENDAKI <small style="display: block; margin-left: 20px;"><i>DETAILS OF HIKER</i></small>
+							A. MAKLUMAT PENDAKI <small style="display: block; margin-left: 20px;"><i>DETAILS OF HIKER</i></small>
 						</a>
 					</h4>
 				</div>
 				<div id="form2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
 					<div class="panel-body">
-						<div class="form-group{{ ($errors->has('hiker_fullname') ? ' has-error' : '') }}">
-							<label class="control-label">Nama Penuh <small><i>Full Name</i></small></label>
-							<input type="text" class="form-control" value="{{ request()->old('hiker_fullname') }}" id="hiker_fullname" name="hiker_fullname">
-							@if($errors->has('hiker_fullname'))
-								<span class="help-error">{{ $errors->first('hiker_fullname') }}</span>
-							@endif
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group{{ ($errors->has('hiker_fullname') ? ' has-error' : '') }}">
+									<label class="control-label">Nama Penuh <small><i>Full Name</i></small></label>
+									<input type="text" class="form-control" value="{{ request()->old('hiker_fullname') }}" id="hiker_fullname" name="hiker_fullname">
+									@if($errors->has('hiker_fullname'))
+										<span class="help-error">{{ $errors->first('hiker_fullname') }}</span>
+									@endif
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="row" style="margin-top: 38px">
+									<div class="col-md-6">
+										<div class="form-group{{ ($errors->has('hiker_nationality') ? ' has-error' : '') }}">
+											<label class="control-label"><input type="radio" id="hiker_nationality" name="hiker_nationality" value="1"> Warganegara <small><i>Citizen</i></small></label>
+											{{-- <input type="text" class="form-control" value="{{ request()->old('hiker_nationality') }}" name="hiker_nationality"> --}}
+											@if($errors->has('hiker_nationality'))
+												<span class="help-error">{{ $errors->first('hiker_nationality') }}</span>
+											@endif
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group{{ ($errors->has('hiker_nationality') ? ' has-error' : '') }}">
+											<label class="control-label"><input type="radio" id="non_hiker_nationality" name="hiker_nationality" value="0"> Bukan Warganegara <small><i>Not a Citizen</i></small></label>
+											{{-- <input type="text" class="form-control" value="{{ request()->old('hiker_nationality') }}" name="hiker_nationality"> --}}
+											@if($errors->has('hiker_nationality'))
+												<span class="help-error">{{ $errors->first('hiker_nationality') }}</span>
+											@endif
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div class="form-group{{ ($errors->has('hiker_nationality') ? ' has-error' : '') }}">
+						
+						{{-- <div class="form-group{{ ($errors->has('hiker_nationality') ? ' has-error' : '') }}">
 							<label class="control-label"><input type="checkbox" name="hiker_nationality" id="hiker_nationality" value="1"> Warganegara <small><i>Nationality</i></small></label>
-							{{-- <input type="text" class="form-control" value="{{ request()->old('hiker_nationality') }}" name="hiker_nationality"> --}}
+							<input type="text" class="form-control" value="{{ request()->old('hiker_nationality') }}" name="hiker_nationality">
 							@if($errors->has('hiker_nationality'))
 								<span class="help-error">{{ $errors->first('hiker_nationality') }}</span>
 							@endif
-						</div>
+						</div> --}}
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group{{ ($errors->has('hiker_ic') ? ' has-error' : '') }}">
 									<label class="control-label">No. KP/No. Passport <small><i>IC No./Passport No.</i></small></label>
-									<input type="text" class="form-control" value="{{ request()->old('hiker_ic') }}" id="hiker_ic" name="hiker_ic">
+									<input type="number" class="form-control" value="{{ request()->old('hiker_ic') }}" id="hiker_ic" name="hiker_ic" data-maxsize="12">
 									@if($errors->has('hiker_ic'))
 										<span class="help-error">{{ $errors->first('hiker_ic') }}</span>
 									@endif
@@ -53,10 +164,11 @@
 							<div class="col-md-6">
 								<div class="form-group{{ ($errors->has('hiker_gender') ? ' has-error' : '') }}">
 									<label class="control-label">Jatina <small><i>Gender</i></small></label>
-									<br />
-									<input type="radio" name="hiker_gender" value="M" checked> Lelaki <small><i>Male</i></small>
-									<br />
-									<input type="radio" name="hiker_gender" value="W"> Perempuan <small><i>Female</i></small>
+									<select class="form-control select2" name="hiker_gender" id="hiker_gender" data-placeholder="Pilih Jatina" style="width: 100%">
+										<option value="M"{{ (request()->old('hiker_gender') == 'M' ? ' selected' : '') }}>Lelaki / Male</option>
+										<option value="W"{{ (request()->old('hiker_gender') == 'W' ? ' selected' : '') }}>Perempuan / Female</option>
+									</select>
+									
 									@if($errors->has('hiker_gender'))
 										<span class="help-error">{{ $errors->first('hiker_gender') }}</span>
 									@endif
@@ -65,7 +177,7 @@
 							<div class="col-md-6">
 								<div class="form-group{{ ($errors->has('hiker_age') ? ' has-error' : '') }}">
 									<label class="control-label">Umur <small><i>Age</i></small></label>
-									<input type="text" class="form-control" value="{{ request()->old('hiker_age') }}" name="hiker_age" id="hiker_age">
+									<input type="number" class="form-control" value="{{ request()->old('hiker_age') }}" name="hiker_age" id="hiker_age">
 									@if($errors->has('hiker_age'))
 										<span class="help-error">{{ $errors->first('hiker_age') }}</span>
 									@endif
@@ -73,40 +185,71 @@
 								
 							</div>
 						</div>
-						<div class="form-group{{ ($errors->has('hiker_phone') ? ' has-error' : '') }}">
-							<label class="control-label">No. Telefon <small><i>Telephone No.</i></small></label>
-							<input type="text" class="form-control" value="{{ request()->old('hiker_phone') }}" name="hiker_phone">
-							@if($errors->has('hiker_phone'))
-								<span class="help-error">{{ $errors->first('hiker_phone') }}</span>
-							@endif
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group{{ ($errors->has('hiker_phone') ? ' has-error' : '') }}">
+									<label class="control-label">No. Telefon <small><i>Telephone No.</i></small></label>
+									<input type="number" class="form-control" value="{{ request()->old('hiker_phone') }}" name="hiker_phone">
+									@if($errors->has('hiker_phone'))
+										<span class="help-error">{{ $errors->first('hiker_phone') }}</span>
+									@endif
+								</div>
+							</div>
 						</div>
 						<div class="form-group{{ ($errors->has('hiker_address') ? ' has-error' : '') }}">
-							<label class="control-label">Alamat Tempat Tinggal <small><i>Home Address</i></small></label>
+							<label class="control-label">Alamat <small><i>Address</i></small></label>
 							<textarea class="form-control" rows="3" name="hiker_address">{{ request()->old('hiker_address') }}</textarea>
 							@if($errors->has('hiker_address'))
 								<span class="help-error">{{ $errors->first('hiker_address') }}</span>
 							@endif
 						</div>
 						<div class="row">
-							<div class="col-md-6">
-								<div class="form-group{{ ($errors->has('hiker_state') ? ' has-error' : '') }}">
-									<label class="control-label">Negeri <small><i>State</i></small></label>
-									<input type="text" class="form-control" value="{{ request()->old('hiker_state') }}" name="hiker_state">
-									@if($errors->has('hiker_state'))
-										<span class="help-error">{{ $errors->first('hiker_state') }}</span>
-									@endif
-								</div>
-							</div>
-							<div class="col-md-6">
+							<div class="col-md-4">
 								<div class="form-group{{ ($errors->has('hiker_postcode') ? ' has-error' : '') }}">
-									<label class="control-label">Poskod <small><i>Postcode</i></small></label>
-									<input type="text" class="form-control" value="{{ request()->old('hiker_postcode') }}" name="hiker_postcode">
+									<label class="control-label">Poskod <small><i>Post Code</i></small></label>
+									<input type="number" class="form-control" value="{{ request()->old('hiker_postcode') }}" name="hiker_postcode" id="hiker_postcode" data-maxsize="5">
 									@if($errors->has('hiker_postcode'))
 										<span class="help-error">{{ $errors->first('hiker_postcode') }}</span>
 									@endif
 								</div>
 							</div>
+							<div class="col-md-4">
+								<div class="form-group{{ ($errors->has('hiker_state') ? ' has-error' : '') }}">
+									<label class="control-label">Negeri <small><i>State</i></small></label>
+									<select class="form-control select2" name="hiker_state" id="hiker_state" data-placeholder="Pilih Negeri" style="width: 100%">
+										<option></option>
+										@foreach($states as $state)
+											<option value="{{ $state->id }}">{{ $state->name }}</option>
+										@endforeach
+									</select>
+									@if($errors->has('hiker_state'))
+										<span class="help-error">{{ $errors->first('hiker_state') }}</span>
+									@endif
+								</div>
+							</div>
+							<div class="col-md-4">
+
+								<div class="form-group{{ ($errors->has('hiker_country') ? ' has-error' : '') }}">
+									<label class="control-label">Negara <small><i>Country</i></small></label>
+									<select class="form-control select2" name="hiker_country" id="hiker_country" data-placeholder="Pilih Negara" style="width: 100%">
+										<option></option>
+										@foreach($countries as $country)
+											<option value="{{ $country->id }}"{{ (strtolower($country->name) == 'malaysia' ? ' selected' : '') }}>{{ ucwords(strtolower($country->name)) }}</option>
+										@endforeach
+									</select>
+									@if($errors->has('hiker_country'))
+										<span class="help-error">{{ $errors->first('hiker_country') }}</span>
+									@endif
+								</div>
+							</div>
 						</div>
+						@if($malim_ready < $malim_available)
+							<div class="form-group">
+								<label>
+									<input type="checkbox" name="guide"> Adakah anda sebagai Malim Gunung?
+								</label>
+							</div>
+						@endif
 					</div>
 				</div>
 			</div>
@@ -120,32 +263,55 @@
 				</div>
 				<div id="form3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
 					<div class="panel-body">
-						<div class="form-group{{ ($errors->has('emergency_fullname') ? ' has-error' : '') }}">
-							<label class="control-label">Nama Penuh <small><i>Full Name</i></small></label>
-							<input type="text" class="form-control" value="{{ request()->old('emergency_fullname') }}" name="emergency_fullname">
-							@if($errors->has('emergency_fullname'))
-								<span class="help-error">{{ $errors->first('emergency_fullname') }}</span>
-							@endif
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group{{ ($errors->has('emergency_fullname') ? ' has-error' : '') }}">
+									<label class="control-label">Nama Penuh <small><i>Full Name</i></small></label>
+									<input type="text" class="form-control" value="{{ request()->old('emergency_fullname') }}" name="emergency_fullname">
+									@if($errors->has('emergency_fullname'))
+										<span class="help-error">{{ $errors->first('emergency_fullname') }}</span>
+									@endif
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group"{{ ($errors->has('emergency_relationship') ? ' has-error' : '') }}>
+									<label class="control-label">Hubungan <small><i>Relationship</i></small></label>
+									<select class="form-control select2" name="emergency_relationship" style="width: 100%" data-placeholder="Pilih Hubungan">
+										<option disabled selected value>Hubungan</option>
+										<option value="husband-wife"{{ (request()->old('emergency_relationship') == 'husband-wife'? ' selected' : '') }}>Suami-Isteri / Husband-Wife</option>
+										<option value="parents"{{ (request()->old('emergency_relationship') == 'parents'? ' selected' : '') }}>Ibu-Bapa / Parents</option>
+										<option value="siblings"{{ (request()->old('emergency_relationship') == 'siblings'? ' selected' : '') }}>Adik-beradik / Siblings</option>
+										<option value="others"{{ (request()->old('emergency_relationship') == 'others'? ' selected' : '') }}>Lain-lain / Others</option>
+									</select>
+									@if($errors->has('emergency_relationship'))
+										<span class="help-error">{{ $errors->first('emergency_relationship') }}</span>
+									@endif
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group{{ ($errors->has('emergency_phone') ? ' has-error' : '') }}">
+									<label class="control-label">No. Telefon <small><i>Telephone No.</i></small></label>
+									<input type="number" class="form-control" value="{{ request()->old('emergency_phone') }}" name="emergency_phone">
+									@if($errors->has('emergency_phone'))
+										<span class="help-error">{{ $errors->first('emergency_phone') }}</span>
+									@endif
+								</div>
+							</div>
 						</div>
-						<div class="form-group{{ ($errors->has('emergency_phone') ? ' has-error' : '') }}">
-							<label class="control-label">No. Telefon <small><i>Telephone No.</i></small></label>
-							<input type="text" class="form-control" value="{{ request()->old('emergency_phone') }}" name="emergency_phone">
-							@if($errors->has('emergency_phone'))
-								<span class="help-error">{{ $errors->first('emergency_phone') }}</span>
-							@endif
-						</div>
+
+						
 						<div class="form-group{{ ($errors->has('emergency_address') ? ' has-error' : '') }}">
-							<label class="control-label">Alamat Tempat Tinggal <small><i>Address</i></small></label>
+							<label class="control-label">Alamat<small><i>Address</i></small></label>
 							<textarea class="form-control" rows="3" name="emergency_address">{{ request()->old('emergency_address') }}</textarea>
 							@if($errors->has('emergency_address'))
 								<span class="help-error">{{ $errors->first('emergency_address') }}</span>
 							@endif
 						</div>
-						<div class="form-group">
+						{{-- <div class="form-group">
 							<label class="control-label">Sekiranya Berbeza Daripada Alamat Pendaki <small><i>If Different From Hiker Address</i></small></label>
 							<textarea class="form-control" rows="3" name="emergency_second_address">{{ request()->old('emergency_second_address') }}</textarea>
-						</div>
-						<div class="row">
+						</div> --}}
+						{{-- <div class="row">
 							<div class="col-md-6">
 								<div class="form-group{{ ($errors->has('emergency_state') ? ' has-error' : '') }}">
 									<label class="control-label">Negeri <small><i>State</i></small></label>
@@ -164,7 +330,48 @@
 									@endif
 								</div>
 							</div>
-						</div>
+						</div> --}}
+						<div class="row">
+									<div class="col-md-4">
+										<div class="form-group{{ ($errors->has('emergency_postcode') ? ' has-error' : '') }}">
+											<label class="control-label">Poskod <small><i>Post Code</i></small></label>
+											<input type="number" class="form-control" value="{{ request()->old('emergency_postcode') }}" name="emergency_postcode" data-maxsize="5">
+											@if($errors->has('emergency_postcode'))
+												<span class="help-error">{{ $errors->first('emergency_postcode') }}</span>
+											@endif
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group{{ ($errors->has('emergency_state') ? ' has-error' : '') }}">
+											<label class="control-label">Negeri <small><i>State</i></small></label>
+											<select class="form-control select2" name="emergency_state" id="emergency_state" data-placeholder="Pilih Negeri" style="width: 100%">
+												<option></option>
+												@foreach($states as $state)
+													<option value="{{ $state->id }}">{{ $state->name }}</option>
+												@endforeach
+											</select>
+											@if($errors->has('emergency_state'))
+												<span class="help-error">{{ $errors->first('emergency_state') }}</span>
+											@endif
+										</div>
+									</div>
+									<div class="col-md-4">
+
+										<div class="form-group{{ ($errors->has('emergency_country') ? ' has-error' : '') }}">
+											<label class="control-label">Negara <small><i>Country</i></small></label>
+											<select class="form-control select2" name="emergency_country" id="country" data-placeholder="Pilih Negara" style="width: 100%">
+												<option></option>
+												@foreach($countries as $country)
+													<option value="{{ $country->id }}"{{ (strtolower($country->name) == 'malaysia' ? ' selected' : '') }}>{{ ucwords(strtolower($country->name)) }}</option>
+												@endforeach
+											</select>
+											@if($errors->has('emergency_country'))
+												<span class="help-error">{{ $errors->first('emergency_country') }}</span>
+											@endif
+										</div>
+									</div>
+									
+								</div>
 					</div>
 				</div>
 			</div>
@@ -178,13 +385,19 @@
 				</div>
 				<div id="form4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
 					<div class="panel-body">
-						<div class="form-group">
-							<label class="control-label">Nama Syarikat Insurans <small><i>Name of Insurans Company</i></small></label>
-							<input type="text" class="form-control" value="{{ request()->old('insurance_name') }}" name="insurance_name">
-						</div>
-						<div class="form-group">
-							<label class="control-label">No. Polisi Insurans <small><i>No. Of Insurans Policies</i></small></label>
-							<input type="text" class="form-control" value="{{ request()->old('insurance_code') }}" name="insurance_code">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="control-label">Nama Syarikat Insurans <small><i>Name of Insurans Company</i></small></label>
+									<input type="text" class="form-control" value="{{ request()->old('insurance_name') }}" name="insurance_name">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="control-label">No. Polisi Insurans <small><i>No. Of Insurans Policies</i></small></label>
+									<input type="text" class="form-control" value="{{ request()->old('insurance_code') }}" name="insurance_code">
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -382,21 +595,21 @@
 					
 						<div class="form-group{{ ($errors->has('declaration_name') ? ' has-error' : '') }}">
 							<label class="control-label">Nama Penuh <small><i>Full Name</i></small></label>
-							<input type="text" class="form-control" value="{{ request()->old('declaration_name') }}" id="declaration_name" name="declaration_name">
+							<input type="text" class="form-control" value="{{ request()->old('declaration_name') }}" id="declaration_name" name="declaration_name" readonly>
 							@if($errors->has('declaration_name'))
 								<span class="help-error">{{ $errors->first('declaration_name') }}</span>
 							@endif
 						</div>
 						<div class="form-group{{ ($errors->has('declaration_ic') ? ' has-error' : '') }}">
 							<label class="control-label">No. KP / No. Passport <small><i>IC No./Passport No.</i></small></label>
-							<input type="text" class="form-control" value="{{ request()->old('declaration_ic') }}" id="declaration_ic" name="declaration_ic">
+							<input type="text" class="form-control" value="{{ request()->old('declaration_ic') }}" id="declaration_ic" name="declaration_ic" readonly>
 							@if($errors->has('declaration_ic'))
 								<span class="help-error">{{ $errors->first('declaration_ic') }}</span>
 							@endif
 						</div>
 						<div class="form-group{{ ($errors->has('declaration_date') ? ' has-error' : '') }}">
 							<label class="control-label">Tarikh <small><i>Date</i></small></label>
-							<input type="text" class="form-control datepicker" value="{{ date('d/m/Y') }}" name="declaration_date">
+							<input type="text" class="form-control" value="{{ date('d/m/Y') }}" name="declaration_date" readonly>
 							@if($errors->has('declaration_date'))
 								<span class="help-error">{{ $errors->first('declaration_date') }}</span>
 							@endif
@@ -404,11 +617,17 @@
 
 						<p><b>Nota: Permohonan perlu dikemukakan tiga (3) minggu sebelum tarikh pendakian dilakukan kepada Jabatan Perhutanan Negeri.</b></p>
 						<p><i>Notes: Application must be submitted three (3) week before the date of hiking activities to the State Forestry Department.</i></p>
+						<label>
+							<input type="checkbox" name="agreement" style="color: #000000">&nbsp;<strong>Saya mengakui bahawa segala maklumat yang diberi dan dikemukakan di dalam sistem ini adalah benar. <br><i style="margin-left: 17px">I acknowledge that all information given and presented in this system is true.</i></strong></strong>
+							@if($errors->has('agreement'))
+								<span class="help-error" style="display: block; color: red">{{ $errors->first('agreement') }}</span>
+							@endif
+						</label>
 					</div>
 				</div>
 			</div>
 		</div>
-		<button type="submit" id="setApplication" class="btn btn-primary pull-right">Mohon<div class="ripple-container"></div></button>
+		<button type="submit" id="setApplication" class="btn btn-primary pull-right">Hantar / Apply<div class="ripple-container"></div></button>
 		<div class="clearfix"></div>
 	{{ Form::close() }}
 	<br />

@@ -13,7 +13,7 @@
             <table class="table table-bordered" style="margin-bottom: 10px; width: 30%">
                 <thead>
                     <tr>
-                        <th colspan="2">Pemohon</th>
+                        <th colspan="2"><strong>Pemohon</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,7 +30,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th colspan="2">A. Maklumat Permohonan</th>
+                        <th colspan="2"><strong>A. Maklumat Permohonan</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -134,7 +134,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th colspan="2">B. Pengesahan Permohonan</th>
+                        <th colspan="2"><strong>B. Pengesahan Permohonan</strong></th>
                     </tr>
                 </thead>
                 <tbody>

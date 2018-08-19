@@ -16,9 +16,14 @@ use Log;
 
 class AuditTrailActivityController extends Controller
 {
-	public function index()
+	public function index(Request $request)
 	{
-		$data['logs'] = ActivityLog::paginate(10);
+		$data['logs'] = ActivityLog::whereHas('user', function($query) use ($request){
+										$query->whereRaw('name LIKE ?', ['%'. $request->search .'%']);
+									 })
+									 ->orderBy('login_date', 'DESC')
+									 ->orderBy('logout_date', 'DESC')
+									 ->paginate(10);
 
 		return view('activitylog.index', $data);
 	}

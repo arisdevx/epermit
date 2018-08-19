@@ -62,14 +62,14 @@
                                    data-toggle="modal"
                                    data-target="#modal-form"
                                    data-action="{{ route('state-forestry-department.edit', $stateforestry->id) }}"
-                                   data-title="Edit {{ $stateforestry->name }}">
+                                   data-title="Kemaskini {{ $stateforestry->name }}">
                                     <i class="material-icons">create</i>
                                 </a>&nbsp;
                                 <a type="button" class="btn btn-danger btn-sm"
                                    data-toggle="modal"
                                    data-target="#modal-delete"
                                    data-action="{{ route('state-forestry-department.destroy', $stateforestry->id) }}"
-                                   data-title="Delete Confirmation!"
+                                   data-title="Hapus"
                                    data-message="You are about to delete {{ $stateforestry->name }} record, this procedure is irreversible. Do you want to proceed?">
                                    <i class="material-icons">clear</i>
                                     <div class="ripple-container"></div>

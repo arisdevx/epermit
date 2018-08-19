@@ -13,7 +13,7 @@
             <table class="table table-bordered" style="margin-bottom: 10px; width: 30%">
                 <thead>
                     <tr>
-                        <th colspan="2">Pemohon</th>
+                        <th colspan="2"><strong>Pemohon</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,7 +27,7 @@
                     </tr>
                 </tbody>
             </table>
-            <table class="table table-bordered">
+            {{-- <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th colspan="2">A. Maklumat Permohonan</th>
@@ -101,58 +101,85 @@
                             <td>{{ (!empty($applicant->applicantConvenience->participant) ? $applicant->applicantConvenience->participant : '-') }} Unit</td> 
                         </tr>
                     @endif
-                    {{-- @php($index = 1)
-                    @php($days = 0)
-                    @php($participan_total = 0)
-                    @php($amount_total = 0)
-                    @foreach($applicant->applicantConvenience as $convenience)
-                        <tr>
-                            <td style="width: 1%">{{ $index }}</td>
-                            <td>{{ (!empty($convenience->state->name) ? $convenience->state->name : '') }}</td>
-                            <td>{{ $convenience->convenience->ecoPark->name }}</td>
-                            <td>{{ (!empty($convenience->convenience->convenience_category->name) ? $convenience->convenience->convenience_category->name : '') }} {{ (!empty($convenience->convenience->convenience_sub_category->name) ? $convenience->convenience->convenience_sub_category->name : '') }}</td>
-                            
-                            <td>{{ date('d/m/Y', strtotime($convenience->starting_date)) }}</td>
-                            <td>{{ date('d/m/Y', strtotime($convenience->ending_date)) }}</td>
-                            <td>{{ $convenience->participant }}</td>
-                            <td>{{ $convenience->days_total }} {{ $convenience->convenience->capacity_category->name }}</td>
-                            <td>RM {{ $convenience->amount }}</td>
-                        </tr>
-                        @php($days += $convenience->days_total)
-                        @php($participan_total += $convenience->participant)
-                        @php($amount_total += $convenience->amount)
-                    @endforeach
+                </tbody>
+            </table> --}}
+             <table class="table table-bordered">
+                <thead>
                     <tr>
-                        <td colspan="6" align="right">Total</td>
-                        <td>{{ $participan_total }}</td>
-                        <td>{{ $days }}</td>
-                        <td>RM {{ $amount_total }}</td>
-                    </tr> --}}
+                        <th colspan="6"><strong>A. Maklumat Permohonan</strong></th>
+                    </tr>
+                    <tr>
+                        <th>No</th>
+                        <th>Maklumat Permohonan</th>
+                        <th>Tarikh Mula</th>
+                        <th>Tarikh Akhir</th>
+                        <th>Bil Hari</th>
+                        <th>Kemudahan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(!$applicant->applicant_convenience->isEmpty())
+                        @php($no = 1)
+                        @foreach($applicant->applicant_convenience as $convenience)
+                            <tr>
+                                <td>{{ $no++ }}</td>
+                                <td>
+                                    Negeri: <strong>{{ (!empty($convenience->state->name) ? $convenience->state->name : '-') }}</strong><br />
+                                    Daerah: <strong>{{ (!empty($convenience->area->name) ? $convenience->area->name : '-') }}</strong><br />
+                                    TER/HTN:    <strong>@if($convenience->eco_park_type == 'ter')
+                                                    Taman Eko-Rimba (TER)
+                                                @elseif($convenience->eco_park_type == 'htn')
+                                                    Hutan Taman Negeri (HTN)
+                                                @elseif($convenience->eco_park_type == 'hsk')
+                                                    Hutan Simpan Kekal (HSK)
+                                                @endif
+                                                </strong>
+                                                <br />
+                                    Nama TER/HTN: <strong>{{ (!empty($convenience->eco_park->name) ? $convenience->eco_park->name : '-') }}</strong><br />
+                                </td>
+                                <td>{{ date('d/m/Y', strtotime($convenience->starting_date)) }}</td>
+                                <td>{{ date('d/m/Y', strtotime($convenience->ending_date)) }}</td>
+                                <td>{{ (!empty($convenience->days_total) ? $convenience->days_total : '-') }} Hari</td>
+                                <td>
+                                    @if($convenience->convenience_category_id == '2' OR $convenience->convenience_category_id == '3')
+                                        {{ (!empty($convenience->participant) ? $convenience->participant : '-') }} Orang 
+                                        @if($applicant->applicantConvenience->nationality == '0')
+                                            Bukan Warganegara
+                                        @else
+                                            Warganegara
+                                        @endif
+                                    @else
+                                        {{ (!empty($convenience->participant) ? $convenience->participant : '-') }} Unit {{ (!empty($convenience->convenience->convenience_category->name) ? $convenience->convenience->convenience_category->name : '-') }} - {{ (!empty($convenience->convenience->convenience_sub_category->name) ? $convenience->convenience->convenience_sub_category->name : '-') }}
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
             <br />
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th colspan="2">B. Pengesahan Permohonan</th>
+                        <th colspan="2"><strong>B. Pengesahan Permohonan</strong></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th width="15%">Nama Penuh</th>
-                        <td>{{ $applicant->applicantConvenience->applicant_convenience_declaration->name }}</td>
+                        <td>{{ $applicant->applicant_convenience_declaration->name }}</td>
                     </tr>
                     <tr>
                         <th width="15%">No. K/P / No. Passport / IC</th>
-                        <td>{{ $applicant->applicantConvenience->applicant_convenience_declaration->ic_number }}</td>
+                        <td>{{ $applicant->applicant_convenience_declaration->ic_number }}</td>
                     </tr>
                     <tr>
                         <th width="15%">Tarikh Permohonan</th>
-                        <td>{{ date('d/m/Y', strtotime($applicant->applicantConvenience->applicant_convenience_declaration->application_date)) }}</td>
+                        <td>{{ date('d/m/Y', strtotime($applicant->applicant_convenience_declaration->application_date)) }}</td>
                     </tr>
                 </tbody>
             </table>
-             <a href="{{ url('applicant-status') }}" class="btn btn-default">Semula</a>
+             <a href="{{ url('applicant-status') }}" class="btn btn-default">Kembali</a>
             <a href="{{ url('applicant-status/complete/' . $applicant->id) }}" class="btn btn-primary">Luluskan</a>
             
         </div>

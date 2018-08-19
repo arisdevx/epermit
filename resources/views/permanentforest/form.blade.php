@@ -43,7 +43,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="form-group" v-bind:class="errors.name ? 'has-error' : ''">
             <label class="control-label">
                 <span v-if="errors.name">@{{ errors.name[0] }}</span>
@@ -53,23 +53,24 @@
             <span class="material-icons form-control-feedback">clear</span>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-6" style="display: none;">
         <div class="form-group" v-bind:class="errors.price ? 'has-error' : ''">
             <label class="control-label">
                 <span v-if="errors.price">@{{ errors.price[0] }}</span>
                 <span v-else>Caj Permit (RM)</span>
             </label>
-            {{ Form::text('price', old('price', $forest->price), ['class' => 'form-control']) }}
+            {{ Form::text('price', '0', ['class' => 'form-control']) }} 
+            {{-- {{ Form::text('price', old('price', $forest->price), ['class' => 'form-control']) }} --}}
             <span class="material-icons form-control-feedback">clear</span>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-6" style="display: none">
         <div class="form-group" v-bind:class="errors.capacity ? 'has-error' : ''">
             <label class="control-label">
                 <span v-if="errors.capacity">@{{ errors.capacity[0] }}</span>
                 <span v-else>Daya Tampung</span>
             </label>
-            {{ Form::number('capacity', old('capacity', $forest->capacity), ['class' => 'form-control']) }}
+            {{ Form::number('capacity', '0', ['class' => 'form-control']) }}
             <span class="material-icons form-control-feedback">clear</span>
         </div>
     </div>

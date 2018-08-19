@@ -39,8 +39,14 @@ class RegisterCheckRequest extends FormRequest
 
     public function messages()
     {
-        return [
-            'usernamecheck.numeric' => 'No Kad Pengenalan / Passport yang dimasukan tidak sah',
-        ];
+        $validate['usernamecheck.unique'] = 'No kad pengenalan yang dimasukan telah diguna. <br><i>The identity card no your entered already taken.</i>';
+        $validate['usernamecheck.numeric'] = 'No Kad Pengenalan / Passport yang dimasukan tidak sah <br><i>The identity card number must be numeric<i>';
+        
+        if($this->citizencheck == '1')
+        {
+            $validate['usernamecheck.digits'] = 'The username must be between 12 characters';
+        }
+
+        return $validate;
     }
 }

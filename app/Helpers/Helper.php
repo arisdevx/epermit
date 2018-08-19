@@ -4,6 +4,7 @@ use App\Models\HikingHealthDetail;
 use App\Models\ActivityLogDetail;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Cookie;
+use App\Models\Applicant;
 
 if(!function_exists('getHealthy'))
 {
@@ -45,5 +46,15 @@ if(!function_exists('writeLog'))
 		$activityDetail->activity        = $activity;
 		$activityDetail->activity_log_id = log_activity_id();
 		$activityDetail->save();
+	}
+}
+
+if(!function_exists('get_applicant_total'))
+{
+	function get_applicant_total()
+	{
+		$applicant = Applicant::where('status', 'new')->get();
+
+		return $applicant->count();
 	}
 }

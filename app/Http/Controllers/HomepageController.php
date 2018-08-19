@@ -91,7 +91,7 @@ class HomepageController extends Controller
 			}
 		}
 
-		Flash::success('Success');
+		Flash::success('Anda telah berjaya mengemaskini pengaturan laman utama');
 
 		return redirect(route('homepage-setting.index'));
 	}

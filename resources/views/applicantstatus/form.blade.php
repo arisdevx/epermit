@@ -36,8 +36,8 @@
                     if(response.data.errors) {
                         this.errors = response.data.errors;
                     } else {
-                        console.log(response);
-                        // window.location.href = '{!! $index !!}';
+                        // console.log(response);
+                        window.location.href = '{!! $index !!}';
                     }
                 }.bind(this));
             }

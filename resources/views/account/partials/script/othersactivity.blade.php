@@ -11,8 +11,8 @@
 				// 		maxDate:$('.otherEndingDate').val()?$('.otherEndingDate').val():false
 				// 	})
 				// },
-				minDate:'{{ date('Y/m/d', strtotime('+1 month')) }}',
-				startDate: '{{ date('Y/m/d', strtotime('+1 month')) }}',
+				minDate:'{{ date('Y/m/d', strtotime('+14 day')) }}',
+				startDate: '{{ date('Y/m/d', strtotime('+14 day')) }}',
 				timepicker:false,
 				format:'d/m/Y',
 				scrollMonth:false,
@@ -29,8 +29,8 @@
 				// 		minDate: startingDate
 				// 	})
 				// },
-				minDate:'{{ date('Y/m/d', strtotime('+1 month')) }}',
-				startDate: '{{ date('Y/m/d', strtotime('+1 month')) }}',
+				minDate:'{{ date('Y/m/d', strtotime('+14 day')) }}',
+				startDate: '{{ date('Y/m/d', strtotime('+14 day')) }}',
 				timepicker:false,
 				format:'d/m/Y',
 				scrollMonth:false,
@@ -61,7 +61,7 @@
 					},
 					success: function(data)
 					{
-						$('#area').select2('destroy').empty().select2({data: data});
+						$('#area').html(data).selectpicker('refresh');
 					}
 				});
 			});
@@ -77,7 +77,9 @@
 						url: '{{ url('account/member-aktiviti-lain/find-activity-price') }}',
 						data: {
 							id: $(this).val(),
-							_token: '{{ csrf_token() }}'
+							_token: '{{ csrf_token() }}',
+							state: $('#state').val(),
+							area: $('#area').val(),
 						},
 						success: function(data)
 						{
@@ -102,7 +104,7 @@
 					},
 					success: function(data)
 					{
-						$('#activity').select2('destroy').empty().select2({data: data});
+						$('#activity').html(data).selectpicker('refresh');
 					}
 				});
 
@@ -201,7 +203,7 @@
 					},
 					success: function(data)
 					{
-						$('#place').select2('destroy').empty().select2({data: data});
+						$('#place').html(data).selectpicker('refresh');
 					}
 				});
 			});
@@ -218,6 +220,22 @@
 
 			$('body').on('click', '#print', function(){
 				$('#printArea').printThis();
+			});
+			$('#location').keypress(function (e) {
+			    var txt = String.fromCharCode(e.which);
+			    if (!txt.match(/[A-Za-z0-9&. ]/)) {
+			        return false;
+			    }
+			});
+			$('#country').on('change', function(){
+				if($(this).val() != '130')
+				{
+					$('#postcode').attr('type', 'text');
+				}
+				else
+				{
+					$('#postcode').attr('type', 'number');
+				}
 			});
 		});
 

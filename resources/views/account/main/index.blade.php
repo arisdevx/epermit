@@ -73,13 +73,14 @@
 		</div>
 	</div> --}}
 	<div class="row">
-			<div class="col-md-8 col-sm-12">
+			{{-- <div class="col-md-8 col-sm-12">
 				<div class="panel panel-home2" style="padding: 3% 40px;">
 					{!! $homepage->setting_value !!}
 				</div>
-			</div>
-			<div class="col-md-4 col-sm-12">
-				<div style="padding: 14px 40px; border-right: solid 1px lightgray;">
+			</div> --}}
+			<div class="col-md-12 col-sm-12">
+				{{-- padding awal - atas bawah 14 --}}
+				<div style="padding-top: 20px;">
 					{!! $footer->setting_value !!}
 				</div>
 			</div>

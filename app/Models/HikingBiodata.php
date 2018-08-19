@@ -14,4 +14,14 @@ class HikingBiodata extends Model
     {
     	return $this->belongsTo('App\Models\HikingBiodata');
     }
+
+    public function state()
+    {
+    	return $this->belongsTo('App\Models\State');
+    }
+
+    public function country()
+    {
+    	return $this->belongsTo('App\Models\Country');
+    }
 }

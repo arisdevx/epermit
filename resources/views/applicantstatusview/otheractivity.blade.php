@@ -13,7 +13,7 @@
             <table class="table table-bordered" style="margin-bottom: 10px; width: 30%">
                 <thead>
                     <tr class="active">
-                        <th colspan="2">Pemohon</th>
+                        <th colspan="2"><strong>Pemohon</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,7 +30,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr class="active">
-                        <th colspan="2">A. Maklumat Pemohon</th>
+                        <th colspan="2"><strong>A. Maklumat Pemohon</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -137,7 +137,7 @@
             <table class="table table-bordered" style="margin-top: 10px;">
                 <thead>
                     <tr class="active">
-                        <th colspan="2">B. Pengesahan Pemohon</th>
+                        <th colspan="2"><strong>B. Pengesahan Pemohon</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -157,7 +157,7 @@
                     </tr>
                 </tbody>
             </table>
-            <a href="{{ url('applicant-status') }}" class="btn btn-default">Semula</a>
+            <a href="{{ url('applicant-status') }}" class="btn btn-default">Kembali</a>
             <a href="{{ url('applicant-status/complete/' . $applicant->id) }}" class="btn btn-primary">Luluskan</a>
         </div>
     </div>

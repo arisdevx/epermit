@@ -11,6 +11,7 @@ use App\Models\State;
 use App\Models\Area;
 use App\Models\EcoPark;
 use App\Models\PermanentForest;
+use App\Models\UserLocation;
 use Flash;
 use Validator;
 use Log;
@@ -19,17 +20,54 @@ class EcoParkController extends Controller
 {
 	public function index(Request $request)
 	{
-			
-		$data['ecoparks'] = EcoPark::where(function($q) use ($request){
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$data['ecoparks'] = EcoPark::where(function($q) use ($request){
+									$q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
+							   })
+								->where('state_id', $location->state_id)->paginate(10);
+			}
+			else
+			{
+				$data['ecoparks'] = EcoPark::where(function($q) use ($request){
 									$q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
 							   })->paginate(10);
+			}
+		}
+		else
+		{
+			$data['ecoparks'] = EcoPark::where(function($q) use ($request){
+									$q->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($request->search).'%']);
+							   })->paginate(10);
+		}
+		
 
 		return view('ecopark.index', $data);
 	}
 
 	public function create()
 	{
-		$states  = State::get();
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$states    = State::where('id', $location->state_id)->get();
+			}
+			else
+			{
+				$states    = State::get();
+			}
+		}
+		else
+		{
+			$states    = State::get();
+		}
 		$areas   = Area::get();
 		$ecopark = new EcoPark;
 
@@ -87,7 +125,7 @@ class EcoParkController extends Controller
 
 		activityLog('Tambah Taman Eko-Rimba ' . $ecopark->name);
 
-		Flash::success(sprintf('You\'ve successfully created the %s.', $ecopark->name));
+		Flash::success(sprintf('Anda telah berjaya menambah maklumat %s.', $ecopark->name));
 
         // return ['errors' => false];
 
@@ -95,7 +133,23 @@ class EcoParkController extends Controller
 
 	public function edit($id)
 	{
-		$states = State::get();
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$states    = State::where('id', $location->state_id)->get();
+			}
+			else
+			{
+				$states    = State::get();
+			}
+		}
+		else
+		{
+			$states    = State::get();
+		}
 		$areas = Area::get();
 		$ecopark = EcoPark::find($id);
 		$forests = PermanentForest::where([
@@ -132,7 +186,7 @@ class EcoParkController extends Controller
 
 		activityLog('Update Taman Eko-Rimba ' . $ecopark->name);
 
-		Flash::success(sprintf('You\'ve successfully changed the %s.', $ecopark->name));
+		Flash::success(sprintf('Anda telah berjaya mengemaskini maklumat %s.', $ecopark->name));
 		// return ['error' => false];
 	}
 
@@ -142,7 +196,7 @@ class EcoParkController extends Controller
 		activityLog('Hapus Taman Eko-Rimba ' . $ecopark->name);
 		$ecopark->delete();
 
-		Flash::success(sprintf('%s has been deleted.', $ecopark->name));
+		Flash::success(sprintf('Anda telah berjaya memadam maklumat %s.', $ecopark->name));
         return redirect()->route('eco-park.index');
 	}
 

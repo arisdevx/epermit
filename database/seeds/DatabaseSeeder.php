@@ -30,10 +30,12 @@ class DatabaseSeeder extends Seeder
         $this->call(ConvenienceSubCategorySeeder::class);
         $this->call(CountrySeeder::class);
         $this->call(EcoParkSeeder::class);
+        $this->call(GuideConfigSeeder::class);
         $this->call(HikingBiodataSeeder::class);
         $this->call(HikingCampgroundSeeder::class);
         $this->call(HikingDeclarationSeeder::class);
         $this->call(HikingEmergencySeeder::class);
+        $this->call(HikingGuideTableSeeder::class);
         $this->call(HikingHealthDetailSeeder::class);
         $this->call(HikingHealthSeeder::class);
         $this->call(HikingInformationSeeder::class);
@@ -51,6 +53,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SliderSeeder::class);
         $this->call(StateForestrySeeder::class);
         $this->call(StateSeeder::class);
+        $this->call(StateUserTableSeeder::class);
         $this->call(UserAccessLogSeeder::class);
         $this->call(UserLocationSeeder::class);
     }

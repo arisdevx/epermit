@@ -24,7 +24,7 @@
                             <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="basic-addon1"><i class="material-icons">email</i></span>
-                                    <input id="email" type="text" class="form-control" name="username" placeholder="Kata Nama" value="{{ old('ic') }}" autofocus required>
+                                    <input id="email" type="text" class="form-control" name="username" placeholder="Kata Nama / Username" value="{{ old('ic') }}" autofocus required style="text-transform: none !important;">
                                     <span class="material-icons form-control-feedback">clear</span>
                                     @if ($errors->has('username'))
                                     <span class="help-block">
@@ -39,7 +39,7 @@
                             <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="basic-addon1"><i class="material-icons">lock</i></span>
-                                    <input id="password" type="password" class="form-control" placeholder="Kata Laluan" name="password" required>
+                                    <input id="password" type="password" class="form-control" placeholder="Kata Laluan" name="password" required style="text-transform: none !important;">
                                     <span class="material-icons form-control-feedback">clear</span>
                                     @if ($errors->has('password'))
                                     <span class="help-block">
@@ -70,8 +70,8 @@
 
                         <div class="form-group">
                             <div class="col-md-12">
-                                <span class="pull-left">Belum <a href="{{ url('account/register') }}">Mendaftar</a>?</span>
-                                <span class="pull-right">Lupa <a href="{{ url('account/forgot-password') }}">Kata Laluan</a>!</span>
+                                <span class="pull-left">Belum <a href="{{ url('account/register') }}">Mendaftar</a>?<br /><small><i>Not <a href="{{ url('account/register') }}">Registered</a> Yet?</i></small></span>
+                                <span class="pull-right">Lupa <a href="{{ url('account/forgot-password') }}">Kata Laluan</a>! <br /><small><i>Forget <a href="{{ url('account/forgot-password') }}">Password</a>!</i></small></span>
                             </div>
                         </div>
                     </form>

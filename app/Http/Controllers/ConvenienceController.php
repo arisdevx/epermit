@@ -16,6 +16,7 @@ use App\Models\ConvenienceSubCategory;
 use App\Models\ConveniencePrice;
 use App\Models\CapacityCategory;
 use App\Models\PriceCategory;
+use App\Models\UserLocation;
 use Flash;
 use Validator;
 use Log;
@@ -24,7 +25,33 @@ class ConvenienceController extends Controller
 {
 	public function index(Request $request)
 	{
-		$data['conveniences'] = Convenience::paginate(10);
+		$location = UserLocation::where('user_id', auth()->user()->id)->first();
+		
+		if(!empty($location))
+		{
+			if($location->state_id != 0 AND $location->area_id == 0)
+			{
+				$data['conveniences'] = Convenience::where('state_id', $location->state_id)
+												   ->whereHas('convenience_sub_category', function($query) use ($request){
+												   		$query->where('name', 'like', '%'. $request->search .'%');
+												   })
+												   ->paginate(10);
+			}
+			else
+			{
+				$data['conveniences'] = Convenience::whereHas('convenience_sub_category', function($query) use ($request){
+												   		$query->where('name', 'like', '%'. $request->search .'%');
+												   })
+												   ->paginate(10);
+			}
+		}
+		else
+		{
+			$data['conveniences'] = Convenience::whereHas('convenience_sub_category', function($query) use ($request){
+												   		$query->where('name', 'like', '%'. $request->search .'%');
+												   })
+												   ->paginate(10);
+		}
 
 		return view('convenience.index', $data);
 	}
@@ -65,7 +92,7 @@ class ConvenienceController extends Controller
 
 		activityLog('Tambah Tempah Kemudahan ' . $convenience->name);
 
-		Flash::success(sprintf('You\'ve successfully created the %s.', $convenience->name));
+		Flash::success(sprintf('Anda telah berjaya menambah maklumat %s.', $convenience_subcategory->name));
 
 	}
 
@@ -108,7 +135,7 @@ class ConvenienceController extends Controller
 
 		activityLog('Update Tempah Kemudahan ' . $convenience->name);
 
-		Flash::success(sprintf('You\'ve successfully changed the %s.', $convenience->name));
+		Flash::success(sprintf('Anda telah berjaya mengemaskini maklumat %s.', $convenience_subcategory->name));
 	}
 
 	public function destroy($id)
@@ -117,7 +144,7 @@ class ConvenienceController extends Controller
 		activityLog('Hapus Tempah Kemudahan ' . $convenience->name);
 		$convenience->delete();
 
-		Flash::success(sprintf('%s has been deleted.', $convenience->name));
+		Flash::success(sprintf('Anda telah berjaya memadam maklumat %s.', $convenience->convenience_sub_category->name));
         return redirect()->route('convenience.index');
 	}
 

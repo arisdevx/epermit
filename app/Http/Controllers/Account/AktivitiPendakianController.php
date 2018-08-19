@@ -30,15 +30,28 @@ use App\Models\EcoPark;
 use App\Models\ConvenienceCategory;
 use App\Models\ApplicantConveniencePeople;
 use App\Models\ApplicantConvenienceUnit;
+use App\Models\Country;
+use App\Models\UserLocation;
+use App\Models\RegionalForestry;
+use App\Models\GuideConfig;
+use App\Models\HikingGuide;
+use App\Models\Setting;
 use Auth;
 use Mail;
 use DB;
+use PDF;
 
 class AktivitiPendakianController extends Controller
 {
-	public function index()
+	public function index(Request $request)
 	{
-		$data['states'] = State::get();
+		$data['states'] = State::orderBy('name', 'ASC')->get();
+		$data['countries'] = Country::get();
+		$data['areas']  = Area::where('state_id', $request->old('state'))->get();
+		$data['mountains'] = Mountain::where([
+									 	'state_id' => $request->old('state'),
+									 	'area_id' => $request->old('area')
+									 ])->get();
 
 		return view('account.aktivitipendakian.index', $data);
 	}
@@ -59,20 +72,22 @@ class AktivitiPendakianController extends Controller
 		$getMountain = Mountain::find($request->mountain);
 		// $getForest = PermanentForest::find($request->permanent_forest);
 
-		if(($getMountain->capacity == '0') OR ($getCampground->capacity_total >= $participant))
+		if(($getMountain->capacity >= $participant))
 		{
 			$amount_total 		= 0;
 			$mountainData 		= Mountain::find($request->mountain);
 
-			if(!empty($request->amount_convenience))
-			{
+			// if(!empty($request->amount_convenience))
+			// {
 
-				$amount_total = ($request->amount+$getForest->price+$request->amount_convenience);
-			}
-			else
-			{
-				$amount_total = ($request->amount);
-			}
+			// 	$amount_total = ($request->amount+$request->amount_convenience);
+			// }
+			// else
+			// {
+			// 	$amount_total = ($request->amount);
+			// }
+
+			$amount_total = $request->amount;
 
 			$applicantData      = Applicant::whereRaw("date_format(created_at, '%Y-%m-%d') = date_format(now(), '%Y-%m-%d') && type = 'hiking'")->count();
 			$number = ($applicantData+1);
@@ -82,10 +97,24 @@ class AktivitiPendakianController extends Controller
 			$applicant->status  = 'new';
 			$applicant->type    = 'hiking';
 			$applicant->amount  = $amount_total;
-			$applicant->number  = 'AP' . date('dmY') . '-' . ($number < 10 ? '0' . $number : $number);
+			$applicant->number  = 'TR/TU/M/' . date('Ymd') . '-' . str_pad($number, 3, '0', STR_PAD_LEFT);
+			// $applicant->number  = 'AP' . date('dmY') . '-' . ($number < 10 ? '0' . $number : $number);
 
 			if($applicant->save())
 			{
+				
+				$applicantParticipant               = new HikingParticipant;
+				$applicantParticipant->applicant_id = $applicant->id;
+				$applicantParticipant->save();
+
+				if(!empty($request->guide))
+				{
+					$hikingGuide = new HikingGuide;
+					$hikingGuide->applicant_id = $applicant->id;
+					$hikingGuide->participant_id = $applicantParticipant->id;
+					$hikingGuide->save();
+				}
+
 				$applicantLocation               = new HikingLocation;
 				$applicantLocation->state_id     = $request->state;
 				$applicantLocation->area_id      = $request->area;
@@ -100,7 +129,7 @@ class AktivitiPendakianController extends Controller
 				$applicantInformation->starting_time       = date('Y-m-d H:i:s');
 				$applicantInformation->ending_date         = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $request->ending_date)));
 				$applicantInformation->arrival_time        = date('Y-m-d H:i:s');
-				$applicantInformation->mountain_guide      = $request->mountain_guide;
+				$applicantInformation->mountain_guide      = (!empty($request->mountain_guide) ? $request->mountain_guide : '');
 				$applicantInformation->participants_total  = $request->participant;
 				$applicantInformation->amount              = $request->amount;
 				$applicantInformation->applicant_id        = $applicant->id;
@@ -115,11 +144,12 @@ class AktivitiPendakianController extends Controller
 				$applicantBiodata->nationality  = (!empty($request->hiker_nationality) ? '1' : '0');
 				$applicantBiodata->phone        = $request->hiker_phone;
 				$applicantBiodata->address      = $request->hiker_address;
-				$applicantBiodata->state        = $request->hiker_state;
+				$applicantBiodata->country_id   = $request->hiker_country;
+				$applicantBiodata->state_id        = $request->hiker_state;
 				$applicantBiodata->postcode     = $request->hiker_postcode;
 				$applicantBiodata->applicant_id = $applicant->id;
 				$applicantBiodata->user_id      = Auth::guard('applicant')->user()->id;
-				$applicantBiodata->hiking_participant_id = 0;
+				$applicantBiodata->hiking_participant_id = $applicantParticipant->id;
 				$applicantBiodata->save();
 
 				$applicantEmergency                 = new HikingEmergency;
@@ -127,11 +157,13 @@ class AktivitiPendakianController extends Controller
 				$applicantEmergency->phone          = $request->emergency_phone;
 				$applicantEmergency->address        = $request->emergency_address;
 				$applicantEmergency->second_address = (!empty($request->emergency_second_address) ? $request->emergency_second_address : '');
-				$applicantEmergency->state          = $request->emergency_state;
+				$applicantEmergency->state_id          = $request->emergency_state;
+				$applicantEmergency->country_id  = $request->emergency_country;
 				$applicantEmergency->postcode       = $request->emergency_postcode;
 				$applicantEmergency->applicant_id   = $applicant->id;
 				$applicantEmergency->user_id 		= Auth::guard('applicant')->user()->id;
-				$applicantEmergency->hiking_participant_id = 0;
+				$applicantEmergency->hiking_participant_id = $applicantParticipant->id;
+				$applicantEmergency->relationship = $request->emergency_relationship;
 				$applicantEmergency->save();
 
 				$applicantInsurance               = new HikingInsurance;
@@ -139,7 +171,7 @@ class AktivitiPendakianController extends Controller
 				$applicantInsurance->code         = (!empty($request->insurance_code) ? $request->insurance_code : '');
 				$applicantInsurance->applicant_id = $applicant->id;
 				$applicantInsurance->user_id 	  = Auth::guard('applicant')->user()->id;
-				$applicantInsurance->hiking_participant_id = 0;
+				$applicantInsurance->hiking_participant_id = $applicantParticipant->id;
 				$applicantInsurance->save();
 
 				$applicantDeclaration            = new HikingDeclaration;
@@ -148,13 +180,13 @@ class AktivitiPendakianController extends Controller
 				$applicantDeclaration->date      = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $request->declaration_date)));
 				$applicantDeclaration->applicant_id = $applicant->id;
 				$applicantDeclaration->user_id 	 = Auth::guard('applicant')->user()->id;
-				$applicantDeclaration->hiking_participant_id = 0;
+				$applicantDeclaration->hiking_participant_id = $applicantParticipant->id;
 				$applicantDeclaration->save();
 
 				$applicantHealth               = new HikingHealth;
 				$applicantHealth->applicant_id = $applicant->id;
 				$applicantHealth->user_id 	   = Auth::guard('applicant')->user()->id;
-				$applicantHealth->hiking_participant_id = 0;
+				$applicantHealth->hiking_participant_id = $applicantParticipant->id;
 				$applicantHealth->save();
 
 				$order = 1;
@@ -296,23 +328,28 @@ class AktivitiPendakianController extends Controller
 				}
 
 				$user = User::find(Auth::guard('applicant')->user()->id);
+				$hikingLocation = HikingLocation::where('applicant_id', $applicant->id)->first();
+				$hikingInformation = HikingInformation::where('applicant_id', $applicant->id)->first();
 
 				$mail_data = [
 						'url'	=> url(''),
 						'logo'  => '',
 						'full_name' => $user->name,
-						'form' => url('form/hiking/' . $applicant->id)
+						'form' => url('form/hiking/' . $applicant->id),
+						'mountain' => $hikingInformation->mountain->name,
+						'state' => $hikingLocation->state->name,
+						'area' => $hikingLocation->area->name
 				];
 
 				$email = Mail::send('account.partials.email.aktivitipendakian', $mail_data , function ($mail) use ($user)
 				{
-					$mail->from('contact@arisdev.id', 'JPSM e-Permit');
+					$mail->from(config('mail.from.address'), 'JPSM e-Permit');
 					$mail->to($user->email, $user->name);
 
 					$mail->subject('JPSM e-Permit: Aktiviti Pendakian');
 				});
 
-				return redirect(url('account/member-aktiviti-pendakian'))->with('status', 'success');
+				return redirect('account/member-aktiviti-pendakian/view/' . $applicant->id)->with('status', 'success');
 			}
 			else
 			{
@@ -328,7 +365,7 @@ class AktivitiPendakianController extends Controller
 	public function edit($id)
 	{
 		$data['applicant']			= Applicant::find($id);
-		$data['states'] 			= State::get();
+		$data['states'] 			= State::orderBy('name', 'ASC')->get();
 		$data['location'] 			= HikingLocation::where('applicant_id', $id)->first();
 		$data['areas']  			= Area::where('state_id', $data['location']->state_id)->get();
 		$data['information'] 		= HikingInformation::where('applicant_id', $id)->first();
@@ -356,6 +393,30 @@ class AktivitiPendakianController extends Controller
 		$data['campgrounds']		= HikingCampground::where('applicant_id', $id)->get();
 
 		$data['convenience_data'] = ApplicantConvenience::where('applicant_id', $id)->first();
+		$data['countries'] = Country::get();
+
+		$start_date  = date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $data['information']->starting_date)));
+
+		$getHikingInformation = HikingInformation::selectRaw('SUM(participants_total) as participant')
+												 ->where('mountain_id', $data['mountain_selected']->mountain_id)
+												 ->whereRaw("DATE_FORMAT(starting_date, '%Y-%m-%d') = '" . date('Y-m-d', strtotime($start_date)) ."'")
+												 ->groupBy(DB::raw("DATE_FORMAT(starting_date, '%Y-%m-%d')"))
+												 ->first();
+
+		$available_slots = ($data['mountain_selected']->capacity-(!empty($getHikingInformation->participant) ? $getHikingInformation->participant : 0));
+		
+		$data['slots'] = $available_slots;
+
+		// if($available_slots >= 1)
+		// {
+		// 	for($i = 1; $i <= $available_slots; $i++)
+		// 	{
+		// 		$data['slots'][] = [
+		// 			'id' => $i,
+		// 			'text' => $i
+		// 		];
+		// 	}
+		// }
 
 		if(!empty($data['convenience_data']))
 		{
@@ -389,6 +450,17 @@ class AktivitiPendakianController extends Controller
 								  ->get();
 		}
 
+		$setting = json_decode(Setting::where('setting_key', 'guide')->first()->setting_value);
+		$biodata = HikingBiodata::where('applicant_id', $data['applicant']->id)
+								->where('user_id', Auth::guard('applicant')->user()->id)
+								->first();
+
+		$data['malim_available'] = ceil($data['applicant']->hikingInformation->participants_total/$setting->participant)*$setting->guide;
+		$data['malim_ready'] = $data['applicant']->hikingGuide->count();
+		$data['malim'] = HikingGuide::where('applicant_id', $data['applicant']->id)
+								  ->where('participant_id', $biodata->hiking_participant_id)
+								  ->first();
+
 		
 
 		return view('account.aktivitipendakian.edit', $data);
@@ -401,15 +473,17 @@ class AktivitiPendakianController extends Controller
 		$amount_total 		= 0;
 		$mountainData = Mountain::find($request->mountain);
 
-		if(!empty($request->amount_convenience))
-		{
+		// if(!empty($request->amount_convenience))
+		// {
 
-			$amount_total = ($request->amount+$mountainData->other_price+$request->amount_convenience);
-		}
-		else
-		{
-			$amount_total = ($request->amount+$mountainData->other_price);
-		}
+		// 	$amount_total = ($request->amount+$mountainData->other_price+$request->amount_convenience);
+		// }
+		// else
+		// {
+		// 	$amount_total = ($request->amount+$mountainData->other_price);
+		// }
+
+		$amount_total = $request->amount;
 
 		$applicant          = Applicant::find($id);
 		$applicant->user_id = Auth::guard('applicant')->user()->id;
@@ -418,6 +492,7 @@ class AktivitiPendakianController extends Controller
 
 		if($applicant->save())
 		{
+
 			$applicantLocation               = HikingLocation::where('applicant_id', $id)->first();
 			$applicantLocation->state_id     = $request->state;
 			$applicantLocation->area_id      = $request->area;
@@ -432,7 +507,7 @@ class AktivitiPendakianController extends Controller
 			$applicantInformation->starting_time       = date('Y-m-d H:i:s');
 			$applicantInformation->ending_date         = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $request->ending_date)));
 			$applicantInformation->arrival_time        = date('Y-m-d H:i:s');
-			$applicantInformation->mountain_guide      = $request->mountain_guide;
+			$applicantInformation->mountain_guide      = (!empty($request->mountain_guide) ? $request->mountain_guide : '');
 			$applicantInformation->participants_total  = $request->participant;
 			$applicantInformation->amount              = $request->amount;
 			$applicantInformation->applicant_id        = $applicant->id;
@@ -447,19 +522,49 @@ class AktivitiPendakianController extends Controller
 			$applicantBiodata->nationality  = $request->hiker_nationality;
 			$applicantBiodata->phone        = $request->hiker_phone;
 			$applicantBiodata->address      = $request->hiker_address;
-			$applicantBiodata->state        = $request->hiker_state;
+			$applicantBiodata->state_id        = $request->hiker_state;
+			$applicantBiodata->country_id = $request->hiker_country;
 			$applicantBiodata->postcode     = $request->hiker_postcode;
 			$applicantBiodata->applicant_id = $applicant->id;
 			$applicantBiodata->save();
+
+			$biodata = HikingBiodata::where('applicant_id', $id)
+								->where('user_id', Auth::guard('applicant')->user()->id)
+								->first();
+
+			if(empty($request->guide))
+			{
+				
+
+				$checkGuide = HikingGuide::where('applicant_id', $id)
+										 ->where('participant_id', $biodata->hiking_participant_id)
+										 ->first();
+				if(!empty($checkGuide))
+				{
+					$checkGuide->forceDelete();
+				}
+
+			}
+			else
+			{
+
+				$hikingGuide = new HikingGuide;
+				$hikingGuide->applicant_id = $applicant->id;
+				$hikingGuide->participant_id = $biodata->hiking_participant_id;
+				$hikingGuide->save();
+
+			}
 
 			$applicantEmergency                 = HikingEmergency::where('applicant_id', $id)->first();
 			$applicantEmergency->name       	= $request->emergency_fullname;
 			$applicantEmergency->phone          = $request->emergency_phone;
 			$applicantEmergency->address        = $request->emergency_address;
 			$applicantEmergency->second_address = $request->emergency_second_address;
-			$applicantEmergency->state          = $request->emergency_state;
+			$applicantEmergency->state_id          = $request->emergency_state;
+			$applicantEmergency->country_id = $request->emergency_country;
 			$applicantEmergency->postcode       = $request->emergency_postcode;
 			$applicantEmergency->applicant_id   = $applicant->id;
+			$applicantEmergency->relationship   = $request->emergency_relationship;
 			$applicantEmergency->save();
 
 			$applicantInsurance               = HikingInsurance::where('applicant_id', $id)->first();
@@ -631,8 +736,8 @@ class AktivitiPendakianController extends Controller
 			// 		$campground->save();
 			// 	}
 			// }
-
-			return redirect(url('account/member-aktiviti-pendakian/'. $id .'/edit'))->with('status', 'success');
+			return redirect('account/member-aktiviti-pendakian/view/' . $id)->with('status', 'success');
+			// return redirect(url('account/member-aktiviti-pendakian/'. $id .'/edit'))->with('status', 'success');
 		}
 		else
 		{
@@ -687,19 +792,15 @@ class AktivitiPendakianController extends Controller
 	{
 		$areas = Area::where('state_id', $request->id)->get();
 
-		$data[] = [
-			'id' => '',
-			'text' => ''
-		];
+		$data = '';
+		$data .= '<option disabled selected value>Pilih Daerah</option>';
+
 		foreach($areas as $area)
 		{
-			$data[] = [
-				'id' => $area->id,
-				'text' => $area->name
-			];
+			$data .= '<option data-tokens="'. $area->name .'" value="'. $area->id .'">'. $area->name .'</option>';
 		}
 
-		return response()->json($data);
+		return $data;
 	}
 
 	public function findMountain(Request $request)
@@ -709,17 +810,35 @@ class AktivitiPendakianController extends Controller
 							'area_id' => $request->area_id,
 							// 'permanent_forest_id' => $request->forest_id
 						])->get();
+
+
 		
-		$data[] = [
+		$data['mountain'] = '';
+		$data['mountain'] .= '<option disabled selected value>Pilih Gunung</option>';
+
+		foreach($mountains as $mountain)
+		{
+			$data['mountain'] .= '<option data-tokens="'. $mountain->name .'" value="'. $mountain->id .'">'. $mountain->name .'</option>';
+		}
+
+		$conveniences = Convenience::select('type')
+						->where([
+							'state_id' => $request->state_id,
+							'area_id' => $request->area_id
+						])
+						->groupBy('type')
+						->get();
+
+		$data['convenience'][] = [
 			'id' => '',
 			'text' => ''
 		];
 
-		foreach($mountains as $mountain)
+		foreach($conveniences as $convenience)
 		{
-			$data[] = [
-				'id' => $mountain->id,
-				'text' => $mountain->name
+			$data['convenience'][] = [
+				'id' => $convenience->type,
+				'text' => ($convenience->type == 'ter' ? 'Taman Eko-Rimba (TER)' : 'Hutan Taman Negeri (HTN)')
 			];
 		}
 
@@ -789,7 +908,7 @@ class AktivitiPendakianController extends Controller
 
 		$data = [
 			'campground' => $html,
-			'amount' => $mountain->price
+			'amount' => ($mountain->price+$mountain->other_price),
 		];
 
 		return response()->json($data);
@@ -800,14 +919,16 @@ class AktivitiPendakianController extends Controller
 		$mountain = Mountain::find($request->mountain_id);
 		$nextDate = ($mountain->travel_day);
 
-		$start_date = date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $request->starting_date)));
+		$start_date  = date('Y-m-d 00:00:00', strtotime(str_replace('/', '-', $request->starting_date)));
 		$ending_date = date('d/m/Y', strtotime($start_date . '+' . $nextDate . ' day'));
 
-		$startTimestamp = strtotime($start_date);
+		$startTimestamp  = strtotime($start_date);
 		$endingTimestamp = strtotime(str_replace('/', '-', $ending_date));
-		$timeDiff = abs($endingTimestamp - $startTimestamp);
-		$findDay = $timeDiff/86400;
-		$numberDay = intval($findDay);
+		$timeDiff        = abs($endingTimestamp - $startTimestamp);
+		$findDay         = $timeDiff/86400;
+		$numberDay       = (intval($findDay)+1);
+		$html = '';
+		$days     = config('days');
 
 		$getHikingInformation = HikingInformation::selectRaw('SUM(participants_total) as participant')
 												 ->where('mountain_id', $request->mountain_id)
@@ -817,9 +938,63 @@ class AktivitiPendakianController extends Controller
 
 		$available_slots = ($mountain->capacity-(!empty($getHikingInformation->participant) ? $getHikingInformation->participant : 0));
 		
+		if($mountain->campground == 'Y')
+		{
+			$campgrounds = MountainCampground::where('mountain_id', $mountain->id)->limit(($numberDay != 1 ? ($numberDay-1) : $numberDay))->get();
+
+			if(!$campgrounds->isEmpty())
+			{
+
+				for($i = 1; $i <= count($campgrounds); $i++)
+				{
+						$html .= '<tr>';
+						$html .= ' <td width="20%">'. $days[$i] .'</td>';
+						$html .= ' <td>';
+						$html .= '		<select class="select2 form-control campground" name="campground['. $i .']" id="campground-'. $i .'" data-id="'. $i .'" style="width: 100%" data-placeholder="Pilih Tapak Perkhemahan">';
+						$html .= '		<option></option>';
+									foreach($campgrounds as $campground)
+									{
+						$html .= '		<option value="'. $campground->id .'" data-id="'. $i .'">'. $campground->name .'</option>';
+									}
+						$html .= ' 		</select>';
+						$html .= ' </td>';
+						// $html .= '	<td width="15%"></td>';
+						// $html .= '	<td width="20%" align="center"><input type="number" class="form-control" name=""></td>';
+						$html .= '</tr>';
+				}
+
+				// foreach($campgrounds as $campground)
+				// {
+				// 	$html .= '<tr>';
+				// 	$html .= ' <td width="20%">'. $days[$i] .'</td>';
+				// 	$html .= '	<td>'. $campground->name .'</td>';
+				// 	// $html .= '	<td width="15%">'. $campground->capacity .'</td>';
+				// 	$html .= '	<td width="20%" align="center"><input type="number" class="form-control" name="campground['. $campground->id .']"></td>';
+				// 	$html .= '</tr>';
+				// 	$i++;
+				// }
+			}
+			else
+			{
+				$html .= '<tr>';
+				$html .= '	<td colspan3>Ada</td>';
+				// $html .= '	<td width="15%" colspan="2">'. (!empty($mountain->capacity) ? $mountain->capacity : '0') .'</td>';
+				// $html .= '	<td></th>';
+				$html .= '</tr>';
+			}
+		}
+		else
+		{
+			$html .= '<tr>';
+			$html .= '	<td colspan="3" align="center">Tiada</td>';
+			$html .= '</tr>';
+		}
+
 		$data['ending_date'] = $ending_date;
 		$data['day'] = $numberDay;
+		$data['campground'] = $html;
 		$data['slots'][] = [];
+		$data['slot_count'] = $available_slots;
 
 		if($available_slots >= 1)
 		{
@@ -840,7 +1015,7 @@ class AktivitiPendakianController extends Controller
 	{
 		$mountain = Mountain::find($request->mountain_id);
 
-		$amount = $mountain->price*$request->participant;
+		$amount = ($mountain->price*$request->participant)+$mountain->other_price;
 
 		return $amount;
 	}
@@ -937,7 +1112,10 @@ class AktivitiPendakianController extends Controller
 
 	public function editUser($applicant_id, $user_id)
 	{
+		$setting = json_decode(Setting::where('setting_key', 'guide')->first()->setting_value);
 		$data['applicant']			= Applicant::find($applicant_id);
+		$data['states']				= State::get();
+		$data['countries']			= Country::get();
 		$data['biodata']     		= HikingBiodata::where([
 										'applicant_id' => $applicant_id,
 										'hiking_participant_id' => $user_id
@@ -958,6 +1136,11 @@ class AktivitiPendakianController extends Controller
 										'applicant_id' => $applicant_id,
 										'hiking_participant_id' => $user_id
 									  ])->first();
+		$data['malim_available'] = ceil($data['applicant']->hikingInformation->participants_total/$setting->participant)*$setting->guide;
+		$data['malim_ready'] = $data['applicant']->hikingGuide->count();
+		$data['malim'] = HikingGuide::where('applicant_id', $applicant_id)
+								  ->where('participant_id', $user_id)
+								  ->first();
 		
 
 		return view('account.aktivitipendakian.edituser', $data);
@@ -975,7 +1158,8 @@ class AktivitiPendakianController extends Controller
 		$applicantBiodata->nationality  = $request->hiker_nationality;
 		$applicantBiodata->phone        = $request->hiker_phone;
 		$applicantBiodata->address      = $request->hiker_address;
-		$applicantBiodata->state        = $request->hiker_state;
+		$applicantBiodata->state_id        = $request->hiker_state;
+		$applicantBiodata->country_id        = $request->hiker_country;
 		$applicantBiodata->postcode     = $request->hiker_postcode;
 		$applicantBiodata->applicant_id = $applicant_id;
 		$applicantBiodata->save();
@@ -985,9 +1169,11 @@ class AktivitiPendakianController extends Controller
 		$applicantEmergency->phone          = $request->emergency_phone;
 		$applicantEmergency->address        = $request->emergency_address;
 		$applicantEmergency->second_address = $request->emergency_second_address;
-		$applicantEmergency->state          = $request->emergency_state;
+		$applicantEmergency->state_id          = $request->emergency_state;
+		$applicantEmergency->country_id          = $request->emergency_country;
 		$applicantEmergency->postcode       = $request->emergency_postcode;
 		$applicantEmergency->applicant_id   = $applicant_id;
+		$applicantEmergency->relationship   = $request->emergency_relationship;
 		$applicantEmergency->save();
 
 		$applicantInsurance               = HikingInsurance::where(['applicant_id' => $applicant_id, 'hiking_participant_id' => $user_id])->first();
@@ -1006,6 +1192,31 @@ class AktivitiPendakianController extends Controller
 		$applicantHealth               = HikingHealth::where(['applicant_id' => $applicant_id, 'hiking_participant_id' => $user_id])->first();
 		$applicantHealth->applicant_id = $applicant_id;
 		$applicantHealth->save();
+
+		$hikingGuide = HikingGuide::where('applicant_id', $applicant_id)
+								  ->where('participant_id', $user_id)
+								  ->first();
+
+		if(!empty($request->guide))
+		{
+			if(empty($hikingGuide))
+			{
+				$hikingGuide = new HikingGuide;
+				$hikingGuide->applicant_id = $applicant_id;
+				$hikingGuide->participant_id = $user_id;
+				$hikingGuide->save();
+			}
+
+		}
+		else
+		{
+			if(!empty($hikingGuide))
+			{
+				$hikingGuide->forceDelete();
+			}
+		}
+
+
 
 		$applicantHealthDetail = HikingHealthDetail::where('hiking_health_id', $applicantHealth->id);
 
@@ -1035,6 +1246,38 @@ class AktivitiPendakianController extends Controller
 		$applicant = Applicant::find($id);
 		$applicant->status = 'processed';
 		$applicant->save();
+
+		$countApplicant = Applicant::where('type', 'hiking')
+									->whereRaw("DATE_FORMAT(created_at, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')")
+									->count();
+
+		$mail_data = [
+				'full_name' => $applicant->user->name,
+				'state' => $applicant->hikingLocation->state->name,
+				'area' => $applicant->hikingLocation->area->name,
+				'code_number' => $applicant->number,
+				'applicant_date' => date('d M Y', strtotime($applicant->HikingDeclaration->date)),
+				'mountain' => $applicant->hikingInformation->mountain->name,
+				'starting_date' => date('d M Y', strtotime($applicant->hikingInformation->starting_date)),
+				'participant' => $applicant->hikingInformation->participants_total,
+				'guide' => $applicant->hikingGuide->count()
+		];
+
+		// return view('account.aktivitipendakian.document', $mail_data);
+
+		view()->share($mail_data);
+		$pdf = PDF::loadView('account.aktivitipendakian.document')->save(public_path('files/hiking/attachment_' . str_replace('/', '_', $applicant->number) . '.pdf'));
+		$user = $applicant->user;
+		$user['file'] = public_path('files/hiking/attachment_' . str_replace('/', '_', $applicant->number) . '.pdf');
+
+		$email = Mail::send('account.aktivitipendakian.document', $mail_data , function ($mail) use ($user)
+		{
+			$mail->from(config('mail.from.address'), 'JPSM e-Permit');
+			$mail->to($user->email, $user->name);
+
+			$mail->subject('Surat Permohonan Aktiviti Pendakian');
+			$mail->attach($user->file);
+		});
 
 		return redirect(url('account/member-application-status'))->with('status', 'success-processed');
 		// Flash::success('Pemohonan anda telah dihantar');
@@ -1150,5 +1393,58 @@ class AktivitiPendakianController extends Controller
 		$data['price'] = $convenience->price;
 
 		return response()->json($data);
+	}
+
+	public function view($id)
+	{
+		$data['applicant'] = Applicant::find($id);
+		
+		$checkPHD		   = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id,
+								'area_id'  => $data['applicant']->hikingLocation->area_id
+							 ])->first();
+
+		$data['phd'] = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id,
+								'area_id'  => $data['applicant']->hikingLocation->area_id
+							 ])->first();
+		$data['jpn'] = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id
+							 ])->first();
+		$data['phd_data'] = RegionalForestry::where([
+											'state_id' => $data['applicant']->hikingLocation->state_id,
+											'area_id' => $data['applicant']->hikingLocation->area_id
+									    ])
+										->first();
+		return view('account.aktivitipendakian.review', $data);
+	}
+
+	public function download($id)
+	{
+		$data['applicant'] = Applicant::find($id);
+		
+		$checkPHD		   = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id,
+								'area_id'  => $data['applicant']->hikingLocation->area_id
+							 ])->first();
+
+		$data['phd'] = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id,
+								'area_id'  => $data['applicant']->hikingLocation->area_id
+							 ])->first();
+		$data['jpn'] = UserLocation::where([
+								'state_id' => $data['applicant']->hikingLocation->state_id
+							 ])->first();
+		$data['phd_data'] = RegionalForestry::where([
+											'state_id' => $data['applicant']->hikingLocation->state_id,
+											'area_id' => $data['applicant']->hikingLocation->area_id
+									    ])
+										->first();
+
+		view()->share($data);
+
+		$pdf = PDF::loadView('account.aktivitipendakian.download');
+
+		return $pdf->download('download_'. $data['applicant']->number .'.pdf');
 	}
 }

@@ -8,17 +8,17 @@
     <?php
     Menu::make('MyNavBar', function($menu) {
         $menu->add(
-            '<i class="material-icons">dashboard</i><p>Dashboard</p>',
+            '<i class="material-icons">dashboard</i><p>Utama<br><span style="display:block; margin-left: 45px">Dashboard</span></p>',
             route('member-home.index')
         );
 
         $menu->add(
-            '<i class="material-icons">face</i><p>Profile Saya</p>',
+            '<i class="material-icons">face</i><p>Profile Saya<br><span style="display:block; margin-left: 45px">My Profile</span></p>',
             route('member-profile.index')
         );
 
         $menu->add(
-            '<i class="material-icons">receipt</i><p>Status Permohonan</p>',
+            '<i class="material-icons">receipt</i><p>Permohonan Saya<br><span style="display:block; margin-left: 45px">My Application</span></p>',
             route('member-application-status.index')
         );
     });

@@ -23,12 +23,12 @@
             </div>
             <div class="card-content">
                 <div class="row">
-                    <div class="col-sm-3 col-sm-offset-9">
+                    <div class="col-sm-4 col-sm-offset-8">
                         {!! Form::open(['url' => route('admin.index'), 'method' => 'get']) !!}
                         <div class="input-group">
-                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Pencarian...']) }}
-                            <span class="input-group-addon">
-                                <button type="submit" class="btn btn-white btn-round btn-just-icon">
+                            {{ Form::text('search', old('search'), ['class' => 'form-control', 'placeholder' => 'Nama']) }}
+                            <span class="input-group-addon" style="padding-top: 0;">
+                                <button type="submit" class="btn btn-white btn-round btn-just-icon" style="margin-top: 0; padding: 8px">
                                     <i class="material-icons">search</i>
                                     <div class="ripple-container"></div>
                                 </button>
@@ -67,7 +67,7 @@
                                        data-toggle="modal"
                                        data-target="#modal-form"
                                        data-action="{{ route('admin.edit', $admin->id) }}"
-                                       data-title="Edit {{ $admin->name }}"
+                                       data-title="Kemaskini {{ $admin->name }}"
                                     >
                                         <i class="material-icons">create</i>
                                     </a>&nbsp;
@@ -75,7 +75,7 @@
                                        data-toggle="modal"
                                        data-target="#modal-delete"
                                        data-action="{{ route('admin.destroy', $admin->id) }}"
-                                       data-title="Delete {{ $admin->name }}"
+                                       data-title="Hapus {{ $admin->name }}"
                                        data-message="Adakah anda ingin hapuskan akaun {{ $admin->name }}?"
                                     >
                                         <i class="material-icons">clear</i>

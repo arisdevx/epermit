@@ -72,9 +72,9 @@
         <div class="form-group" v-bind:class="errors.price ? 'has-error' : ''">
             <label class="control-label">
                 <span v-if="errors.price">@{{ errors.price[0] }}</span>
-                <span v-else>Caj Pemprosesan</span>
+                <span v-else>Caj Permit</span>
             </label>
-            {{ Form::text('price', old('price', $mountain->price), ['class' => 'form-control']) }}
+            {{ Form::number('price', old('price', $mountain->price), ['class' => 'form-control']) }}
             <span class="material-icons form-control-feedback">clear</span>
         </div>
     </div>
@@ -82,16 +82,16 @@
         <div class="form-group" v-bind:class="errors.other_price ? 'has-error' : ''">
             <label class="control-label">
                 <span v-if="errors.other_price">@{{ errors.other_price[0] }}</span>
-                <span v-else>Tukar Caj Permit</span>
+                <span v-else>Caj Pemprosesan</span>
             </label>
-            {{ Form::text('other_price', old('other_price', (!empty($mountain->permanent_forest->price) ? $mountain->permanent_forest->price : '0')), ['class' => 'form-control', 'readonly' => 'readonly', 'id' => 'other_price']) }}
+            {{ Form::number('other_price', old('other_price', $mountain->other_price), ['class' => 'form-control', 'id' => 'other_price']) }}
             <span class="material-icons form-control-feedback">clear</span>
         </div>
     </div>
     
 </div>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-3" style="display: none">
         <div class="form-group" v-bind:class="errors.campground ? 'has-error' : ''">
             <label class="control-label">
                 <span v-if="errors.campground">@{{ errors.campground[0] }}</span>
@@ -119,38 +119,34 @@
         <div class="form-group" v-bind:class="errors.capacity ? 'has-error' : ''">
             <label class="control-label">
                 <span v-if="errors.capacity">@{{ errors.capacity[0] }}</span>
-                <span v-else>Had Daya Tampung Perkhemahan</span>
+                <span v-else>Had Daya Tampung Pendakian</span>
             </label>
-            {{ Form::text('capacity', old('capacity', $mountain->capacity), ['class' => 'form-control']) }}
+            {{ Form::number('capacity', old('capacity', $mountain->capacity), ['class' => 'form-control']) }}
             <span class="material-icons form-control-feedback">clear</span>
         </div>
     </div>
-    <div class="col-md-5">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group" v-bind:class="errors.travel_day ? 'has-error' : ''">
-                    <label class="control-label">
-                        <span v-if="errors.travel_day">@{{ errors.travel_day[0] }}</span>
-                        <span v-else>Hari</span><br /><br />
-                    </label>
-                    {{ Form::number('travel_day', old('travel_day', $mountain->travel_day), ['class' => 'form-control']) }}
-                    <span class="material-icons form-control-feedback">clear</span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group" v-bind:class="errors.travel_night ? 'has-error' : ''">
-                    <label class="control-label">
-                        <span v-if="errors.travel_night">@{{ errors.travel_night[0] }}</span>
-                        <span v-else>Malam</span><br /><br />
-                    </label>
-                    {{ Form::number('travel_night', old('travel_night', $mountain->travel_night), ['class' => 'form-control']) }}
-                    <span class="material-icons form-control-feedback">clear</span>
-                </div>
-            </div>
+    <div class="col-md-4">
+        <div class="form-group" v-bind:class="errors.travel_day ? 'has-error' : ''">
+            <label class="control-label">
+                <span v-if="errors.travel_day">@{{ errors.travel_day[0] }}</span>
+                <span v-else>Hari</span>
+            </label>
+            {{ Form::number('travel_day', old('travel_day', $mountain->travel_day), ['class' => 'form-control']) }}
+            <span class="material-icons form-control-feedback">clear</span>
         </div>
     </div>
+    <div class="col-md-4">
+        <div class="form-group" v-bind:class="errors.travel_night ? 'has-error' : ''">
+            <label class="control-label">
+                <span v-if="errors.travel_night">@{{ errors.travel_night[0] }}</span>
+                <span v-else>Malam</span>
+            </label>
+            {{ Form::number('travel_night', old('travel_night', $mountain->travel_night), ['class' => 'form-control']) }}
+            <span class="material-icons form-control-feedback">clear</span>
+        </div>
+    </div>  
 </div>
-<div class="row">
+<div class="row" style="display: none">
     <div class="col-md-9">
         <div class="form-group" v-bind:class="errors.location ? 'has-error' : ''" style="margin-bottom: 20px">
             <label class="control-label">
@@ -174,7 +170,7 @@
         </div>
     </div>
 </div>
-<div class="form-group" style="margin-top: 20px !important;">
+<div class="form-group" style="margin-top: 20px !important; display: none;">
     <div class="card">
         <div class="card-header" data-background-color="red">
             <h4 class="title pull-left">Tapak Perkhemahan</h4>
@@ -227,6 +223,55 @@
                                 </a>
                             </td>
                         </tr>
+                    @endif
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="form-group" style="margin-top: 20px !important; display: none;">
+    <div class="card">
+        <div class="card-header" data-background-color="red">
+            <h4 class="title pull-left">Senarai Laluan Negeri</h4>
+            <a type="button" id="addRelatedState" class="pull-right cursor-pointer">
+                <i class="fa fa-2x fa-plus-circle"></i>
+            </a>
+            <span class="clearfix"></span>
+        </div>
+        <div class="card-content">
+            <div id="trsTemplate" style="display: none">
+                <select class="form-control" placeholder="Pilih Negeri" name="related_state[]" id="related_state" style="width: 100%">
+                    @foreach($states as $state)
+                        <option value="{{ $state->id }}">{{ $state->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="active">
+                        <th>Negeri</th>
+                        <th width="5%"></th>
+                    </tr>
+                </thead>
+                <tbody id="tableRelatedState">
+                    @if(isset($mountain->id))
+                        @foreach($mountain->mountain_related as $related)
+                            <tr id="trs-{{ $related->id }}" class="rowRelatedState">
+                                <td>
+                                    <select class="form-control" placeholder="Pilih Negeri" name="related_state[]" id="related_state" style="width: 100%">
+                                        @foreach($states as $state)
+                                            <option value="{{ $state->id }}"{{ ($state->id == $related->state_id ? ' selected' : '') }}>{{ $state->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td class="td-actions text-center" align="center">
+                                     <a type="button" data-id="{{ $related->id }}" class="deleteRelatedState btn btn-danger btn-xs">
+                                          <i class="material-icons">clear</i>
+                                          <div class="ripple-container"></div>
+                                     </a>
+                                </td>
+                            </tr>
+                        @endforeach
                     @endif
                 </tbody>
             </table>
@@ -325,19 +370,53 @@
             $('#tc-' + id).remove();
         });
 
+        /*
         $('body').on('change', '#permanentforest', function(){
             $.ajax({
                 type: 'POST',
-                url: '{{ url('hiking/find-hsk-price') }}',
+                url: '{{--{{ url('hiking/find-hsk-price') }}--}}',
                 data: {
                     id: $(this).val(),
-                    _token: '{{ csrf_token() }}'
+                    _token: '{{--{{ csrf_token() }}--}}'
                 },
                 success: function(data)
                 {
                     $('#other_price').val(data);
                 }
             });
+        });
+        */
+
+        $('#addRelatedState').on('click', function(){
+            var trsTemplate = $('#trsTemplate').html();
+            var fakeID = $('#tableRelatedState tr').length;
+            var html = '';
+            html += '<tr id="trsf-'+ fakeID +'" class="rowRelatedState">';
+            html += '    <td>';
+            html += trsTemplate;
+            html += '    </td>';
+            html += '    <td class="td-actions text-center" align="center">';
+            html += '         <a type="button" data-id="'+ fakeID +'" class="deleteRelatedStateFake btn btn-danger btn-xs">';
+            html += '              <i class="material-icons">clear</i>';
+            html += '              <div class="ripple-container"></div>';
+            html += '         </a>';
+            html += '    </td>';
+            html += '</tr>';
+
+            $(html).appendTo('#tableRelatedState');
+
+        });
+
+        $('body').on('click', '.deleteRelatedStateFake', function(){
+            var id = $(this).data('id');
+
+            $('#trsf-' + id).remove();
+        });
+
+        $('body').on('click', '.deleteRelatedState', function(){
+            var id = $(this).data('id');
+
+            $('#trs-' + id).remove();
         });
 
     })(jQuery);

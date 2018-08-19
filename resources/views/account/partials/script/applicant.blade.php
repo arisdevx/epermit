@@ -21,9 +21,9 @@
 					}
 				},
 				timepicker:false,
-				minDate:'{{ date('Y/m/d', strtotime('+1 month')) }}',//yesterday is minimum date(for today use 0 or -1970/01/01)
+				minDate:'{{ date('Y/m/d', strtotime('+14 day')) }}',//yesterday is minimum date(for today use 0 or -1970/01/01)
  				// maxDate:'+1970/01/02', //tomorrow is maximum date calendar
- 				startDate: '{{ date('Y/m/d', strtotime('+1 month')) }}',
+ 				startDate: '{{ date('Y/m/d', strtotime('+15 day')) }}',
 				format:'d/m/Y',
 				scrollMonth:false,
 				scrollTime:false,
@@ -42,7 +42,8 @@
 					},
 					success: function(data)
 					{
-						$('#area').select2('destroy').empty().select2({data: data});
+						console.log(data);
+						$('#area').html(data).selectpicker('refresh');
 					}
 				});
 			});
@@ -63,7 +64,8 @@
 					},
 					success: function(data)
 					{
-						$('#mountain').select2('destroy').empty().select2({data: data});
+						$('#mountain').html(data.mountain).selectpicker('refresh');;
+						$('#type').select2('destroy').empty().select2({data: data.convenience});
 						// console.log(data);
 						// $('#mountain').select2('destroy').empty().select2({data: data.mountain});
 						// $('#convenience').select2('destroy').empty().select2({data: data.convenience});
@@ -149,8 +151,8 @@
 					},
 					success: function(data)
 					{
-						$('#campgroundDetail').show();
-						$('#campgroundDetailData').html(data.campground);
+						// $('#campgroundDetail').show();
+						// $('#campgroundDetailData').html(data.campground);
 						$('#amount').val($.number(data.amount, 2));
 						$('.select2').select2();
 						console.log(data);
@@ -171,9 +173,26 @@
 					{
 						$('#ending_date').val(data.ending_date);
 						$('#day').val(data.day);
-						$('#participant').select2('destroy').empty().select2({data: data.slots});
+						// $('#participant').select2('destroy').empty().select2({data: data.slots});
+						$('#campgroundDetail').show();
+						$('#campgroundDetailData').html(data.campground);
+						$('.select2').select2();
+						$('#participant').prop('disabled', false);
+						$('#available_slot').html('Had peserta berbaki' + data.slot_count + ' sahaja');
+						$('#available_slot_hidden').val(data.slot_count);
 					}
 				});
+			});
+
+			$('#participant').on('change', function(){
+				var slot = $('#available_slot_hidden').val();
+
+				if(parseInt($(this).val()) > parseInt(slot))
+				{
+					alert('Jumlah peserta sepatutnya kurang daripada ' + slot);
+					$(this).focus();
+					$(this).val('');
+				}
 			});
 
 			$('body').on('change', '#participant', function(){
@@ -211,44 +230,44 @@
 				});
 			});
 
-			$('body').on('change', '.campground', function(){
-				// var count = $(".campground option:selected").length;
-				// alert(count);
-				var i = 0;
-				var key = [];
-				$('.campground').each(function(){
+			// $('body').on('change', '.campground', function(){
+			// 	// var count = $(".campground option:selected").length;
+			// 	// alert(count);
+			// 	var i = 0;
+			// 	var key = [];
+			// 	$('.campground').each(function(){
 
-					var data = $(this).find('option:selected').val();
-					var id   = $(this).find('option:selected').data('id');
+			// 		var data = $(this).find('option:selected').val();
+			// 		var id   = $(this).find('option:selected').data('id');
 					
-					if(data != '')
-					{
-						i++;
+			// 		if(data != '')
+			// 		{
+			// 			i++;
 
-						key.push(id);
-					}
-				});
+			// 			key.push(id);
+			// 		}
+			// 	});
 
-				if(i === 2)
-				{
-					$('.campground').prop('disabled', true);
+			// 	if(i === 2)
+			// 	{
+			// 		$('.campground').prop('disabled', true);
 
-					for(var k = 0; k < key.length; k++)
-					{
-						$('#campground-' + key[k]).prop('disabled', false);
-					}
-				}
+			// 		for(var k = 0; k < key.length; k++)
+			// 		{
+			// 			$('#campground-' + key[k]).prop('disabled', false);
+			// 		}
+			// 	}
 
-				// for(var k = 0; k < key.length; k++)
-				// {
-				// 	if(i == 2)
-				// 	{
-				// 		$('.campground').prop('disabled', true);
-				// 		$('#campground-' + key[k]).prop('disabled', false);
-				// 	}
-				// }
+			// 	// for(var k = 0; k < key.length; k++)
+			// 	// {
+			// 	// 	if(i == 2)
+			// 	// 	{
+			// 	// 		$('.campground').prop('disabled', true);
+			// 	// 		$('#campground-' + key[k]).prop('disabled', false);
+			// 	// 	}
+			// 	// }
 
-			});
+			// });
 
 			$('body').on('change', '#convenience_day', function(){
 				var price = $('#convenience_price').val();
@@ -302,7 +321,7 @@
 				$('#declaration_ic').val($(this).val());
 			});
 
-			$('body').on('change', '#hiker_nationality', function(){
+			$('body').on('click', '#hiker_nationality', function(){
 				if($(this).is(':checked'))
 				{
 					$('#hiker_birthday').prop('readonly', true);
@@ -312,6 +331,21 @@
 				{
 					$('#hiker_birthday').prop('readonly', false);
 					$('#hiker_age').prop('readonly', false);
+				}
+			});
+
+			$('body').on('click', '#non_hiker_nationality', function(){
+				if(!$(this).is(':checked'))
+				{
+					$('#hiker_birthday').prop('readonly', true);
+					$('#hiker_age').prop('readonly', true);
+				}
+				else
+				{
+					$('#hiker_birthday').prop('readonly', false);
+					$('#hiker_age').prop('readonly', false);
+					$('#hiker_birthday').val('');
+					$('#hiker_age').val('');
 				}
 			});
 
@@ -340,9 +374,31 @@
 					birthday = day + '/' + month + '/' + year;
 					dob = new Date(year + '-' + month + '-' + day);
 					age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
+					console.log(birthday);
 
-					$('#hiker_birthday').val(birthday);
-					$('#hiker_age').val(age);
+					var theDate = new Date(birthday);
+					if (Object.prototype.toString.call(theDate) === "[object Date]") {
+					  	// it is a date
+					  	if (isNaN(theDate.getTime())) {  // d.valueOf() could also work
+					    	$('#hiker_birthday').val('');
+					  	} else {
+
+					    	$('#hiker_birthday').val(birthday);
+
+							if(isNaN(age))
+							{
+								$('#hiker_age').val('');
+							}
+							else
+							{
+								$('#hiker_age').val(age);
+							}
+					  	}
+					} else {
+					  	$('#hiker_birthday').val('');
+					}
+
+					
 				}
 			});
 
@@ -478,7 +534,143 @@
 
 				$('#amount_convenience').val((total*price));
 			});
+
+			$('body').on('change', '#checkName', function(){
+				if($(this).is(':checked'))
+				{
+					@if(auth()->guard('applicant')->user()->profile->citizen == 1)
+						$('#hiker_nationality').prop('checked', true);
+					@else
+						$('#non_hiker_nationality').prop('checked', true);
+					@endif
+					$('#hiker_state').val('{{ auth()->guard('applicant')->user()->profile->state }}').change();
+					$('#hiker_fullname').attr('readonly', 'readonly');
+					$('#hiker_fullname').val('{{ auth()->guard('applicant')->user()->name }}');
+					$('#declaration_name').val('{{ auth()->guard('applicant')->user()->name }}');
+					$('#declaration_ic').val('{{ (!empty(auth()->guard('applicant')->user()->profile->nokp) ? auth()->guard('applicant')->user()->profile->nokp : '') }}');
+					var kp = '{{ (!empty(auth()->guard('applicant')->user()->profile->nokp) ? auth()->guard('applicant')->user()->profile->nokp : '') }}';
+					if(kp != '')
+					{
+						var getDate = kp.substring(0, 6);
+						var getArray = getDate.match(/.{1,2}/g);
+						var year, month, day, dob, age;
+						var birthday;
+						var today = new Date();
+
+						if(getArray[0] > 60)
+						{
+							year = 19 + getArray[0];
+						}
+						else
+						{
+							year = 20 + getArray[0];
+						}
+
+						month = getArray[1];
+						day   = getArray[2];
+
+						birthday = day + '/' + month + '/' + year;
+						dob = new Date(year + '-' + month + '-' + day);
+						age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
+						$('#hiker_ic').val(kp);
+						$('#hiker_birthday').val(birthday);
+						$('#hiker_age').val(age);
+					}
+
+					@if(!empty(auth()->guard('applicant')->user()->profile->phone))
+						$('#hiker_phone').val('{{ auth()->guard('applicant')->user()->profile->phonecode . auth()->guard('applicant')->user()->profile->phone }}');
+					@endif
+
+					@if(!empty(auth()->guard('applicant')->user()->profile->address_1))
+					
+						$('#hiker_address').val("{{ trim(preg_replace('/\s\s+/', ' ', auth()->guard('applicant')->user()->profile->address_1)) }}");
+					@endif
+
+					@if(!empty(auth()->guard('applicant')->user()->profile->postcode))
+					
+						$('#hiker_postcode').val('{{ auth()->guard('applicant')->user()->profile->postcode }}');
+					@endif
+
+					@if(!empty(auth()->guard('applicant')->user()->profile->state))
+					
+						$('#hiker_state').val('{{ auth()->guard('applicant')->user()->profile->state }}').trigger('change');
+					@endif
+
+					@if(!empty(auth()->guard('applicant')->user()->profile->country))
+						$('#hiker_country').val('{{ auth()->guard('applicant')->user()->profile->country }}').trigger('change');
+					@endif
+
+					$('#hiker_gender').val('M').trigger('change');
+
+					
+
+				}
+				else
+				{
+					$('#hiker_fullname').prop('readonly', false);
+					$('#hiker_fullname').val('');
+					$('#hiker_fullname').val('');
+					$('#hiker_ic').val('');
+					$('#hiker_birthday').val('');
+					$('#hiker_age').val('');
+					$('#hiker_phone').val('');
+					$('#hiker_address').val('');
+					$('#hiker_postcode').val('');
+					$('#hiker_state').val('').trigger('change');
+					$('#hiker_country').val('').trigger('change');
+					$('#hiker_nationality').prop('checked', false);
+					$('#non_hiker_nationality').prop('checked', false);
+					$('#hiker_state').val('').change();
+					$('#declaration_name').val('');
+					$('#declaration_ic').val('');
+				}
+			});
+			$('#checkAddress').on('click', function(){
+				if($(this).is(':checked'))
+				{
+					$('#emergency_address').val('{{ trim(preg_replace('/\s\s+/', ' ', auth()->guard('applicant')->user()->profile->address_1)) }}');
+				}
+				else
+				{
+					$('#emergency_address').val('');
+				}
+			});
+
+			$('#hiker_country').on('change', function(){
+				if($(this).val() == 130)
+				{
+					$('#hiker_postcode').attr('type', 'number');
+				}
+				else
+				{
+					$('#hiker_postcode').attr('type', 'text');
+				}
+			});
+			$('#country').on('change', function(){
+				if($(this).val() == 130)
+				{
+					$('#emergency_postcode').attr('type', 'number');
+				}
+				else
+				{
+					$('#emergency_postcode').attr('type', 'text');
+				}
+			});
 		});
 
+		
+
 	})(jQuery);
+	document.querySelector(".control-phone").addEventListener("keypress", function (evt) {
+	    if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57)
+	    {
+	        evt.preventDefault();
+	    }
+	});
+	document.querySelector(".control-phone-emergency").addEventListener("keypress", function (evt) {
+	    if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57)
+	    {
+	        evt.preventDefault();
+	    }
+	});
 </script>

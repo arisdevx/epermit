@@ -61,7 +61,7 @@
                                    data-toggle="modal"
                                    data-target="#modal-form"
                                    data-action="{{ route('role.edit', $role->id) }}"
-                                   data-title="Edit {{ $role->display_name }} Role"
+                                   data-title="Kemaskini {{ $role->display_name }} Role"
                                 >
                                     <i class="material-icons">edit</i>
                                 </a>
@@ -69,7 +69,7 @@
                                    data-toggle="modal"
                                    data-target="#modal-delete"
                                    data-action="{{ route('role.destroy', $role->id) }}"
-                                   data-title="Delete Confirmation!"
+                                   data-title="Hapus"
                                    data-message="You are about to delete {{ $role->display_name }} record, this procedure is irreversible. Do you want to proceed?"
                                 >
                                     <i class="material-icons">close</i>
