@@ -337,6 +337,8 @@ class AktivitiPendakianController extends Controller
 						'full_name' => $user->name,
 						'form' => url('form/hiking/' . $applicant->id),
 						'mountain' => $hikingInformation->mountain->name,
+						'starting_date' => date('d/m/Y', strtotime($hikingInformation->starting_date)),
+						'ending_date' => date('d/m/Y', strtotime($hikingInformation->ending_date)),
 						'state' => $hikingLocation->state->name,
 						'area' => $hikingLocation->area->name
 				];

@@ -139,7 +139,7 @@
 					var end = new Date(end_date[2] + '-' + end_date[1] + '-' + end_date[0]);
 					var diff = Math.round((end- start)/(1000*60*60*24));
 
-					$('#day').val(diff);
+					$('#day').val((diff == 0 ? 1 : diff));
 				}
 
 				// $.ajax({
@@ -173,7 +173,7 @@
 					var end = new Date(ending_date[2] + '-' + ending_date[1] + '-' + ending_date[0]);
 					var diff = Math.round((end- start)/(1000*60*60*24));
 
-					$('#day').val(diff);
+					$('#day').val((diff == 0 ? 1 : diff));
 				}
 
 			});

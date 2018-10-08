@@ -29,23 +29,23 @@ class HomeController extends Controller
 
         if(auth()->user()->hasRole(['admin', 'super']))
         {
-            $data['hiking_total'] = Applicant::where('type', 'hiking')->count();
+            $data['hiking_total'] = Applicant::where('type', 'hiking')->where('status', '!=', 'new')->count();
             $data['hiking_new'] = Applicant::where([
-                                            'type' => 'hiking',
-                                            'status' => 'new'
-                                        ])->count();
-            $data['hiking_processed'] = Applicant::where([
                                             'type' => 'hiking',
                                             'status' => 'processed'
                                         ])->count();
-            $data['hiking_completed'] = Applicant::where([
+            $data['hiking_processed'] = Applicant::where([
                                             'type' => 'hiking',
                                             'status' => 'completed'
                                         ])->count();
-            $data['hiking_finished'] = Applicant::where([
+            $data['hiking_completed'] = Applicant::where([
                                             'type' => 'hiking',
                                             'status' => 'finished'
                                         ])->count();
+            // $data['hiking_finished'] = Applicant::where([
+            //                                 'type' => 'hiking',
+            //                                 'status' => 'finished'
+            //                             ])->count();
             $data['hiking_canceled'] = Applicant::where([
                                             'type' => 'hiking',
                                             'status' => 'canceled'

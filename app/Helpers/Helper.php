@@ -53,7 +53,7 @@ if(!function_exists('get_applicant_total'))
 {
 	function get_applicant_total()
 	{
-		$applicant = Applicant::where('status', 'new')->get();
+		$applicant = Applicant::where('status', 'processed')->get();
 
 		return $applicant->count();
 	}

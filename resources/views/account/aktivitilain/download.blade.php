@@ -1,4 +1,4 @@
-<table border="0" width="100%" style="padding: 0; margin: 0">
+<!-- <table border="0" width="100%" style="padding: 0; margin: 0">
   <tr>
     <td width="20%" align="center">
       <img src="{{ url('img/jpsm-tiger-logo.png') }}" style="width: 150px">
@@ -13,7 +13,7 @@
       <img src="{{ url('img/jpsm-mail-logo.png') }}" style="width: 100px">
     </td>
   </tr>
-</table>
+</table> -->
 {{-- <table border="0" width="100%">
 	<tr>
 		<td colspan="2">{{ (!empty($other->applicant_other_activity_detail->agency) ? $other->applicant_other_activity_detail->agency : '') }}</td>
@@ -38,6 +38,8 @@
 		<td colspan="2">{{ (!empty($other->applicant_other_activity_detail->email) ? $other->applicant_other_activity_detail->email : '') }}</td>
 	</tr>
 </table> --}}
+{{ $applicant->user->name }}<br />
+{{ $applicant->user->profile->address_1 }}
 <hr />
 
 <table width="100%" border="0">
@@ -53,12 +55,13 @@
 
 <p>Tuan / Puan, </p>
 
-<p style="text-transform: uppercase;"><strong>Permohonan Menjalankan Aktiviti {{ (!empty($other->applicant_other_activity_detail->name) ? $other->applicant_other_activity_detail->name : '') }} di {{ ($other->type == 'hsk' ? (!empty($other->permanent_forest->name) ? $other->permanent_forest->name : '') : (!empty($other->eco_park->name) ? $other->eco_park->name : '')) }} 
-<br />No Permohonan : {{ $applicant->number }}</strong></p>
+<p style="text-transform: uppercase;"><strong>Permohonan Menjalankan Aktiviti {{ (!empty($other->applicant_other_activity_detail->name) ? $other->applicant_other_activity_detail->name : '') }} di {{ ($other->type == 'hsk' ? (!empty($other->permanent_forest->name) ? $other->permanent_forest->name : '') : (!empty($other->eco_park->name) ? $other->eco_park->name : '')) }} </p>
 
-<p>Dengan segala hormatnya, saya merujuk kepada perkara diatas.</p>
+<p>Perkara diatas dirujuk.</p>
 
-<p>1. Maklumat aktiviti adalah seperti berikut:</p>
+<p>2. Dengan segala hormatnya, saya merujuk kepada perkara diatas.</p>
+
+<p>3. Maklumat aktiviti adalah seperti berikut:</p>
 <table width="100%" border="0" cellspacing="0" cellpadding="2" style="margin: 0 auto">
 	<tr>
 		<th style="text-align: left; width: 30%">Nama Aktiviti</th>
@@ -78,13 +81,14 @@
 		<th style="text-align: left; width: 30%">Bilangan Peserta</th>
 		<td colspan="3">{{ (!empty($other->applicant_other_activity_detail->participant) ? $other->applicant_other_activity_detail->participant : '') }}</td>
 	</tr>
-	<tr>
+	<!-- <tr>
 		<th style="text-align: left; width: 30%">Tarikh Permohonan</th>
 		<td colspan="3">{{ (!empty($other->applicant_other_activity_declaration->application_date) ? date('d/m/Y', strtotime($other->applicant_other_activity_declaration->application_date)) : '') }}</td>
-	</tr>
+	</tr> -->
 </table>
-<p>3. {{ (!empty($other->applicant_other_activity_detail->description) ? $other->applicant_other_activity_detail->description : '') }}</p>
-<p>4. Saya mengaku bahawa maklumat-maklumat yang diberikan di atas adalah benar. Pihak kerajaan tidak akan dipertanggungjawabkan jika terdapat sebarang kesulitan yang timbul akibat maklumat yang tidak benar. Keselamatan pemohon dan para peserta semasa menjalankan aktiviti adalah dibawah tanggungjawab sendiri.</p>
+<p>4.	Tujuan permohonan ini adalah bagi <strong>Menjalankan aktiviti {{ (!empty($other->applicant_other_activity_detail->name) ? $other->applicant_other_activity_detail->name : '') }}</strong></p>
+<!-- <p>3. {{ (!empty($other->applicant_other_activity_detail->description) ? $other->applicant_other_activity_detail->description : '') }}</p> -->
+<p>5. Saya mengaku bahawa maklumat-maklumat yang diberikan di atas adalah benar. Pihak kerajaan tidak akan dipertanggungjawabkan jika terdapat sebarang kesulitan yang timbul akibat maklumat yang tidak benar. Keselamatan pemohon dan para peserta semasa menjalankan aktiviti adalah dibawah tanggungjawab sendiri.</p>
 <p>Yang Benar, </p>
 {{ (!empty($other->applicant_other_activity_declaration->name) ? $other->applicant_other_activity_declaration->name : '') }}<br />
 {{ (!empty($other->applicant_other_activity_declaration->ic_number) ? $other->applicant_other_activity_declaration->ic_number : '') }}<br />

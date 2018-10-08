@@ -290,10 +290,10 @@
 										@endif
 										<label style="display: block">Muat Naik Senarai Peserta <small><i>Upload list of participants</i></small></label>
 										<div class="fileUpload btn btn-default">
-											<span>Pilih File</span>
+											<span>Pilih File / Choose File</span>
 											<input type="file" name="participant_file" data-id="1" class="uploadBtn upload" />
 										</div>
-										<input id="uploadFakePath-1" class="form-control" placeholder="Lokasi fail" disabled="disabled" />
+										<input id="uploadFakePath-1" class="form-control" placeholder="Lokasi fail / Location file" disabled="disabled" />
 										@if(!empty($other->applicant_other_activity_detail->participant_file))
 											@if(file_exists(public_path('/files/'. $other->applicant_other_activity_detail->participant_file)))
 												<a href="{{ url('files/' . $other->applicant_other_activity_detail->participant_file) }}">Download</a>
@@ -314,10 +314,10 @@
 										@endif
 										<label style="display: block">Muat Naik Atur Cara Program <small><i>Upload program guide</i></small></label>
 										<div class="fileUpload btn btn-default">
-											<span>Pilih File</span>
+											<span>Pilih File / Choose File</span>
 											<input type="file" name="program_file" data-id="2" class="uploadBtn upload" />
 										</div>
-										<input id="uploadFakePath-2" class="form-control" placeholder="Lokasi fail" disabled="disabled" />
+										<input id="uploadFakePath-2" class="form-control" placeholder="Lokasi fail / Location file" disabled="disabled" />
 										@if(!empty($other->applicant_other_activity_detail->program_file))
 											@if(file_exists(public_path('/files/'. $other->applicant_other_activity_detail->program_file)))
 												<a href="{{ url('files/' . $other->applicant_other_activity_detail->program_file) }}">Download</a>

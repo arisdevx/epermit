@@ -196,7 +196,7 @@
 					<label for="agreement" style="color: #333333"><input type="checkbox" name="agreement" id="agreement"> Saya mengakui bahawa segala maklumat yang diberi dan dikemukakan di dalam sistem ini adalah benar. <br><p style="margin-left: 20px"><i>I acknowledge that all information given and presented in this system is true.</i></p>
 </label>
 					@if($errors->has('agreement'))
-						<p class="help-block" style="color: red">{{ $errors->first('agreement') }}</p>
+						<p class="help-block" style="color: red !important;">{{ $errors->first('agreement') }}</p>
 					@endif
 				</div>
 				<button type="submit" class="btn btn-primary pull-right">Simpan<div class="ripple-container"></div></button>

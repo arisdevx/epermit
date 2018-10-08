@@ -140,6 +140,7 @@ class AktivitiLainController extends Controller
 							 ])->first();
 
 			$mail_data = [
+				'user'	=> $applicant->user,
 				'number' =>	$applicant->number,
 				'agency'           => $detail->agency,
 				'address'          => $detail->address,

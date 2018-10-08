@@ -414,27 +414,31 @@
                             <td width="10%">{{ $hiking_new }}</td>
                         </tr>
                         <tr>
-                            <td width="35%" align="left">Permohonan Diproses</td>
+                            <td width="35%" align="left">Permohonan Diluluskan</td>
                             <td width="10%">{{ $hiking_processed }}</td>
                         </tr>
                     @else
                         <tr>
                             <td width="35%" align="left">Permohonan Baru</td>
-                            <td width="10%">{{ $hiking_processed }}</td>
+                            <td width="10%">{{ $hiking_new }}</td>
                         </tr>
                     @endif
-                    <tr>
-                        <td width="35%" align="left">Permohonan Diluluskan</td>
-                        <td width="10%">{{ $hiking_completed }}</td>
-                    </tr>
-                    <tr>
+                    
+                    
+                    {{-- <tr>
                         <td width="35%" align="left">Permohonan Selesai</td>
                         <td width="10%">{{ $hiking_finished }}</td>
+                    </tr> --}}
+                    <tr>
+                        <td width="35%" align="left">Permohonan Selesai</td>
+                        <td width="10%">{{ $hiking_completed }}</td>
                     </tr>
                     <tr>
                         <td width="35%" align="left">Permohonan Dibatalkan</td>
                         <td width="10%">{{ $hiking_canceled }}</td>
                     </tr>
+                    
+                    <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
                 </table>
             </div>
             <div class="card-footer">

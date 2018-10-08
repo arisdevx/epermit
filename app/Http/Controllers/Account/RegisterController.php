@@ -81,7 +81,7 @@ class RegisterController extends Controller
 
 			Mail::send('account.partials.email.newuser', $mail_data , function ($mail) use ($user)
 			{
-				$mail->from('mail@jpsm.com.my', 'JPSM e-Permit');
+				$mail->from(config('mail.from.address'), 'JPSM e-Permit');
 				$mail->to('ikhwanzaini.aidan@gmail.com', 'New User');
 
 				$mail->subject('JPSM e-Permit: Akaun Baru');

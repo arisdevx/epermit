@@ -8,6 +8,16 @@
 <p>Anda telah berjaya membuat permohonan aktiviti pendakian seperti maklumat dibawah ini:</p><br />
 <table border="0" width="100%">
   <tr>
+    <td width="30%">Tarikh Mula Pendakian</td>
+    <td width="1%">:</td>
+    <td>{{ (!empty($starting_date) ? $starting_date : '-') }}</td>
+  </tr>
+  <tr>
+    <td width="30%">Tarikh Akhir Pendakian</td>
+    <td width="1%">:</td>
+    <td>{{ (!empty($ending_date) ? $ending_date : '-') }}</td>
+  </tr>
+  <tr>
     <td width="30%">Nama Gunung</td>
     <td width="1%">:</td>
     <td>{{ (!empty($mountain) ? $mountain : '-') }}</td>

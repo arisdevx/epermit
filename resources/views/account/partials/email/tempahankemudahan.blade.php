@@ -8,6 +8,16 @@
 <p>Anda telah berjaya membuat tempahan kemudahan seperti maklumat dibawah ini:</p><br />
 <table border="0" width="100%">
   <tr>
+    <td width="30%">Tarikh Mula Tempahan</td>
+    <td width="1%">:</td>
+    <td>{{ (!empty($starting_date) ? $starting_date : '-') }}</td>
+  </tr>
+  <tr>
+    <td width="30%">Tarikh Akhir Tempahan</td>
+    <td width="1%">:</td>
+    <td>{{ (!empty($ending_date) ? $ending_date : '-') }}</td>
+  </tr>
+  <tr>
     <td width="30%">TER/HTN</td>
     <td width="1%">:</td>
     <td>{{ (!empty($type) ? $type : '-') }}</td>

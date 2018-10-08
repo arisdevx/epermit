@@ -12,7 +12,7 @@
         <div class="card-content">
             <div id="printData" style="display: none">
                 <div id="printArea">
-                    <table border="0" width="100%" style="padding: 0; margin: 0">
+                    <!-- <table border="0" width="100%" style="padding: 0; margin: 0">
                       <tr>
                         <td width="20%" align="center">
                           <img src="{{ url('img/jpsm-tiger-logo.png') }}" style="width: 150px">
@@ -27,11 +27,12 @@
                           <img src="{{ url('img/jpsm-mail-logo.png') }}" style="width: 100px">
                         </td>
                       </tr>
-                    </table>
+                    </table> -->
                     {{-- {{ $applicant_convenience->state->name }}<br />
                     {{ $applicant_convenience->area->name }}<br />
                     {{ $applicant->user->email }}<br /> --}}
-
+                    {{ $applicant->user->name }}
+                    {{ $applicant->user->profile->address_1 }}<br>
                     <hr />
 
                     <table width="100%" border="0">
@@ -48,11 +49,12 @@
                     <p>Tuan / Puan, </p>
 
                     <p style="text-transform: uppercase;"><strong>Permohonan {{-- Menjalankan Aktiviti --}} Tempahan Kemudahan di {{ $applicant_convenience->eco_park->name }}
-                        <br />No Permohonan : {{ $applicant->number }}</strong></p>
+                        </strong></p>
 
-                        <p><strong>Dengan segala hormatnya, saya merujuk kepada perkara diatas.</strong></p>
+                        <p>Perkara di atas dirujuk.</p>
+                        <p>2. Dengan segala hormatnya, saya merujuk kepada perkara diatas.</p>
 
-                        <p><strong>1. Maklumat aktiviti adalah seperti berikut:</strong></p>
+                        <p><strong>3. Maklumat aktiviti adalah seperti berikut:</strong></p>
                         <table width="100%" border="1" cellspacing="0" cellpadding="3">
                             <thead>
                                 <tr>
@@ -133,7 +135,8 @@
                             </tr>
                         </table> --}}
                         <br />
-                        <p>3. Saya mengaku bahawa maklumat-maklumat yang diberikan di atas adalah benar. Pihak kerajaan tidak akan dipertanggungjawabkan jika terdapat sebarang kesulitan yang timbul akibat maklumat yang tidak benar. Keselamatan pemohon dan para peserta semasa menjalankan aktiviti adalah dibawah tanggungjawab sendiri.</p>
+                        <p>4. Tujuan permohonan ini adalah bagi Permohonan Tempahan Kemudahan di {{ $applicant_convenience->eco_park->name }}</p>
+                        <p>5. Saya mengaku bahawa maklumat-maklumat yang diberikan di atas adalah benar. Pihak kerajaan tidak akan dipertanggungjawabkan jika terdapat sebarang kesulitan yang timbul akibat maklumat yang tidak benar. Keselamatan pemohon dan para peserta semasa menjalankan aktiviti adalah dibawah tanggungjawab sendiri.</p>
                         <p>Yang Benar, </p>
                         {{ $applicant->applicant_convenience_declaration->name }}<br />
                         {{ $applicant->applicant_convenience_declaration->ic_number }}<br />

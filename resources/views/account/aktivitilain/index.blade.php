@@ -274,10 +274,10 @@
 									<div class="col-md-6">
 										<label style="display: block">Muat Naik Senarai Peserta <span style="color: red;">(*)</span> <small><i>Upload list of participants <span style="color: red;">(*)</span></i></small></label>
 										<div class="fileUpload btn btn-default">
-											<span>Pilih File</span>
+											<span>Pilih File / Choose File</span>
 											<input type="file" name="participant_file" data-id="1" class="uploadBtn upload" />
 										</div>
-										<input id="uploadFakePath-1" class="form-control" placeholder="Lokasi fail" disabled="disabled" />
+										<input id="uploadFakePath-1" class="form-control" placeholder="Lokasi fail / Location file" disabled="disabled" />
 										@if($errors->has('participant_file'))
 											<span class="help-error" style="color: red">{!! $errors->first('participant_file') !!}</span>
 										@endif
@@ -285,10 +285,10 @@
 									<div class="col-md-6">
 										<label style="display: block">Muat Naik Atur Cara Program <span style="color: red;">(*)</span> <small><i>Upload program guide <span style="color: red;">(*)</span></i></small></label>
 										<div class="fileUpload btn btn-default">
-											<span>Pilih File</span>
+											<span>Pilih File / Choose File</span>
 											<input type="file" name="program_file" data-id="2" class="uploadBtn upload" />
 										</div>
-										<input id="uploadFakePath-2" class="form-control" placeholder="Lokasi fail" disabled="disabled" />
+										<input id="uploadFakePath-2" class="form-control" placeholder="Lokasi fail / Location file" disabled="disabled" />
 										@if($errors->has('program_file'))
 											<span class="help-error" style="color: red">{!! $errors->first('program_file') !!}</span>
 										@endif

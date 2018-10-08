@@ -7,13 +7,13 @@
             </div>
 
             <div class="modal-body">
-                <p class="modal-message">{!! $message or 'Write your modal message here!' !!}</p>
+                <p class="modal-message">{{ $message or 'Write your modal message here!' }}</p>
             </div>
 
             <div class="modal-footer">
                 {!! Form::open(['url' => '', 'class' => 'modal-action', 'method' => 'delete']) !!}
                     <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Ya</button>
+                    <button type="submit" class="btn btn-primary">Padam</button>
                 {!! Form::close() !!}
             </div>
         </div>

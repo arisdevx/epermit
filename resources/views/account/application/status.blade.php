@@ -204,7 +204,7 @@
 										@if($status->user_id == auth()->guard('applicant')->user()->id)
 											@if($status->status == 'new')
 												
-												@if($status->hikingInformation->participants_total <= ($status->hikingParticipant->count()-1))
+												@if($status->hikingInformation->participants_total <= ($status->hikingParticipant->count()))
 													<a href="{{ url('account/member-aktiviti-pendakian/process/' . $status->id) }}" class="btn btn-success btn-sm btn-block">Hantar / <i>Send</i></a> 
 												@else
 													<a href="#" 
@@ -222,8 +222,8 @@
 				                                   data-toggle="modal"
 				                                   data-target="#modal-delete"
 				                                   data-action="{{ route('member-application-status.destroy', $status->id) }}"
-				                                   data-title="Delete Confirmation!"
-				                                   data-message="You are about to delete {{ $status->name }} record, this procedure is irreversible. Do you want to proceed?">
+				                                   data-title="Hapus"
+				                                   data-message="Apakah anda pasti untuk hapus rekod ini? / Are you sure to delete this record?">
 				                                    Batal / Cancel
 				                                    <div class="ripple-container"></div>
 				                                </a> 
@@ -235,8 +235,8 @@
 				                                   data-toggle="modal"
 				                                   data-target="#modal-delete"
 				                                   data-action="{{ route('member-application-status.destroy', $status->id) }}"
-				                                   data-title="Delete Confirmation!"
-				                                   data-message="You are about to delete {{ $status->name }} record, this procedure is irreversible. Do you want to proceed?">
+				                                   data-title="Hapus"
+				                                   data-message="Apakah anda pasti untuk hapus rekod ini? / Are you sure to delete this record?">
 				                                    Batal / Cancel
 				                                    <div class="ripple-container"></div>
 				                                </a> 
@@ -269,8 +269,8 @@
 			                                    class="btn btn-danger btn-sm btn-block"
 			                                   data-target="#modal-delete"
 			                                   data-action="{{ route('member-application-status.destroy', $status->id) }}"
-			                                   data-title="Delete Confirmation!"
-			                                   data-message="You are about to delete {{ $status->name }} record, this procedure is irreversible. Do you want to proceed?">
+			                                   data-title="Hapus"
+			                                   data-message="Apakah anda pasti untuk hapus rekod ini? / Are you sure to delete this record?">
 			                                    Batal / <i>Cancel</i>
 			                                    <div class="ripple-container"></div>
 			                                </a> 
@@ -299,8 +299,8 @@
 			                                    class="btn btn-danger btn-sm btn-block"
 			                                   data-target="#modal-delete"
 			                                   data-action="{{ route('member-application-status.destroy', $status->id) }}"
-			                                   data-title="Delete Confirmation!"
-			                                   data-message="You are about to delete {{ $status->name }} record, this procedure is irreversible. Do you want to proceed?">
+			                                   data-title="Hapus"
+			                                   data-message="Apakah anda pasti untuk hapus rekod ini? / Are you sure to delete this record?">
 			                                    Batal / Cancel
 			                                    <div class="ripple-container"></div>
 			                                </a>
@@ -483,8 +483,8 @@
 				                                   data-toggle="modal"
 				                                   data-target="#modal-delete"
 				                                   data-action="{{ route('member-application-status.destroy', $status->id) }}"
-				                                   data-title="Delete Confirmation!"
-				                                   data-message="You are about to delete {{ $status->name }} record, this procedure is irreversible. Do you want to proceed?">
+				                                   data-title="Hapus"
+				                                   data-message="Apakah anda pasti untuk hapus rekod ini? / Are you sure to delete this record?">
 				                                    Batal
 				                                    <div class="ripple-container"></div>
 				                                </a> 
@@ -496,8 +496,8 @@
 				                                   data-toggle="modal"
 				                                   data-target="#modal-delete"
 				                                   data-action="{{ route('member-application-status.destroy', $status->id) }}"
-				                                   data-title="Delete Confirmation!"
-				                                   data-message="You are about to delete {{ $status->name }} record, this procedure is irreversible. Do you want to proceed?">
+				                                   data-title="Hapus"
+				                                   data-message="Apakah anda pasti untuk hapus rekod ini? / Are you sure to delete this record?">
 				                                    Batal
 				                                    <div class="ripple-container"></div>
 				                                </a> 
@@ -530,8 +530,8 @@
 			                                    class="btn btn-danger btn-sm btn-block"
 			                                   data-target="#modal-delete"
 			                                   data-action="{{ route('member-application-status.destroy', $status->id) }}"
-			                                   data-title="Delete Confirmation!"
-			                                   data-message="You are about to delete {{ $status->name }} record, this procedure is irreversible. Do you want to proceed?">
+			                                   data-title="Hapus"
+			                                   data-message="Apakah anda pasti untuk hapus rekod ini? / Are you sure to delete this record?">
 			                                    Batal
 			                                    <div class="ripple-container"></div>
 			                                </a> 
@@ -560,8 +560,8 @@
 			                                    class="btn btn-danger btn-sm btn-block"
 			                                   data-target="#modal-delete"
 			                                   data-action="{{ route('member-application-status.destroy', $status->id) }}"
-			                                   data-title="Delete Confirmation!"
-			                                   data-message="You are about to delete {{ $status->name }} record, this procedure is irreversible. Do you want to proceed?">
+			                                   data-title="Hapus"
+			                                   data-message="Apakah anda pasti untuk hapus rekod ini? / Are you sure to delete this record?">
 			                                    Batal
 			                                    <div class="ripple-container"></div>
 			                                </a>

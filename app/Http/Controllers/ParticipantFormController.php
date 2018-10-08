@@ -143,7 +143,7 @@ class ParticipantFormController extends Controller
 
 		Mail::send('account.partials.email.newparticipant', $mail_data , function ($mail) use ($applicant)
 		{
-			$mail->from('mail@jpsm.com.my', 'JPSM e-Permit');
+			$mail->from(config('mail.from.address'), 'JPSM e-Permit');
 			$mail->to($applicant->user->email, $applicant->user->email);
 
 			$mail->subject('JPSM e-Permit: Pendaftaran Peserta Baru');
